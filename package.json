@@ -4,8 +4,8 @@
    "description": "Node JS web application that includes a server as well as a UI.  The application serves to deliver recipes as well as build a grocery list of necessary items to make a number of selected recipes.",
    "main": "index.js",
    "scripts": {
-       "test": "mocha",
-       "start": "NODE_ENV=dev nodejs node_api/server.js"
+      "test": "mocha",
+      "start": "NODE_ENV=dev nodejs node_api/server.js"
    },
    "repository": {
       "type": "git",
