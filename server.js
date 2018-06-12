@@ -29,6 +29,11 @@ app.use(bodyParser.json());
  * |     RECIPE ROUTING     |
  * --------------------------
 */
+/**
+ * ----------------
+ * |     GETS     |
+ * ----------------
+*/
 // All recipes
 app.get('/recipes', (req, res) => {
     recipeApi.getRecipes(db, req, res);
@@ -61,11 +66,6 @@ app.get('/recipes/cuisine', (req, res) => {
     recipeApi.getRecipesByCuisine(db, req, res);
 });
 
-// Random recipe
-app.get('/recipes/random', (req, res) => {
-    recipeApi.getRandomRecipe(db, req, res);
-});
-
 
 // Add new Recipe.
 app.post('/recipes/add', (req, res) => {
@@ -75,8 +75,19 @@ app.post('/recipes/add', (req, res) => {
 
 // Recipe by search_name
 // ?list=1+2+3...
-app.get('/recipes/:recipeName?', (req, res) => {
+app.get('/recipes/name/:recipeName?', (req, res) => {
     recipeApi.getRecipeByName(db, req, res);
+});
+
+
+/**
+ * ----------------
+ * |     PUTS     |
+ * ----------------
+*/
+// Random recipe
+app.get('/recipes/random', (req, res) => {
+    recipeApi.getRandomRecipe(db, req, res);
 });
 
 

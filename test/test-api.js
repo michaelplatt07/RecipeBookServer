@@ -17,13 +17,18 @@ var db;
 // I'm currently having to create a self contained MongoClient and create a server instance to be able to run the
 // test and this is really really bad.
 
+
+// Start connection pool for mongodb and also start the server.
 MongoClient.connect(dbUrl + ":" + dbPort + "/" + dbName, {poolSize: 10}, function(err, database) {
     if(err) throw err;
+
     db = database; // Set the db variable for reuse.
 });
 
+
 describe('Recipes with empty database', () => {
     beforeEach((done) => {
+	
 	db.dropCollection('recipes', (err, results) => {
 	    if (err)
 	    {
@@ -76,15 +81,38 @@ describe('Recipes with empty database', () => {
 describe('Recipes with populated database', () => {
     before((done) => {
 	var recipe1 = {"search_name": "mikes_mac_and_cheese", "text_friendly_name": "Mikes Mac and Cheese","ingredients": [{"name": "elbow_noodles","text_friendly_name": "elbow noodles","quantity": 12,"measurement": "oz"},{"name": "cheddar_cheese","text_friendly_name": "cheddar cheese","quantity": 6,"measurement": "oz"},{"name": "gouda_cheese","text_friendly_name": "gouda cheese","quantity": 6,"measurement": "oz"},{"name": "milk","text_friendly_name": "milk","quantity": 2,"measurement": "oz"}],"steps": ["Bring water to a boil","Cook noodels until al dente.","Add the milk and cheeses and melt down.","Stir constantly to ensure even coating and serve."],"course": ["dinner","lunch","side"],"prep_time": {"minutes": 15,"hours": 0},"cook_time":{"minutes": 25,"hours": 1},"cuisine": "italian","submitted_by": "User1","searchable": true};
+	
+	db.dropCollection('recipes', (err, results) => {
+	    if (err)
+	    {
+		throw err;
+	    }
+	    if (results)
+	    {
+		console.log('Dropped the recipes collection.');
+	    }
+	});
+
+	db.createCollection('recipes', (err, results) => {
+	    if (err)
+	    {
+		throw err;
+	    }
+	    if (results)
+	    {
+		console.log('Recreated the recipes collection.');
+	    }
+	});
+
 	db.collection('recipes').insertOne(recipe1, (err, result) => {
 	    done();
 	});
     });
 
-    describe('/recipes/:recipeName?', () => {
+    describe('/recipes/name/:recipeName?', () => {
 	it('Should return the mac and cheese recipe.', (done) => {
 	    chai.request(server)
-		.get('/recipes/mikes_mac_and_cheese')
+		.get('/recipes/name/mikes_mac_and_cheese')
 		.end((err, res) => {
 		    res.should.have.status(200);
 		    res.body['recipes'].length.should.be.eql(1);
@@ -92,6 +120,18 @@ describe('Recipes with populated database', () => {
 		    done();
 		});
 	});
+
+	it('Should return a 400 error because the recipe doesn\'t exist', (done) => {
+	    chai.request(server)
+		.get('/recipes/name/i_dont_exist')
+		.end((err, res) => {
+		    res.should.have.status(400);
+		    res.body['message'].should.be.eql('No recipes found by that name.');
+		    done();
+		    process.exit();
+		});
+	});
+
     });
     
 });

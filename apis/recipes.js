@@ -33,10 +33,10 @@ exports.getRecipeByName = (db, req, res) => {
 	{
 	    res.status(500).send({ message: 'Something went wrong.' });
 	}
-	else if (!result)
+	else if (!result || result.length == 0)
 	{
 	    res.setHeader('Content-Type', 'application/json');
-	    res.status(400).send({ message: 'That recipe does not appear to exist.  Try again.' });
+	    res.status(400).send({ message: 'No recipes found by that name.' });
 	}	    
 	else
 	{
