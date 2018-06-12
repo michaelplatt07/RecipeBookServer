@@ -1,35 +1,23 @@
 process.env.NODE_ENV = 'test';
 
+// Test module imports.
 var chai = require('chai');
 var chaiHttp = require('chai-http');
 var should = chai.should();
 chai.use(chaiHttp);
 
+// Server import and creation
 const server = require('../server');
-const MongoClient = require('mongodb').MongoClient;
-const config = require('config');
-const dbUrl = 'mongodb://' + config.get('dbConfig.host');
-const dbPort = config.get('dbConfig.port');
-const dbName = config.get('dbConfig.name');
-var db;
 
-// TODO(map) : Ask on stack overflow or maybe ask Andrew how I should properly moch a test DB connection here becuase
-// I'm currently having to create a self contained MongoClient and create a server instance to be able to run the
-// test and this is really really bad.
-
-
-// Start connection pool for mongodb and also start the server.
-MongoClient.connect(dbUrl + ":" + dbPort + "/" + dbName, {poolSize: 10}, function(err, database) {
-    if(err) throw err;
-
-    db = database; // Set the db variable for reuse.
-});
+// DB import.
+const db = require('../db');
+db.connect();
 
 
 describe('Recipes with empty database', () => {
     beforeEach((done) => {
 	
-	db.dropCollection('recipes', (err, results) => {
+	db.getDb().dropCollection('recipes', (err, results) => {
 	    if (err)
 	    {
 		throw err;
@@ -39,7 +27,7 @@ describe('Recipes with empty database', () => {
 		console.log('Dropped the recipes collection.');
 	    }
 	});
-	db.createCollection('recipes', (err, results) => {
+	db.getDb().createCollection('recipes', (err, results) => {
 	    if (err)
 	    {
 		throw err;
@@ -82,7 +70,7 @@ describe('Recipes with populated database', () => {
     before((done) => {
 	var recipe1 = {"search_name": "mikes_mac_and_cheese", "text_friendly_name": "Mikes Mac and Cheese","ingredients": [{"name": "elbow_noodles","text_friendly_name": "elbow noodles","quantity": 12,"measurement": "oz"},{"name": "cheddar_cheese","text_friendly_name": "cheddar cheese","quantity": 6,"measurement": "oz"},{"name": "gouda_cheese","text_friendly_name": "gouda cheese","quantity": 6,"measurement": "oz"},{"name": "milk","text_friendly_name": "milk","quantity": 2,"measurement": "oz"}],"steps": ["Bring water to a boil","Cook noodels until al dente.","Add the milk and cheeses and melt down.","Stir constantly to ensure even coating and serve."],"course": ["dinner","lunch","side"],"prep_time": {"minutes": 15,"hours": 0},"cook_time":{"minutes": 25,"hours": 1},"cuisine": "italian","submitted_by": "User1","searchable": true};
 	
-	db.dropCollection('recipes', (err, results) => {
+	db.getDb().dropCollection('recipes', (err, results) => {
 	    if (err)
 	    {
 		throw err;
@@ -93,7 +81,7 @@ describe('Recipes with populated database', () => {
 	    }
 	});
 
-	db.createCollection('recipes', (err, results) => {
+	db.getDb().createCollection('recipes', (err, results) => {
 	    if (err)
 	    {
 		throw err;
@@ -104,7 +92,7 @@ describe('Recipes with populated database', () => {
 	    }
 	});
 
-	db.collection('recipes').insertOne(recipe1, (err, result) => {
+	db.getDb().collection('recipes').insertOne(recipe1, (err, result) => {
 	    done();
 	});
     });

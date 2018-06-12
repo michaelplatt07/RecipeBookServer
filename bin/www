@@ -1,0 +1,32 @@
+// Imports
+const app = require('../server');
+const http = require('http');
+
+// Settings.
+const appDomain = 'localhost';
+const port = 3000;
+
+
+// Set the port
+app.set('port', port);
+
+
+// Create the server.
+const server = http.createServer(app);
+
+
+// Start listening on the specified port.
+server.listen(port);
+server.on('listening', onListening);
+
+
+/*
+ * Utility function for printing out listening info.
+ */
+function onListening() {
+    var addr = server.address();
+    var bind = typeof addre === 'string'
+	? 'pipe ' + addr
+	: 'port ' + addr.port;
+    console.log('Listening on ' + bind);
+};
