@@ -5,7 +5,7 @@ var chai = require('chai');
 var chaiHttp = require('chai-http');
 var should = chai.should();
 chai.use(chaiHttp);
-
+const await = require('await');
 // Server import and creation
 const server = require('../server');
 
@@ -16,27 +16,23 @@ db.connect();
 
 describe('Recipes with empty database', () => {
     beforeEach((done) => {
-	
-	db.getDb().dropCollection('recipes', (err, results) => {
-	    if (err)
-	    {
-		throw err;
+	db.collectionExists('recipes').then((exists) => {
+	    if (exists) {
+		db.getDb().dropCollection('recipes', (err, results) => {
+		    if (err)
+		    {
+			throw err;
+		    }
+		});
 	    }
-	    if (results)
-	    {
-		console.log('Dropped the recipes collection.');
-	    }
-	});
-	db.getDb().createCollection('recipes', (err, results) => {
-	    if (err)
-	    {
-		throw err;
-	    }
-	    if (results)
-	    {
-		console.log('Recreated the recipes collection.');
-	    }
-	    done();
+	    
+	    db.getDb().createCollection('recipes', (err, results) => {
+		if (err)
+		{
+		    throw err;
+		}
+		done();
+	    });
 	});
     });
     
@@ -69,31 +65,27 @@ describe('Recipes with empty database', () => {
 describe('Recipes with populated database', () => {
     before((done) => {
 	var recipe1 = {"search_name": "mikes_mac_and_cheese", "text_friendly_name": "Mikes Mac and Cheese","ingredients": [{"name": "elbow_noodles","text_friendly_name": "elbow noodles","quantity": 12,"measurement": "oz"},{"name": "cheddar_cheese","text_friendly_name": "cheddar cheese","quantity": 6,"measurement": "oz"},{"name": "gouda_cheese","text_friendly_name": "gouda cheese","quantity": 6,"measurement": "oz"},{"name": "milk","text_friendly_name": "milk","quantity": 2,"measurement": "oz"}],"steps": ["Bring water to a boil","Cook noodels until al dente.","Add the milk and cheeses and melt down.","Stir constantly to ensure even coating and serve."],"course": ["dinner","lunch","side"],"prep_time": {"minutes": 15,"hours": 0},"cook_time":{"minutes": 25,"hours": 1},"cuisine": "italian","submitted_by": "User1","searchable": true};
-	
-	db.getDb().dropCollection('recipes', (err, results) => {
-	    if (err)
-	    {
-		throw err;
-	    }
-	    if (results)
-	    {
-		console.log('Dropped the recipes collection.');
-	    }
-	});
 
-	db.getDb().createCollection('recipes', (err, results) => {
-	    if (err)
-	    {
-		throw err;
+	db.collectionExists('recipes').then((exists) => {
+	    if (exists) {
+		db.getDb().dropCollection('recipes', (err, results) => {
+		    if (err)
+		    {
+			throw err;
+		    }
+		});
 	    }
-	    if (results)
-	    {
-		console.log('Recreated the recipes collection.');
-	    }
-	});
+	    
+	    db.getDb().createCollection('recipes', (err, results) => {
+		if (err)
+		{
+		    throw err;
+		}
+	    });
 
-	db.getDb().collection('recipes').insertOne(recipe1, (err, result) => {
-	    done();
+	    db.getDb().collection('recipes').insertOne(recipe1, (err, result) => {
+		done();
+	    });
 	});
     });
 

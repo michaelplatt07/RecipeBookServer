@@ -1,4 +1,5 @@
 // TODO(map) : Make more meaningful error messages here??
+const debug = require('debug')('recipes');
 
 /**
  * ----------------
@@ -9,7 +10,7 @@
  * Returns all recipes that are available.
  */
 exports.getRecipes = (db, req, res) => {
-    console.log("In getRecipes");
+    debug("In getRecipes");
     query = {};
     query.searchable = true;
     db.collection("recipes").find(query).toArray((err, results) => {
@@ -27,7 +28,7 @@ exports.getRecipes = (db, req, res) => {
  * Returns a single recipe by name.
  */
 exports.getRecipeByName = (db, req, res) => {
-    console.log("In getByName");
+    debug("In getByName");
     db.collection("recipes").find({search_name: req.params.recipeName}).toArray((err, result) => {
 	if (err)
 	{
@@ -51,7 +52,7 @@ exports.getRecipeByName = (db, req, res) => {
  * The overall search call for recipes.
  */
 exports.getRecipesBySearchCriteria = (db, req, res) => {
-    console.log("In search");
+    debug("In search");
     var query = {};
     if (req.query.ingredients) { // Check if ingredient parameter was provided.
 	query = {'ingredients.name': {$in: req.query.ingredients.split(' ')}};
@@ -83,7 +84,7 @@ exports.getRecipesBySearchCriteria = (db, req, res) => {
  * Return recipes based on a list of ingredients.
  */
 exports.getRecipesByIngredients = (db, req, res) => {
-    console.log("In byIngredients");
+    debug("In byIngredients");
     var query = {};
     query.searchable = true;
     if (req.query.list) {
@@ -104,7 +105,7 @@ exports.getRecipesByIngredients = (db, req, res) => {
  * Return recipes based on a course.
  */
 exports.getRecipesByCourse = (db, req, res) => {
-    console.log("In byCourse");
+    debug("In byCourse");
     var query = {};
     query.searchable = true;
     if (req.query.list) {
@@ -125,7 +126,7 @@ exports.getRecipesByCourse = (db, req, res) => {
  * Returns recipes based on cuisine they are categorized to.
  */
 exports.getRecipesByCuisine = (db, req, res) => {
-    console.log('In byCuisine');
+    debug('In byCuisine');
     var query = {}
     query.searchable = true;
     if (req.query.list) {
@@ -146,7 +147,7 @@ exports.getRecipesByCuisine = (db, req, res) => {
  * Returns a random recipe from the collection of all recipes.
  */
 exports.getRandomRecipe = (db, req, res) => {
-    console.log("In random");
+    debug("In random");
     var query = {};
     query.searchable = true;
     db.collection("recipes").aggregate({$sample: {size: 1}}, (err, result) => {
@@ -166,7 +167,7 @@ exports.getRandomRecipe = (db, req, res) => {
  * ----------------
 */
 exports.addNewRecipe = (db, req, res) => {
-    console.log('In addNewRecipe.');
+    debug('In addNewRecipe.');
     // TODO(map) : Think about a cleaning method for the data as well.
     recipeData = req.body;
     db.collection('recipes').insertOne(recipeData, (err, result) => {

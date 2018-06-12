@@ -5,7 +5,7 @@
    "main": "index.js",
    "scripts": {
       "test": "NODE_ENV=test mocha test/test-api.js",
-      "start": "NODE_ENV=dev nodejs bin/www"
+      "start": "NODE_ENV=dev DEBUG=recipes nodejs bin/www"
    },
    "repository": {
       "type": "git",
@@ -23,6 +23,7 @@
       "chai": "^4.1.2",
       "chai-http": "^4.0.0",
       "config": "^1.30.0",
+      "debug": "^3.1.0",
       "ejs": "^2.5.9",
       "express": "^4.16.3",
       "hoek": "^5.0.3",
