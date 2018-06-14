@@ -21,16 +21,17 @@ var dbObj = {
  * store the database object in the JSON object.
  */
 exports.connect = () => {
-    if (dbObj.db) return ;
-
+    if (dbObj.db)
+    {
+	console.log('Already connected to the database.');
+    }
+    
     MongoClient.connect(dbUrl + ":" + dbPort + "/" + dbName, {poolSize: 10}, function(err, database) {
 	if(err) throw err;
 
 	dbObj.db = database; // Set the db variable for reuse.
-	
-	return;
-    });
-    
+
+    }); 
 };
 
 
@@ -42,8 +43,13 @@ exports.getDb = () => {
 	return dbObj.db;
     }
     else {
-	console.log("Database not currently connect.");
+	console.log("Database not currently connected.");
     }
+};
+
+
+exports.setDb = (db) => {
+    dbObj.db = db;
 };
 
 

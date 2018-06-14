@@ -34,6 +34,11 @@ app.get('/recipes', (req, res) => {
 
 
 // Search recipe by criteria.
+// ?ingredients=ingredient1+ingredient2+...
+// ?course=course1+course2+...
+// ?submitted_by=authoer
+// ?cuisine=cuisine_1+cuisine_2+...
+
 app.get('/recipes/search', (req, res) => {
     recipeApi.getRecipesBySearchCriteria(db.getDb(), req, res);
 });
@@ -60,14 +65,13 @@ app.get('/recipes/cuisine', (req, res) => {
 });
 
 
-// Add new Recipe.
-app.post('/recipes/add', (req, res) => {
-    recipeApi.addNewRecipe(db.getDb(), req, res);
+// Random recipe
+app.get('/recipes/random', (req, res) => {
+    recipeApi.getRandomRecipe(db.getDb(), req, res);
 });
 
 
 // Recipe by search_name
-// ?list=1+2+3...
 app.get('/recipes/name/:recipeName?', (req, res) => {
     recipeApi.getRecipeByName(db.getDb(), req, res);
 });
@@ -78,9 +82,9 @@ app.get('/recipes/name/:recipeName?', (req, res) => {
  * |     PUTS     |
  * ----------------
 */
-// Random recipe
-app.get('/recipes/random', (req, res) => {
-    recipeApi.getRandomRecipe(db.getDb(), req, res);
+// Add new Recipe.
+app.post('/recipes/add', (req, res) => {
+    recipeApi.addNewRecipe(db.getDb(), req, res);
 });
 
 
