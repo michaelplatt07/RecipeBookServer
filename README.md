@@ -22,10 +22,10 @@ Currently I'm setting this up to connect to a Mongo database.  I chose this data
       	"measurment": "tsp"
       },
       {
-      "name": "milk",
-      "text_friendly_name": "milk",
-      "quantity": 12,
-      "measurment": "oz"
+	"name": "milk",
+      	"text_friendly_name": "milk",
+      	"quantity": 12,
+      	"measurment": "oz"
       }
   ],
   "steps": [
