@@ -11,21 +11,21 @@ Currently I'm setting this up to connect to a Mongo database.  I chose this data
   "ingredients": [
       {
         "name": "sugar",
-    "text_friendly_name": "sugar",
-    "quantity": 8,
-    "measurment": "tbsp"
+	"text_friendly_name": "sugar",
+    	"quantity": 8,
+    	"measurment": "tbsp"
       },
       {
-    "name": "chocolate",
-    "text_friendly_name": "chocolate",
-    "quantity": 2,
-    "measurment": "tsp"
+	"name": "chocolate",
+	"text_friendly_name": "chocolate",
+      	"quantity": 2,
+      	"measurment": "tsp"
       },
       {
-    "name": "milk",
-    "text_friendly_name": "milk",
-    "quantity": 12,
-    "measurment": "oz"
+      "name": "milk",
+      "text_friendly_name": "milk",
+      "quantity": 12,
+      "measurment": "oz"
       }
   ],
   "steps": [
@@ -45,7 +45,9 @@ Currently I'm setting this up to connect to a Mongo database.  I chose this data
     "minutes": 40,
     "hours": 2
   },
-  "cuisine": "american",
+  "cuisine": [
+       "american"
+  ],
   "submitted_by": "User1",
   "searchable": true
 }
@@ -72,4 +74,4 @@ This is the front end/request handling part of the application.  The `express.js
 
 
 ## Testing
-To run the unit tests for this application, navigate to the root directory.  From there, you can run the command `npm test PATH/TO/TEST/FILE`.
+To run the unit tests for this application, navigate to the root directory.  From there, you can run the command `npm test` which will kickstart an entire suite of tests that cover the entire application.
