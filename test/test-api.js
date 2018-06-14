@@ -49,7 +49,7 @@ describe('Recipes with empty database', () => {
 
     describe('/recipes/add', () => {
 	it('Should add a recipe to the database', (done) => {
-	    var recipe = {"C": "D"};
+	    var recipe = {"'C": "D"};
 	    chai.request(server)
 		.post('/recipes/add')
 		.send(recipe)
@@ -61,6 +61,7 @@ describe('Recipes with empty database', () => {
     });
 
 });
+
 
 describe('Recipes with populated database', () => {
     before((done) => {
@@ -76,13 +77,6 @@ describe('Recipes with populated database', () => {
 		});
 	    }
 	    
-	    db.getDb().createCollection('recipes', (err, results) => {
-		if (err)
-		{
-		    throw err;
-		}
-	    });
-
 	    db.getDb().collection('recipes').insertOne(recipe1, (err, result) => {
 		done();
 	    });
@@ -108,10 +102,12 @@ describe('Recipes with populated database', () => {
 		    res.should.have.status(400);
 		    res.body['message'].should.be.eql('No recipes found by that name.');
 		    done();
+		    db.close();
 		    process.exit();
 		});
 	});
 
     });
-    
+
 });
+
