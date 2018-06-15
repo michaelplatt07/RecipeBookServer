@@ -448,3 +448,130 @@ describe('All endpoints with sample recipes in the database', () => {
 });
 
 // TODO(map) : Write my test case for adding a new recipe.
+describe('Various tests for PUTting data in the databse', () => {
+    beforeEach((done) => {
+	db.collectionExists('recipes').then((exists) => {
+	    if (exists) {
+		db.getDb().dropCollection('recipes', (err, results) => {
+		    if (err)
+		    {
+			throw err;
+		    }
+		});
+	    }
+	    
+	    db.getDb().createCollection('recipes', (err, results) => {
+		if (err)
+		{
+		    throw err;
+		}
+		done();
+	    });
+	});
+    });
+    
+    it('Should fail if there is no name sent to the server', (done) => {
+	chai.request(server)
+	    .post('/recipes/add')
+	    .send({})
+	    .end((err, res) => {
+		res.should.have.status(422);
+		res.body['msg']['noNameError'].should.be.equal('Please include a name in your recipe.');
+		done();
+	    });
+    });
+
+    it('Should fail if there are no ingredients listed', (done) => {
+	chai.request(server)
+	    .post('/recipes/add')
+	    .send({text_friendly_name: 'Sample Recipe'})
+	    .end((err, res) => {
+		res.should.have.status(422);
+		res.body['msg']['noIngredientsError'].should.be.equal('Please include a list of ingredients in your recipe.');
+		done();
+	    });
+    });
+
+    it('Should fail if the ingredients don\'t have a name', (done) => {
+	chai.request(server)
+	    .post('/recipes/add')
+	    .send({
+		text_friendly_name: 'Sample Recipe',
+		ingredients: [
+		    {
+			quantity: 8,
+			measurement: 'tbsp'
+		    }
+		]
+	    })
+	    .end((err, res) => {
+		res.should.have.status(422);
+		res.body['msg']['noIngredientNameError'].should.be.equal('One ore more of the ingredients did not have a name given.');
+		done();
+	    });
+    });
+
+    it('Should fail if the ingredients don\'t have a quantity', (done) => {
+	chai.request(server)
+	    .post('/recipes/add')
+	    .send({
+		text_friendly_name: 'Sample Recipe',
+		ingredients: [
+		    {
+			text_friendly_name: 'Ingredient 1',
+			measurement: 'tbsp'
+		    }
+		]
+	    })
+	    .end((err, res) => {
+		res.should.have.status(422);
+		res.body['msg']['noIngredientQuantityError'].should.be.equal('One or more of the ingredients did not have a quantity given.');
+		done();
+	    });
+    });
+
+    it('Should fail if the ingredients don\'t have a measurement', (done) => {
+	chai.request(server)
+	    .post('/recipes/add')
+	    .send({
+		text_friendly_name: 'Sample Recipe',
+		ingredients: [
+		    {
+			text_friendly_name: 'Ingredient 1',
+			quantity: 8
+		    }
+		]
+	    })
+	    .end((err, res) => {
+		res.should.have.status(422);
+		res.body['msg']['noIngredientMeasurementError'].should.be.equal('One or more of the ingredients did not have a measurement given.');
+		done();
+	    });
+    });
+
+    it('Should fail if the there are no steps', (done) => {
+	chai.request(server)
+	    .post('/recipes/add')
+	    .send({
+		text_friendly_name: 'Sample Recipe',
+		ingredients: [
+		    {
+			text_friendly_name: 'Ingredient 1',
+			quantity: 8,
+			measurement: 'tbsp'
+		    }
+		]
+	    })
+	    .end((err, res) => {
+		res.should.have.status(422);
+		res.body['msg']['noStepsError'].should.be.equal('Please include steps in your recipe.');
+		done();
+	    });
+    });
+    // TODO(map) : For tomorrow, I need to continue writing tests.  Pick up with validating there is the
+    // required step data.
+
+    
+    // TODO(map) : Don't forget to do tests about ensuring that searchable values become available.
+    
+});

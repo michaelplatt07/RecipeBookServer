@@ -1,4 +1,3 @@
-// TODO(map) : Make more meaningful error messages here??
 const utils = require('../utils/utility-functions');
 const debug = require('debug')('recipes');
 
@@ -282,17 +281,28 @@ exports.getRandomRecipe = (db, req, res) => {
  * ----------------
  * |     PUTS     |
  * ----------------
-*/
+ */
 exports.addNewRecipe = (db, req, res) => {
     debug('In addNewRecipe.');
-    // TODO(map) : Think about a cleaning method for the data as well.
     recipeData = req.body;
-    db.collection('recipes').insertOne(recipeData, (err, result) => {
-	if (err)
-	{
-	    res.status(500).send({ message: 'Failed to insert data.' });
-	}
-	res.setHeader('Content-Type', 'application/json');
-	res.status(200).send({ data: recipeData, message: 'Data successfully inserted' });
-    });
+
+    var errMsgDict = utils.checkRecipePostData(recipeData);
+
+    if (Object.keys(errMsgDict).length > 0)
+    {
+	res.status(422).send({msg: errMsgDict});
+    }
+    else
+    {
+	// TODO(map) : This will get uncommented when I write the test cases for it.
+	// recipeData['search_name'] = utils.convertTextToSearch(recipeData['text_friendly_name']);
+	db.collection('recipes').insertOne(recipeData, (err, result) => {
+	    if (err)
+	    {
+		res.status(500).send({ message: 'Failed to insert data.' });
+	    }
+	    res.setHeader('Content-Type', 'application/json');
+	    res.status(200).send({ data: recipeData, message: 'Data successfully inserted' });
+	});
+    }
 };

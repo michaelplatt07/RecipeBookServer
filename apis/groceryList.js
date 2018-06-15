@@ -1,4 +1,3 @@
-// TODO(map) : Make more meaningful error messages here??
 const ObjectID = require('mongodb').ObjectID;
 
 /**
