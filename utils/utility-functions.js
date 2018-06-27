@@ -22,8 +22,8 @@ exports.valueInArray = (value, anArray) => {
 /**
 * Converts a text friendly name to the searchable name
 */
-exports.convertTextToSearch = (textFriendlyName) => {
-    return textFriendlyName.replace(/ /g, '_').toLowerCase();
+exports.convertTextToSearch = (textFriendlyString) => {
+    return textFriendlyString.replace(/ /g, '_').toLowerCase();
 };
 
 
@@ -31,6 +31,8 @@ exports.convertTextToSearch = (textFriendlyName) => {
  * Checks the data and ensures the correc information is available and no constraints are violated.  If there is
  * a violation in the data we build up an error report to return.
  */
+// TODO(map) : Make this error checking more robust to include checks for valid values on certain fields such as
+// making sure course is something like 'dinner' and not 'foo'.
 exports.checkRecipePostData = (jsonData) => {
     var errMsgDict = {};
 
@@ -71,9 +73,26 @@ exports.checkRecipePostData = (jsonData) => {
     {
 	errMsgDict['noStepsError'] = 'Please include steps in your recipe.';
     }
-    else
+
+    if(!jsonData['course'] || jsonData['course'].length == 0)
     {
+	errMsgDict['noCoursesError'] = 'Please include at least one course this recipe belongs to.';
     }
 
+    if (!jsonData['prep_time'])
+    {
+	errMsgDict['noPrepTimeError'] = 'Please include a prep time.';
+    }
+
+    if (!jsonData['cook_time'])
+    {
+	errMsgDict['noCookTimeError'] = 'Please include a cook time.';
+    }
+
+    if (!jsonData['cuisine'] || jsonData['cuisine'].length == 0)
+    {
+	errMsgDict['noCuisineError'] = 'Please include one or more cuisines this dish is a part of.';
+    }
+    
     return errMsgDict;
 };

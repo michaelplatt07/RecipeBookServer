@@ -53,6 +53,15 @@ Currently I'm setting this up to connect to a Mongo database.  I chose this data
 }
 ```
 
+The format for a grocery list being added should be as follows:
+```
+{
+	"user": "test.user",
+	"recipes": [
+	]
+}
+```
+
 The JSON format provides a nice and easy way to query the data needed and packaged up a single recipe into a single JSON object.
 
 ## Node API

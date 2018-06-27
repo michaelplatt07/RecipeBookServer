@@ -19,6 +19,7 @@
    "homepage": "https://github.com/michaelplatt07/RecipeBook#readme",
    "dependencies": {
       "await": "^0.2.6",
+      "bluebird": "^3.5.1",
       "body-parser": "^1.18.2",
       "chai": "^4.1.2",
       "chai-http": "^4.0.0",

@@ -9,11 +9,13 @@ chai.use(chaiHttp);
 // Server import and creation
 const server = require('../server');
 
+const ObjectID = require('mongodb').ObjectID;
+
 // DB import.
 const db = require('../db');
 db.connect();
 
-describe('All endpoints with an empty database', () => {
+describe('All recipe endpoints with an empty database', () => {
     beforeEach((done) => {
 	db.collectionExists('recipes').then((exists) => {
 	    if (exists) {
@@ -108,53 +110,10 @@ describe('All endpoints with an empty database', () => {
 });
 
 
-describe('All endpoints with sample recipes in the database', () => {
+describe('All recipe endpoints with sample recipes in the database', () => {
     before((done) => {
 	var recipe1 = {"search_name": "mikes_mac_and_cheese", "text_friendly_name": "Mikes Mac and Cheese","ingredients": [{"name": "elbow_noodles","text_friendly_name": "elbow noodles","quantity": 12,"measurement": "oz"},{"name": "cheddar_cheese","text_friendly_name": "cheddar cheese","quantity": 6,"measurement": "oz"},{"name": "gouda_cheese","text_friendly_name": "gouda cheese","quantity": 6,"measurement": "oz"},{"name": "milk","text_friendly_name": "milk","quantity": 2,"measurement": "oz"}],"steps": ["Bring water to a boil","Cook noodels until al dente.","Add the milk and cheeses and melt down.","Stir constantly to ensure even coating and serve."],"course": ["dinner","lunch","side"],"prep_time": {"minutes": 15,"hours": 0},"cook_time":{"minutes": 25,"hours": 1},"cuisine": "italian","submitted_by": "User1","searchable": true};
-	var recipe2 = {
-  "search_name": "ice_cream", 
-  "text_friendly_name": "Ice Cream",
-  "ingredients": [
-      {
-        "name": "sugar",
-    "text_friendly_name": "sugar",
-    "quantity": 8,
-    "measurment": "tbsp"
-      },
-      {
-    "name": "vanilla",
-    "text_friendly_name": "vanilla",
-    "quantity": 2,
-    "measurment": "tsp"
-      },
-      {
-    "name": "milk",
-    "text_friendly_name": "milk",
-    "quantity": 12,
-    "measurment": "oz"
-      }
-  ],
-  "steps": [
-      "Mix everything together.",
-      "Tumble until solid."
-  ],
-  "course": [
-      "dessert"
-  ],
-  "prep_time":
-  {
-    "minutes": 5,
-    "hours": 0
-  },
-  "cook_time":
-  {
-    "minutes": 40,
-    "hours": 2
-  },
-  "cuisine": "american",
-  "submitted_by": "User1",
-  "searchable": true
-	};
+	var recipe2 = {"search_name": "ice_cream", "text_friendly_name": "Ice Cream", "ingredients": [{"name": "sugar", "text_friendly_name": "sugar", "quantity": 8, "measurment": "tbsp"}, {"name": "vanilla", "text_friendly_name": "vanilla", "quantity": 2, "measurment": "tsp"}, {"name": "milk", "text_friendly_name": "milk", "quantity": 12, "measurment": "oz"}], "steps": ["Mix everything together.", "Tumble until solid."], "course": ["dessert"], "prep_time": {"minutes": 5, "hours": 0}, "cook_time": {"minutes": 40, "hours": 2}, "cuisine": "american", "submitted_by": "User1", "searchable": true};
 
 	var recipes = [recipe1, recipe2];
 	
@@ -447,9 +406,8 @@ describe('All endpoints with sample recipes in the database', () => {
     
 });
 
-// TODO(map) : Write my test case for adding a new recipe.
-describe('Various tests for PUTting data in the databse', () => {
-    beforeEach((done) => {
+describe('Various tests for PUTting recipe data in the databse', () => {
+    before((done) => {
 	db.collectionExists('recipes').then((exists) => {
 	    if (exists) {
 		db.getDb().dropCollection('recipes', (err, results) => {
@@ -568,10 +526,320 @@ describe('Various tests for PUTting data in the databse', () => {
 		done();
 	    });
     });
-    // TODO(map) : For tomorrow, I need to continue writing tests.  Pick up with validating there is the
-    // required step data.
+    
+    it('Should fail if the there are no courses listed', (done) => {
+	chai.request(server)
+	    .post('/recipes/add')
+	    .send({
+		text_friendly_name: 'Sample Recipe',
+		ingredients: [
+		    {
+			text_friendly_name: 'Ingredient 1',
+			quantity: 8,
+			measurement: 'tbsp'
+		    }
+		],
+		steps: [
+		    "Cut stuff up.",
+		    "Mix stuff together.",
+		    "Cook it and enjoy"
+		]
+	    })
+	    .end((err, res) => {
+		res.should.have.status(422);
+		res.body['msg']['noCoursesError'].should.be.equal('Please include at least one course this recipe belongs to.');
+		done();
+	    });
+    });
 
+    it('Should fail if the there is no prep time', (done) => {
+	chai.request(server)
+	    .post('/recipes/add')
+	    .send({
+		text_friendly_name: 'Sample Recipe',
+		ingredients: [
+		    {
+			text_friendly_name: 'Ingredient 1',
+			quantity: 8,
+			measurement: 'tbsp'
+		    }
+		],
+		steps: [
+		    "Cut stuff up.",
+		    "Mix stuff together.",
+		    "Cook it and enjoy"
+		],
+		course: [
+		    "brinner"
+		]
+	    })
+	    .end((err, res) => {
+		res.should.have.status(422);
+		res.body['msg']['noPrepTimeError'].should.be.equal('Please include a prep time.');
+		done();
+	    });
+    });
+
+    it('Should fail if the there is no cook time', (done) => {
+	chai.request(server)
+	    .post('/recipes/add')
+	    .send({
+		text_friendly_name: 'Sample Recipe',
+		ingredients: [
+		    {
+			text_friendly_name: 'Ingredient 1',
+			quantity: 8,
+			measurement: 'tbsp'
+		    }
+		],
+		steps: [
+		    "Cut stuff up.",
+		    "Mix stuff together.",
+		    "Cook it and enjoy"
+		],
+		course: [
+		    "brinner"
+		],
+		prep_time: {
+		    "minutes": 5,
+		    "hours": 0
+		}
+	    })
+	    .end((err, res) => {
+		res.should.have.status(422);
+		res.body['msg']['noCookTimeError'].should.be.equal('Please include a cook time.');
+		done();
+	    });
+    });
+
+    it('Should fail if the there is no cuisine', (done) => {
+	chai.request(server)
+	    .post('/recipes/add')
+	    .send({
+		text_friendly_name: 'Sample Recipe',
+		ingredients: [
+		    {
+			text_friendly_name: 'Ingredient 1',
+			quantity: 8,
+			measurement: 'tbsp'
+		    }
+		],
+		steps: [
+		    "Cut stuff up.",
+		    "Mix stuff together.",
+		    "Cook it and enjoy"
+		],
+		course: [
+		    "brinner"
+		],
+		prep_time: {
+		    "minutes": 5,
+		    "hours": 0
+		},
+		cook_time: {
+		    "minutes": 10,
+		    "hours": 1
+		}
+	    })
+	    .end((err, res) => {
+		res.should.have.status(422);
+		res.body['msg']['noCuisineError'].should.be.equal('Please include one or more cuisines this dish is a part of.');
+		done();
+	    });
+    });
     
-    // TODO(map) : Don't forget to do tests about ensuring that searchable values become available.
+    // TODO(map) : Don''t forget to do tests about ensuring that searchable values become available.    
+});
+
+describe('Testing the grocery list GET API', () => {
+    before((done) => {
+	var recipe1 = {"_id": new ObjectID("5b2abac30cd38878b65a3c21"), "search_name": "mikes_mac_and_cheese", "text_friendly_name": "Mikes Mac and Cheese","ingredients": [{"name": "elbow_noodles","text_friendly_name": "elbow noodles","quantity": 12,"measurement": "oz"},{"name": "cheddar_cheese","text_friendly_name": "cheddar cheese","quantity": 6,"measurement": "oz"},{"name": "gouda_cheese","text_friendly_name": "gouda cheese","quantity": 6,"measurement": "oz"},{"name": "milk","text_friendly_name": "milk","quantity": 2,"measurement": "oz"}],"steps": ["Bring water to a boil","Cook noodels until al dente.","Add the milk and cheeses and melt down.","Stir constantly to ensure even coating and serve."],"course": ["dinner","lunch","side"],"prep_time": {"minutes": 15,"hours": 0},"cook_time":{"minutes": 25,"hours": 1},"cuisine": "italian","submitted_by": "User1","searchable": true};
+	var recipe2 = {"_id": new ObjectID("5b2abac30cd38878b65a4b03"), "search_name": "ice_cream", "text_friendly_name": "Ice Cream", "ingredients": [{"name": "sugar", "text_friendly_name": "sugar", "quantity": 8, "measurment": "tbsp"}, {"name": "vanilla", "text_friendly_name": "vanilla", "quantity": 2, "measurment": "tsp"}, {"name": "milk", "text_friendly_name": "milk", "quantity": 12, "measurment": "oz"}], "steps": ["Mix everything together.", "Tumble until solid."], "course": ["dessert"], "prep_time": {"minutes": 5, "hours": 0}, "cook_time": {"minutes": 40, "hours": 2}, "cuisine": "american", "submitted_by": "User1", "searchable": true};
+
+	var recipes = [recipe1, recipe2];
+
+	var groceryList1 = {
+	    user: 'test.user',
+	    'recipes': [
+		'5b2abac30cd38878b65a3c21', '5b2abac30cd38878b65a4b03'
+	    ]
+	};
+
+	db.collectionExists('recipes').then((exists) => {
+	    if (exists) {
+		db.getDb().dropCollection('recipes', (err, results) => {
+		    if (err)
+		    {
+			throw err;
+		    }
+		});
+	    }
+
+	    db.collectionExists('grocery_lists').then((exists) => {
+		if (exists) {
+		    db.getDb().dropCollection('grocery_lists', (err, results) => {
+			if (err)
+			{
+			    throw err;
+			}
+		    });
+		}
+		
+		db.getDb().collection('recipes').insertMany(recipes, (err, result) => {
+		    db.getDb().collection('grocery_lists').insertOne(groceryList1, (err, results) => {
+			done();
+		    });
+		});
+	    });
+	});
+
+    });
+
+    it('Should fail to return a grocery list because there is no userId', (done) => {
+	chai.request(server)
+	    .get('/groceryList')
+	    .set('userId', '')
+	    .end((err, res) => {
+		res.should.have.status(401);
+		res.body['msg'].should.be.equal('There was no userId supplied.');
+		done()
+	    });
+    });
     
+    it('Should return the recipes list with the correct IDs as well as the full grocery list', (done) => {
+	chai.request(server)
+	    .get('/groceryList')
+	    .set('userId', 'test.user')
+	    .end((err, res) => {
+		res.should.have.status(200);
+		res.body['recipeList'].length.should.be.equal(2);
+		res.body['recipeList'][0]['_id'].should.be.equal('5b2abac30cd38878b65a3c21');
+		res.body['recipeList'][1]['_id'].should.be.equal('5b2abac30cd38878b65a4b03');
+		done();
+	    });
+    });
+
+    /*
+    it('Should return the grocery list built up with the correct ingredients labeled as such', (done) => {
+	chai.request(server)
+	    .get('/groceryList')
+	    .set('userId', 'test.user')
+	    .end((err, res) => {
+		res.should.have.status(200);
+		// TODO(map) : This needs to be finished up.
+		done();
+	    });
+    });*/
+    
+});
+
+
+describe('Testing the grocery list PUT API', () => {
+    before((done) => {
+	db.collectionExists('grocery_lists').then((exists) => {
+	    if (exists) {
+		db.getDb().dropCollection('grocery_lists', (err, results) => {
+		    if (err)
+		    {
+			throw err;
+		    }
+		    done();
+		});
+	    }
+	    
+	});	
+    });
+
+    it('Should insert blank grocery list', (done) => {
+	chai.request(server)
+	    .post('/groceryList/add')
+	    .send({
+		"user": "test.user",
+		"recipes": [
+		]
+	    })
+	    .end((err, res) => {
+		res.should.have.status(200);
+		done();
+	    });
+    });
+
+    it('Should return an error stating there is no recipeId', (done) => {
+	chai.request(server)
+	    .post('/groceryList/addRecipe')
+	    .send({
+		"user": "test.user"
+	    })
+	    .end((err, res) => {
+		res.should.have.status(422);
+		res.body['msg'].should.be.equal("There was no recipeId supplied.");
+		done();
+	    });
+    });
+
+    it('Should return an error stating there is no userId', (done) => {
+	chai.request(server)
+	    .post('/groceryList/addRecipe')
+	    .send({
+		"recipeId": "5b2abac30cd38878b65a3c21"
+	    })
+	    .end((err, res) => {
+		res.should.have.status(422);
+		res.body['msg'].should.be.equal("There was no userId supplied.");
+		done();
+	    });
+    });
+    
+    it('Should add a recipe to grocery list', (done) => {
+	chai.request(server)
+	    .post('/groceryList/addRecipe')
+	    .send({
+		"recipeId": "5b2abac30cd38878b65a3c21",
+		"user": "test.user"
+	    })
+	    .end((err, res) => {
+		res.should.have.status(200);
+		done();
+	    });
+    });
+    
+    it('Should fail to remove the recipe because there is no recipeId supplied', (done) => {
+	chai.request(server)
+	    .post('/groceryList/removeRecipe')
+	    .send({
+		"user": "test.user"
+	    })
+	    .end((err, res) => {
+		res.should.have.status(422);
+		res.body['msg'].should.be.equal('There was no recipeId supplied.');
+		done();
+	    });
+    });
+
+    it('Should fail to remove the recipe because there is no userId supplied', (done) => {
+	chai.request(server)
+	    .post('/groceryList/removeRecipe')
+	    .send({
+		"recipeId": "5b2abac30cd38878b65a3c21"
+	    })
+	    .end((err, res) => {
+		res.should.have.status(422);
+		res.body['msg'].should.be.equal("There was no userId supplied.");
+		done();
+	    });
+    });
+
+        it('Should successfully remove the recipe', (done) => {
+	chai.request(server)
+	    .post('/groceryList/removeRecipe')
+	    .send({
+		"recipeId": "5b2abac30cd38878b65a3c21",
+		"user": "test.user"
+	    })
+	    .end((err, res) => {
+		res.should.have.status(200);
+		done();
+	    });
+    });
+
 });
