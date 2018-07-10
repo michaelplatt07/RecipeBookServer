@@ -1,7 +1,1 @@
-// TODO(map) : Make this a constant that is exported so we know eactly what the standards are that we are going to
-// to be putting the ingredients into.
-
-/*
- * Some things to think about are:
- * 1. If there are multiple standards how do I want to map them?  As a many to one?
- */
+// TODO(map) : This will eventually allow for people to include their own custom standards about what they want for their instance of the application.  These overrides will be absolute and will prevent the application from updating the ingredients table itself.
