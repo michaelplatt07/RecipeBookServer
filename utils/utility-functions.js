@@ -1,8 +1,8 @@
 /**
- * Takes a value and an array of mongo db entries and check to see if the ID exists.  This is just a small util
+ * Takes a value and an array of mongo db entries and checks to see if the ID exists.  This is just a small util
  * function that I felt like pulling out and could probably be optimized later.
  */
-exports.valueInArray = (value, anArray) => {
+exports.mongoIdInArray = (value, anArray) => {
     if (anArray.length == 0)
     {
 	return false;
@@ -16,6 +16,53 @@ exports.valueInArray = (value, anArray) => {
 	}   
     }
     return false;
+};
+
+
+/**
+ * Method to check if a measurment exists in the list of measurements that are returned for a mongo query.  This is
+ * used in the addIngredients method and might be re-used elsewhere.
+ */
+exports.measurementInDb = (aMeasurement, measurementList) => {
+    var duplicate = false;
+    for (let i = 0; i < measurementList['measurement_ratios'].length; ++i)
+    {
+	// Searching for duplicates and if so update the information.
+	if (measurementList['measurement_ratios'][i]['measurement'] == aMeasurement)
+	{
+	    duplicate = true;
+	    measurementList['measurement_ratios'][i]['count'] += 1;
+	    measurementList['total_measurements_added'] += 1;
+	    break;
+	}
+    }
+
+    if (!duplicate) // This is a new measurement and has to be added to the list.
+    {
+	var aRatio = { measurement: aMeasurement, percentage: 0, count: 1 };
+	measurementList['measurement_ratios'].push(aRatio);
+	measurementList['total_measurements_added'] += 1;
+    }
+
+    // Recaclulate percentages and update most used.
+    for (let i = 0; i < measurementList['measurement_ratios'].length; ++i) 
+    {
+	if (i > 0)
+	{
+	    if (measurementList['measurement_ratios'][i -1]['percentage'] < measurementList['measurement_ratios'][i]['percentage']) // The previous measurement has a higher percentage of being used.
+	    {
+		measurementList['most_used_measurement'] = measurementList['measurement_ratios'][i]['measurement']
+	    }
+	    else
+	    { // The later measurement has a higher percentage of being used.
+		measurementList['most_used_measurement'] = measurementList['measurement_ratios'][i -1]['measurement']
+	    }
+	}
+
+	measurementList['measurement_ratios'][i]['percentage'] = measurementList['measurement_ratios'][i]['count'] / measurementList['total_measurements_added'];
+    } 
+       
+    return measurementList;
 };
 
 
@@ -93,6 +140,58 @@ exports.checkRecipePostData = (jsonData) => {
     {
 	errMsgDict['noCuisineError'] = 'Please include one or more cuisines this dish is a part of.';
     }
+
+    if (!jsonData['searchable'])
+    {
+	errMsgDict['noSearchableError'] = 'Please select if you want the recipe to be private or public.';
+    }
     
     return errMsgDict;
+};
+
+
+/**
+ * This method does a number of things.  It checks to see if the ingredient already exists in the collection.  In
+ * the event that it doesn't, we add the ingredient.  If it does, we get the units, we add +1 to the unit counter,
+ * and update the most used unit if needed.
+ *
+ * This will ensure the most commonly used unit is what we build the grocery list up with.
+ */
+exports.insertIngredients = (db, ingredientList) => {
+    ingredientList.forEach((ingredient) => {
+	var query = {};
+	query.name = this.convertTextToSearch(ingredient['text_friendly_name']);
+	db.collection('ingredients').findOne(query, (err, results) => {
+	    if (err)
+	    {
+		throw err;
+	    }
+	    else if (results != null) // The ingredient was seen before.
+	    {
+		results = this.measurementInDb(ingredient['measurement'], results);
+		db.collection('ingredients').updateOne({_id: results['_id']}, results, (err, res) => {
+		    if (err)
+		    {
+			res.status(500).send({ message: 'Failed to update data.' });			
+		    }
+		});
+	    }
+	    else // New ingredient
+	    {
+		ingredient['name'] = this.convertTextToSearch(ingredient['text_friendly_name']);
+		ingredient['most_used_measurement'] = ingredient['measurement'];
+		ingredient['total_measurements_added'] = 1;
+		ingredient['measurement_ratios'] = [{measurement: ingredient['measurement'], percentage: 1, count: 1}];
+		delete ingredient['quantity'];
+		delete ingredient['measurement'];
+		db.collection('ingredients').insertOne(ingredient, (err, result) => {
+		    if (err)
+		    {
+			res.status(500).send({ message: 'Failed to insert data.' });
+		    }
+		});
+	    }
+	});
+    });
+    
 };

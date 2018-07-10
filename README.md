@@ -6,7 +6,7 @@ Currently I'm setting this up to connect to a Mongo database.  I chose this data
 
 ```
 {
-  "search_name": "ice_cream", 
+  "search_name": "ice_cream", // This is created by the application and wouldn't be passed.
   "text_friendly_name": "Ice Cream",
   "ingredients": [
       {
@@ -48,39 +48,52 @@ Currently I'm setting this up to connect to a Mongo database.  I chose this data
   "cuisine": [
        "american"
   ],
-  "submitted_by": "User1",
+  "submitted_by": "User1", // This would be grabbed from the headers.
   "searchable": true
 }
 ```
 
-The format for a grocery list being added should be as follows:
+Users can build grocery lists by selected a variety of recipes and opting to build their shopping list.  A grocery list would look something like this:
 ```
 {
 	"user": "test.user",
 	"recipes": [
+		   "id 1",
+		   "id 2",
+		   "id 3"
 	]
 }
 ```
 
-The JSON format provides a nice and easy way to query the data needed and packaged up a single recipe into a single JSON object.
-
-## Node API
-This is the part of the application that has all the queries to the database.  The queries will have the standard functionality such as getting a random recipe, getting a list of recipes, getting a single recipe, storing recipes, updating, etc.  All of the CRUD components will live here.
-
-This is also designed to be front end agnostic, meaning that any front end should be able to link into the application assuming it can make calls to NodeJS applications.  It shouldn't matter if Angular or React or any other framework is being used.  Doing so will allow for modularity and reuse of the API application in the future.
-
-It is started by running the command `node server.js` inside the appropriate directory.
-
-## Node UI
-This is the front end/request handling part of the application.  The `express.js` file handles all incoming requests and makes the appropriate call to the `server.js` in the API application.  All routing is handled here as well.  This is built currently using Express coupled with `.ejs` files.  The `ejs` files can easily be replaced with Angular files or React, though Angular will probably be used in this particular application.
+In an attempt to standardize how the grocery list will display relevant units of information for ingredients, the application updates its ingredients collection every time a new recipe is added.  It parses out each ingredient, gets the measurement, and runs through a series of calculations to determine what the most commonly used measurment for an ingredient would be (ie. cups for milk, tsp for pepper, etc.).  A sample of an entry in the ingredients collection would look like so:
+```
+{
+	"text_friendly_name" : "Ingredient 2",
+	"name" : "ingredient_2",
+	"most_used_measurement" : "c",
+	"total_measurements_added" : 3,
+	"measurement_ratios" : [
+		{
+			"measurement" : "oz",
+			"percentage" : "0.33",
+			"count" : 1
+		},
+		{
+			"measurement" : "c",
+			"percentage" : "0.67",
+			"count" : 2
+		}
+	]
+}
+```
+<b>NOTE:</b> This collection should never be modified by the admin of the application as the values are updated automatically by the application.  In the even an admin does want to update an entry, they can do so to modify percentages, counts, etc. to get the desired results.
 
 ## Installing
 1. Check out the application via GIT.
 2. Get the MongoDB from the following URL: https://www.mongodb.com/cloud/atlas?jmp=nav
-3. Make sure Mongo is installed and up and running.  This can be done through the following commands:
-   TODO(map) : Finish updating the install instructions.
+3. Make sure Mongo is installed and up and running.
 4. Install the modules using `npm install` on the root directory of this project.
-
+5. Once the modules have been installed the application should be all set to run.  Navigate to the directory of the application and run via the command `npm start`.
 
 ## Testing
 To run the unit tests for this application, navigate to the root directory.  From there, you can run the command `npm test` which will kickstart an entire suite of tests that cover the entire application.

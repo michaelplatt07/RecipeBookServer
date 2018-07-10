@@ -145,7 +145,7 @@ exports.getRecipesBySearchCriteria = (db, req, res) => {
 	{
 	    for(let j = 0; j < values[i].length; ++j)
 	    {
-		if (!utils.valueInArray(values[i][j]['_id'], recipeList))
+		if (!utils.mongoIdInArray(values[i][j]['_id'], recipeList))
 		{
 		    recipeList.push(values[i][j]);
 		}
@@ -294,8 +294,8 @@ exports.addNewRecipe = (db, req, res) => {
     }
     else
     {
-	// TODO(map) : This will get uncommented when I write the test cases for it.
-	// recipeData['search_name'] = utils.convertTextToSearch(recipeData['text_friendly_name']);
+	recipeData['search_name'] = utils.convertTextToSearch(recipeData['text_friendly_name']);
+	utils.insertIngredients(db, recipeData['ingredients']);
 	db.collection('recipes').insertOne(recipeData, (err, result) => {
 	    if (err)
 	    {

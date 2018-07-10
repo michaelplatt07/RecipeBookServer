@@ -21,7 +21,7 @@ exports.getGroceryListByUser = (db, req, res) => {
 	db.collection('grocery_lists').findOne(query, (err, result) => {
 	    if (err)
 	    {
-		res.status(500).send({ message: 'Failed to insert data' });
+		res.status(500).send({ message: 'Failed to retrieve data' });
 	    }
 
 	    recipePromiseList = []
@@ -32,12 +32,27 @@ exports.getGroceryListByUser = (db, req, res) => {
 	    
 	    Promise.all(recipePromiseList).then((values) => {
 		recipeList = []
-		groceryList = [];
+		groceryList = {};
 		values.forEach(value => {
 		    recipeList.push(value);
 		    value.ingredients.forEach(ingredient => {
-			// TODO(map) : Flush out logic here.  How do I want to handle combining ingredients to make my grocery list?
-			groceryList.push(ingredient);
+			// Ingredient is in shopping list.
+			if (ingredient['name'] in groceryList) {
+			    // Measurements are the same.
+			    /*
+			     * When a user inserts a recipe, check if the ingredient exists in the ingredient collection
+			     * If no -> simply add along with type of measurement
+			     * If yes -> calculate percentage of people using measurement and store info.
+			     */
+			    if (ingredient['measurement'] == groceryList[ingredient['measurement']])
+			    {
+				groceryList[ingredient['name']]['quantity'] += ingredient['quantity'];
+			    }
+			}
+			// Ingredient isn't already in shopping list.
+			else {
+			    groceryList[ingredient['name']] = ingredient;
+			}
 		    });
 		});
 
@@ -118,9 +133,9 @@ exports.removeRecipeFromGroceryList = (db, req, res) => {
 	db.collection('grocery_lists').update(query, { $pull: { recipes: recipeId }  },  (err, result) => {
 	    if (err)
 	    {
-		res.status(500).send({ message: 'Failed to insert data' });
+		res.status(500).send({ message: 'Failed to remove the recipe from the grocery list.' });
 	    }
-	    res.status(200).send({ message: 'Data successfully inserted' });
+	    res.status(200).send({ message: 'Recipe removed from grocery list.' });
 	});
     }
 }

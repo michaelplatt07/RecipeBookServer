@@ -1,45 +1,65 @@
+const units = require('../consts/unit-constants');
+
 /**
  * ----------------------------------
  * |     NUMBER REPRESENTATIONS     |
  * ----------------------------------
 */
-
-
-/**
- * ----------------
- * |     MASS     |
- * ----------------
-*/
-exports.ouncesToPounds = (ounces) => {
-    return ounces / 16;
+exports.tspToTbsp = (tsp) => {
+    return tsp / units.TEASPOONS_IN_TABLESPOON;
 }
 
-exports.poundsToOunces = (pounds) => {
-    return pounds * 16;
+exports.tbspToTsp = (tbsp) => {
+    return tbsp * units.TEASPOONS_IN_TABLESPOON;
 }
 
-
-/**
- * ------------------
- * |     LIQUID     |
- * ------------------
-*/
-exports.fluidOuncesToCups = (fluidOunces) => {
-    return fluidOunces / 8;
+exports.tspToCup = (tsp) => {
+    return tsp / units.TEASPOONS_IN_CUP;
 }
 
-exports.cupsToFluidOunces = (cups) => {
-    return cups * 8;
+exports.cupToTsp = (cup) => {
+    return cup * units.TEASPOONS_IN_CUP;
 }
 
-exports.fluidOuncesToQuarts = (fluidOunces) => {
-    return fluidOunces / 32;
+exports.tbspToCup = (tbsp) => {
+    return tbsp / units.TABLESPOONS_IN_CUP;
 }
 
-exports.quartsToFluidOunces = (quarts) => {
-    return quarts * 32;
+exports.cupToTbsp = (cup) => {
+    return cup * units.TABLESPOONS_IN_CUP;
 }
 
+exports.tspToQuart = (tsp) => {
+    return tsp / units.TEASPOONS_IN_QUART;
+}
+
+exports.quartToTsp = (quart) => {
+    return quart * units.TEASPOONS_IN_QUART;
+}
+
+exports.tbspToQuart = (tbsp) => {
+    return tbsp / units.TABLESPOONS_IN_QUART;
+}
+
+exports.quartToTbsp = (quart) => {
+    return quart * units.TABLESPOONS_IN_QUART;
+}
+
+exports.cupToQuart = (cup) => {
+    return cup / units.CUPS_IN_QUART;
+}
+
+exports.quartToCup = (quart) => {
+    return quart * units.CUPS_IN_QUART;
+}
+
+exports.ounceToPound = (ounce) => {
+    return ounce / units.OUNCES_IN_POUNDS;
+}
+
+exports.poundToOunce = (pound) => {
+    return pound * units.OUNCES_IN_POUNDS;
+}
 
 /**
  * ----------------------------------
@@ -47,23 +67,3 @@ exports.quartsToFluidOunces = (quarts) => {
  * ----------------------------------
 */
 
-
-/**
- * ----------------
- * |     MASS     |
- * ----------------
-*/
-exports.ouncesToPoundsString = (ounces) => {
-    return Math.floor(ounces / 16) + " lbs " + ounces % 16 + " oz";
-}
-
-exports.poundsToOuncesString = (pounds) => {
-    return pounds * 16 + " oz";
-}
-
-
-/**
- * ------------------
- * |     LIQUID     |
- * ------------------
-*/

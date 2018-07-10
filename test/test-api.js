@@ -106,9 +106,8 @@ describe('All recipe endpoints with an empty database', () => {
 		done();
 	    });
     });
-
+    
 });
-
 
 describe('All recipe endpoints with sample recipes in the database', () => {
     before((done) => {
@@ -415,6 +414,17 @@ describe('Various tests for PUTting recipe data in the databse', () => {
 		    {
 			throw err;
 		    }
+		    db.collectionExists('ingredients').then((exists) => {
+			if (exists)
+			{
+			    db.getDb().dropCollection('ingredients', (err, results) => {
+				if (err)
+				{
+				    throw err;
+				}
+			    });			    
+			}
+		    });
 		});
 	    }
 	    
@@ -423,7 +433,13 @@ describe('Various tests for PUTting recipe data in the databse', () => {
 		{
 		    throw err;
 		}
-		done();
+		db.getDb().createCollection('ingredients', (err, results) => {
+		    if (err)
+		    {
+			throw err;
+		    }
+		    done();
+		});	
 	    });
 	});
     });
@@ -647,17 +663,218 @@ describe('Various tests for PUTting recipe data in the databse', () => {
 		done();
 	    });
     });
+
+    it('Should fail because there is no searchable', (done) => {
+	chai.request(server)
+	    .post('/recipes/add')
+	    .send({
+		text_friendly_name: 'Sample Recipe',
+		ingredients: [
+		    {
+			text_friendly_name: 'Ingredient 1',
+			quantity: 8,
+			measurement: 'tbsp'
+		    }
+		],
+		steps: [
+		    "Cut stuff up.",
+		    "Mix stuff together.",
+		    "Cook it and enjoy"
+		],
+		course: [
+		    "brinner"
+		],
+		prep_time: {
+		    "minutes": 5,
+		    "hours": 0
+		},
+		cook_time: {
+		    "minutes": 10,
+		    "hours": 1
+		},
+		cuisine: [
+		    'american'
+		]
+	    })
+	    .end((err, res) => {
+		res.should.have.status(422);
+		res.body['msg']['noSearchableError'].should.be.equal('Please select if you want the recipe to be private or public.');
+		done();
+	    });
+    });
+
+    it('Should successfully insert Recipe 1 because all data is there', (done) => {
+	chai.request(server)
+	    .post('/recipes/add')
+	    .send({
+		text_friendly_name: 'Sample Recipe',
+		ingredients: [
+		    {
+			text_friendly_name: 'Ingredient 1',
+			quantity: 8,
+			measurement: 'tbsp'
+		    },
+		    {
+			text_friendly_name: 'Ingredient 2',
+			quantity: 1,
+			measurement: 'oz'
+		    }
+		],
+		steps: [
+		    "Cut stuff up.",
+		    "Mix stuff together.",
+		    "Cook it and enjoy"
+		],
+		course: [
+		    "brinner"
+		],
+		prep_time: {
+		    "minutes": 5,
+		    "hours": 0
+		},
+		cook_time: {
+		    "minutes": 10,
+		    "hours": 1
+		},
+		cuisine: [
+		    'american'
+		],
+		searchable: true
+	    })
+	    .end((err, res) => {
+		res.should.have.status(200);
+		done();
+	    });
+    });
+
+    it('Should successfully insert Recipe 2 because all data is there', (done) => {
+	chai.request(server)
+	    .post('/recipes/add')
+	    .send({
+		text_friendly_name: 'Sample Recipe 2',
+		ingredients: [
+		    {
+			text_friendly_name: 'Ingredient 2',
+			quantity: 3,
+			measurement: 'c'
+		    }
+		],
+		steps: [
+		    "Cut stuff up.",
+		    "Mix stuff together.",
+		    "Cook it and enjoy"
+		],
+		course: [
+		    "brinner"
+		],
+		prep_time: {
+		    "minutes": 5,
+		    "hours": 0
+		},
+		cook_time: {
+		    "minutes": 10,
+		    "hours": 1
+		},
+		cuisine: [
+		    'american'
+		],
+		searchable: true
+	    })
+	    .end((err, res) => {
+		res.should.have.status(200);
+		done();
+	    });
+    });
     
-    // TODO(map) : Don''t forget to do tests about ensuring that searchable values become available.    
+    it('Should successfully insert Recipe 3 because all data is there', (done) => {
+	chai.request(server)
+	    .post('/recipes/add')
+	    .send({
+		text_friendly_name: 'Sample Recipe 3',
+		ingredients: [
+		    {
+			text_friendly_name: 'Ingredient 2',
+			quantity: 1.5,
+			measurement: 'c'
+		    }
+		],
+		steps: [
+		    "Cut stuff up.",
+		    "Mix stuff together.",
+		    "Cook it and enjoy"
+		],
+		course: [
+		    "brinner"
+		],
+		prep_time: {
+		    "minutes": 5,
+		    "hours": 0
+		},
+		cook_time: {
+		    "minutes": 10,
+		    "hours": 1
+		},
+		cuisine: [
+		    'american'
+		],
+		searchable: true
+	    })
+	    .end((err, res) => {
+		res.should.have.status(200);
+		done();
+	    });
+    });
+
+    it('Should be return the recipe found by name.', (done) => {
+	chai.request(server)
+	    .get('/recipes/name/sample_recipe')
+	    .end((err, res) => {
+		res.should.have.status(200);
+		res.body['recipes'].length.should.equal(1);
+		done();
+	    });
+    });
+
+    it('Should return tbsp because that is the only measurement given for ingredient 1.', (done) => {
+	db.getDb().collection('ingredients').find({name: "ingredient_1"}).toArray((err, results) => {
+	    results.length.should.be.equal(1);
+	    results[0]['most_used_measurement'].should.be.equal('tbsp');
+	    results[0]['measurement_ratios'][0]["measurement"].should.be.equal('tbsp');
+	    results[0]['measurement_ratios'][0]["percentage"].should.be.equal(1);
+	    done();
+	});
+    });    
+
+    it('Should ensure that ingredient 2 has the appropriate information set for measurments.', (done) => {
+	db.getDb().collection('ingredients').find({name: "ingredient_2"}).toArray((err, results) => {
+	    results.length.should.be.equal(1);
+	    results[0]['total_measurements_added'].should.be.equal(3);
+	    results[0]['measurement_ratios'][0]["measurement"].should.be.equal('oz');
+	    results[0]['measurement_ratios'][0]["percentage"].should.be.equal(1/3);
+	    results[0]['measurement_ratios'][0]["count"].should.be.equal(1);
+	    results[0]['measurement_ratios'][1]["measurement"].should.be.equal('c');
+	    results[0]['measurement_ratios'][1]["percentage"].should.be.equal(2/3);
+	    results[0]['measurement_ratios'][1]["count"].should.be.equal(2);
+	    results[0]['most_used_measurement'].should.be.equal('c');
+	    done();
+	});
+    });    
+
 });
 
 describe('Testing the grocery list GET API', () => {
     before((done) => {
 	var recipe1 = {"_id": new ObjectID("5b2abac30cd38878b65a3c21"), "search_name": "mikes_mac_and_cheese", "text_friendly_name": "Mikes Mac and Cheese","ingredients": [{"name": "elbow_noodles","text_friendly_name": "elbow noodles","quantity": 12,"measurement": "oz"},{"name": "cheddar_cheese","text_friendly_name": "cheddar cheese","quantity": 6,"measurement": "oz"},{"name": "gouda_cheese","text_friendly_name": "gouda cheese","quantity": 6,"measurement": "oz"},{"name": "milk","text_friendly_name": "milk","quantity": 2,"measurement": "oz"}],"steps": ["Bring water to a boil","Cook noodels until al dente.","Add the milk and cheeses and melt down.","Stir constantly to ensure even coating and serve."],"course": ["dinner","lunch","side"],"prep_time": {"minutes": 15,"hours": 0},"cook_time":{"minutes": 25,"hours": 1},"cuisine": "italian","submitted_by": "User1","searchable": true};
 	var recipe2 = {"_id": new ObjectID("5b2abac30cd38878b65a4b03"), "search_name": "ice_cream", "text_friendly_name": "Ice Cream", "ingredients": [{"name": "sugar", "text_friendly_name": "sugar", "quantity": 8, "measurment": "tbsp"}, {"name": "vanilla", "text_friendly_name": "vanilla", "quantity": 2, "measurment": "tsp"}, {"name": "milk", "text_friendly_name": "milk", "quantity": 12, "measurment": "oz"}], "steps": ["Mix everything together.", "Tumble until solid."], "course": ["dessert"], "prep_time": {"minutes": 5, "hours": 0}, "cook_time": {"minutes": 40, "hours": 2}, "cuisine": "american", "submitted_by": "User1", "searchable": true};
+	
 
-	var recipes = [recipe1, recipe2];
+	var recipe3 = {"_id": new ObjectID("4a4abac30cd38878b65a3c21"), "search_name": "test_1", "text_friendly_name": "Test 1","ingredients": [{"name": "cayenne_pepper","text_friendly_name": "cayenne peper","quantity": 2,"measurement": "tsp"},{"name": "milk","text_friendly_name": "milk","quantity": 3,"measurement": "c"}],"steps": ["Step1", "Step2"],"course": ["dinner","lunch","side"],"prep_time": {"minutes": 15,"hours": 0},"cook_time":{"minutes": 25,"hours": 1},"cuisine": "italian","submitted_by": "User1","searchable": true};
+	var recipe4 = {"_id": new ObjectID("3c4abac30cd38878b65a4b03"), "search_name": "ice_cream", "text_friendly_name": "Ice Cream", "ingredients": [{"name": "cayenne_pepper", "text_friendly_name": "cayenne pepper", "quantity": 2, "measurment": "tsp"}, {"name": "milk", "text_friendly_name": "milk", "quantity": 2, "measurment": "tbsp"}], "steps": ["Step 1.", "Step 2."], "course": ["dessert"], "prep_time": {"minutes": 5, "hours": 0}, "cook_time": {"minutes": 40, "hours": 2}, "cuisine": "american", "submitted_by": "User1", "searchable": true};
 
+	
+	var recipes = [recipe1, recipe2, recipe3, recipe4];
+	
+	// Grocery list for testing everything up until the shopping list.
 	var groceryList1 = {
 	    user: 'test.user',
 	    'recipes': [
@@ -665,6 +882,15 @@ describe('Testing the grocery list GET API', () => {
 	    ]
 	};
 
+	// Grocery list for testing the shopping list.
+	var groceryList2 = {
+	    user: 'test.user2',
+	    'recipes': [
+		'4a4abac30cd38878b65a3c21', '3c4abac30cd38878b65a4b03'
+	    ]
+	};
+
+	
 	db.collectionExists('recipes').then((exists) => {
 	    if (exists) {
 		db.getDb().dropCollection('recipes', (err, results) => {
@@ -687,7 +913,9 @@ describe('Testing the grocery list GET API', () => {
 		
 		db.getDb().collection('recipes').insertMany(recipes, (err, result) => {
 		    db.getDb().collection('grocery_lists').insertOne(groceryList1, (err, results) => {
-			done();
+			db.getDb().collection('grocery_lists').insertOne(groceryList2, (err, results) => {
+			    done();
+			});
 		    });
 		});
 	    });
@@ -719,21 +947,30 @@ describe('Testing the grocery list GET API', () => {
 	    });
     });
 
-    /*
-    it('Should return the grocery list built up with the correct ingredients labeled as such', (done) => {
+    it('Should return the grocery list with cayenne pepper and milk to test same unit addition', (done) => {
 	chai.request(server)
 	    .get('/groceryList')
-	    .set('userId', 'test.user')
+	    .set('userId', 'test.user2')
 	    .end((err, res) => {
 		res.should.have.status(200);
-		// TODO(map) : This needs to be finished up.
+		res.body['groceryList']['cayenne_pepper']['quantity'].should.be.equal(4);
+		res.body['groceryList']['cayenne_pepper']['measurement'].should.be.equal('tsp');
+		//res.body['groceryList']['milk']['quantity'].should.be.equal(5);
+		//res.body['groceryList']['milk']['measurement'].should.be.equal('c');
 		done();
 	    });
-    });*/
+    });
+
+    
+    // TODO(map) : Tests that still need to be written.
+    // 1. Test for different units with one being standard.
+    // 2. Test for different units with neither being standard.
+    // 3. Test for same units with neither being standards.
+
     
 });
 
-
+/* TODO(map) : Uncomment me when done testing.
 describe('Testing the grocery list PUT API', () => {
     before((done) => {
 	db.collectionExists('grocery_lists').then((exists) => {
@@ -829,7 +1066,7 @@ describe('Testing the grocery list PUT API', () => {
 	    });
     });
 
-        it('Should successfully remove the recipe', (done) => {
+    it('Should successfully remove the recipe', (done) => {
 	chai.request(server)
 	    .post('/groceryList/removeRecipe')
 	    .send({
@@ -843,3 +1080,4 @@ describe('Testing the grocery list PUT API', () => {
     });
 
 });
+*/
