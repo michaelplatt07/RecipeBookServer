@@ -1,9 +1,8 @@
 const ObjectID = require('mongodb').ObjectID;
-const debug = require('debug')('recipes');
+const debug = require('debug')('groceryList');
 const Promise = require('bluebird');
 
 
-// TODO(map) : Update to use async/ await
 /**
  * ----------------
  * |     GETS     |
