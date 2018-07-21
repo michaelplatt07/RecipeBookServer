@@ -1,10 +1,88 @@
 const units = require('../consts/unit-constants');
 
+exports.convertMeasurement = (aMeasurement, unitFrom, unitTo) => {
+    if (unitFrom == 'tsp')
+    {
+	switch (unitTo) {
+	case 'Tbsp':
+	    return this.tspToTbsp(aMeasurement);
+	case 'c':
+	    return this.tspToCup(aMeasurement);
+	case 'q':
+	    return this.tspToQuart(aMeasurement);
+	default:
+	    console.log("That conversion doesn't exist.");
+	}
+    }
+    else if (unitFrom == 'Tbsp')
+    {
+	switch (unitTo) {
+	case 'tsp':
+	    return this.tbspToTsp(aMeasurement);
+	case 'c':
+	    return this.tbspToCup(aMeasurement);
+	case 'q':
+	    return this.tbspToQuart(aMeasurement);
+	default:
+	    console.log("'That conversion doesn't exist.");
+	}
+    }
+    else if (unitFrom == 'c')
+    {
+	switch (unitTo) {
+	case 'tsp':
+	    return this.cupToTsp(aMeasurement);
+	case 'Tbsp':
+	    return this.cupToTbsp(aMeasurement);
+	case 'q':
+	    return this.cupToQuart(aMeasurement);
+	default:
+	    console.log("'That conversion doesn't exist.");
+	}
+    }
+    else if (unitFrom == 'q')
+    {
+	switch (unitTo) {
+	case 'tsp':
+	    return this.quartToTsp(aMeasurement);
+	case 'Tbsp':
+	    return this.quartToTbsp(aMeasurement);
+	case 'c':
+	    return this.quartToCup(aMeasurement);
+	default:
+	    console.log("'That conversion doesn't exist.");
+	}
+    }
+    else if (unitFrom == 'lb')
+    {
+	switch (unitTo) {
+	case 'oz':
+	    return this.poundToOunce(aMeasurement);
+	default:
+	    console.log("'That conversion doesn't exist.");
+	}
+    }
+    else if (unitFrom == 'oz')
+    {
+	switch (unitTo) {
+	case 'lb':
+	    return this.ounceToPound(aMeasurement);
+	default:
+	    console.log("'That conversion doesn't exist.");
+	}
+    }
+    else
+    {
+	// TODO(map) : Think about maybe throwing an error here instead.
+	console.log("That conversion doesn't exist.");
+    }
+}
+
 /**
  * ----------------------------------
  * |     NUMBER REPRESENTATIONS     |
  * ----------------------------------
-*/
+ */
 exports.tspToTbsp = (tsp) => {
     return tsp / units.TEASPOONS_IN_TABLESPOON;
 }

@@ -2,12 +2,13 @@ var expect = require('chai').expect;
 
 var unitConverter = require('../utils/unit-converter');
 
+
 describe('tspToTbsp() number', function () {
   it('Should convert tsp to tbsp', function () {
       var tsp = 3;
       var expectedTbsp = 1;
 
-      var tbsp = unitConverter.tspToTbsp(tsp);
+      var tbsp = unitConverter.convertMeasurement(tsp, 'tsp', 'Tbsp');
 
       expect(tbsp).to.be.equal(expectedTbsp);
   });
@@ -18,7 +19,7 @@ describe('tbspToTsp() number', function () {
       var tbsp = 1;
       var expectedTsp = 3;
 
-      var tsp = unitConverter.tbspToTsp(tbsp);
+      var tsp = unitConverter.convertMeasurement(tbsp, 'Tbsp', 'tsp');
 
       expect(tsp).to.be.equal(expectedTsp);
   });
@@ -29,7 +30,7 @@ describe('tspToCup() number', function () {
       var tsp = 48;
       var expectedCup = 1;
 
-      var cup = unitConverter.tspToCup(tsp);
+      var cup = unitConverter.convertMeasurement(tsp, 'tsp', 'c');
 
       expect(cup).to.be.equal(expectedCup);
   });
@@ -40,7 +41,7 @@ describe('cupToTsp() number', function () {
       var cup = 1;
       var expectedTsp = 48;
 
-      var tsp = unitConverter.cupToTsp(cup);
+      var tsp = unitConverter.convertMeasurement(cup, 'c', 'tsp');
 
       expect(tsp).to.be.equal(expectedTsp);
   });
@@ -51,7 +52,7 @@ describe('tbspToCup() number', function () {
       var tbsp = 16;
       var expectedCup = 1;
 
-      var cup = unitConverter.tbspToCup(tbsp);
+      var cup = unitConverter.convertMeasurement(tbsp, 'Tbsp', 'c');
 
       expect(cup).to.be.equal(expectedCup);
   });
@@ -62,7 +63,7 @@ describe('cupToTbsp() number', function () {
       var cup = 1;
       var expectedTbsp = 16;
 
-      var tbsp = unitConverter.cupToTbsp(cup);
+      var tbsp = unitConverter.convertMeasurement(cup, 'c', 'Tbsp');
 
       expect(tbsp).to.be.equal(expectedTbsp);
   });
@@ -73,7 +74,7 @@ describe('tspToQuart() number', function () {
       var tsp = 192;
       var expectedQuart = 1;
 
-      var quart = unitConverter.tspToQuart(tsp);
+      var quart = unitConverter.convertMeasurement(tsp, 'tsp', 'q');
 
       expect(quart).to.be.equal(expectedQuart);
   });
@@ -84,7 +85,7 @@ describe('quartToTsp() number', function () {
       var quart = 1;
       var expectedTsp = 192;
 
-      var tsp = unitConverter.quartToTsp(quart);
+      var tsp = unitConverter.convertMeasurement(quart, 'q', 'tsp');
 
       expect(tsp).to.be.equal(expectedTsp);
   });
@@ -95,7 +96,7 @@ describe('tbpsToQuart() number', function () {
       var tbsp = 64;
       var expectedQuart = 1;
 
-      var quart = unitConverter.tbspToQuart(tbsp);
+      var quart = unitConverter.convertMeasurement(tbsp, 'Tbsp', 'q');
 
       expect(quart).to.be.equal(expectedQuart);
   });
@@ -106,7 +107,7 @@ describe('quartToTbsp() number', function () {
       var quart = 1;
       var expectedTbsp = 64;
 
-      var tbsp = unitConverter.quartToTbsp(quart);
+      var tbsp = unitConverter.convertMeasurement(quart, 'q', 'Tbsp');
 
       expect(tbsp).to.be.equal(expectedTbsp);
   });
@@ -117,7 +118,7 @@ describe('cupToQuart() number', function () {
       var cup = 4;
       var expectedQuart = 1;
 
-      var quart = unitConverter.cupToQuart(cup);
+      var quart = unitConverter.convertMeasurement(cup, 'c', 'q');
 
       expect(quart).to.be.equal(expectedQuart);
   });
@@ -128,7 +129,7 @@ describe('quartToCup() number', function () {
       var quart = 1;
       var expectedCup = 4;
 
-      var cup = unitConverter.quartToCup(quart);
+      var cup = unitConverter.convertMeasurement(quart, 'q', 'c');
 
       expect(cup).to.be.equal(expectedCup);
   });
@@ -139,7 +140,7 @@ describe('ounceToPound() number', function () {
       var ounce = 16;
       var expectedPound = 1;
 
-      var pound = unitConverter.ounceToPound(ounce);
+      var pound = unitConverter.convertMeasurement(ounce, 'oz', 'lb');
 
       expect(pound).to.be.equal(expectedPound);
   });
@@ -150,7 +151,7 @@ describe('poundToOunce() number', function () {
       var pound = 1;
       var expectedOunce = 16;
 
-      var ounce = unitConverter.poundToOunce(pound);
+      var ounce = unitConverter.convertMeasurement(pound, 'lb', 'oz');
 
       expect(ounce).to.be.equal(expectedOunce);
   });
