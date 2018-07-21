@@ -1,6 +1,7 @@
 const ObjectID = require('mongodb').ObjectID;
 const debug = require('debug')('groceryList');
 const Promise = require('bluebird');
+const unitConverter = require('../utils/unit-converter');
 
 
 /**
@@ -27,34 +28,34 @@ exports.getGroceryListByUser = async (db, req, res) => {
 	    recipePromiseList.push(db.collection("recipes").findOne({ '_id': o_id }));
 	});
 	
-	let recipes = Promise.all(recipePromiseList);
+	let recipes = await Promise.all(recipePromiseList);
 	recipeList = []
-	groceryList = {};
+	groceryShoppingList = {};
 	recipes.forEach(recipe => {
 	    recipeList.push(recipe);
 	    recipe.ingredients.forEach(ingredient => {
-		// Ingredient is in shopping list.
-		if (ingredient['name'] in groceryList) {
-		    // Measurements are the same.
-		    /*
-		     * When a user inserts a recipe, check if the ingredient exists in the ingredient collection
-		     * If no -> simply add along with type of measurement
-		     * If yes -> calculate percentage of people using measurement and store info.
-		     */
-		    if (ingredient['measurement'] == groceryList[ingredient['measurement']])
-		    {
-			groceryList[ingredient['name']]['quantity'] += ingredient['quantity'];
-		    }
+		/*
+		 * Convert the ingredient to the most used as based on a query to the 
+		 * database to the ingredients collection.  
+		 *
+		 * Check if the ingredient has already been added to the grocery list.
+		 *
+		 */
+		let dbIngredient = await db.collection('ingredients').findOne({ 'text_friendly_name': ingredient.text_friendly_name })
+		if (dbIngredient.most_used_measurement != ingredient.measurment)
+		{
+		    ingredient.quantity = unitConverter.convertMeasurement(ingredient.quantity, ingredient.measurement, dbIngredient.most_used_measurement);
 		}
-		// Ingredient isn't already in shopping list.
+		if (ingredient['name'] in groceryShoppingList) {
+		}
 		else {
-		    groceryList[ingredient['name']] = ingredient;
+
 		}
 	    });
 	});
 
 	res.setHeader('Content-Type', 'application/json');
-	return res.status(200).send({ recipeList: recipeList, groceryList: groceryList });
+	return res.status(200).send({ recipeList: recipeList, groceryShoppingList: groceryShoppingList });
     }
 }
 
