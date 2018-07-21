@@ -62,7 +62,7 @@ describe('All recipe endpoints with an empty database', () => {
 	    .get('/recipes/ingredients')
 	    .end((err, res) => {
 		res.should.have.status(404);
-		res.body['msg'].should.be.equal('There were no recipes found that use those ingredients.');
+		res.body['msg'].should.be.equal('Please include one or more ingredients to filter by.');
 		done();
 	    });
     });
@@ -72,7 +72,7 @@ describe('All recipe endpoints with an empty database', () => {
 	    .get('/recipes/course')
 	    .end((err, res) => {
 		res.should.have.status(404);
-		res.body['msg'].should.be.equal('There were no recipes found for that course.');
+		res.body['msg'].should.be.equal('Please include one or more courses to filter by.');
 		done();
 	    });
     });
@@ -82,7 +82,7 @@ describe('All recipe endpoints with an empty database', () => {
 	    .get('/recipes/cuisine')
 	    .end((err, res) => {
 		res.should.have.status(404);
-		res.body['msg'].should.be.equal('There were no recipes found using that cuisine.');
+		res.body['msg'].should.be.equal('Please include one or more cuisines to filter by.');
 		done();
 	    });
     });
@@ -850,10 +850,10 @@ describe('Various tests for PUTting recipe data in the databse', () => {
 	    results.length.should.be.equal(1);
 	    results[0]['total_measurements_added'].should.be.equal(3);
 	    results[0]['measurement_ratios'][0]["measurement"].should.be.equal('oz');
-	    results[0]['measurement_ratios'][0]["percentage"].should.be.equal(1/3);
+	    results[0]['measurement_ratios'][0]["percentage"].should.be.equal(33);
 	    results[0]['measurement_ratios'][0]["count"].should.be.equal(1);
 	    results[0]['measurement_ratios'][1]["measurement"].should.be.equal('c');
-	    results[0]['measurement_ratios'][1]["percentage"].should.be.equal(2/3);
+	    results[0]['measurement_ratios'][1]["percentage"].should.be.equal(66);
 	    results[0]['measurement_ratios'][1]["count"].should.be.equal(2);
 	    results[0]['most_used_measurement'].should.be.equal('c');
 	    done();
@@ -864,33 +864,6 @@ describe('Various tests for PUTting recipe data in the databse', () => {
 
 describe('Testing the grocery list GET API', () => {
     before((done) => {
-	var recipe1 = {"_id": new ObjectID("5b2abac30cd38878b65a3c21"), "search_name": "mikes_mac_and_cheese", "text_friendly_name": "Mikes Mac and Cheese","ingredients": [{"name": "elbow_noodles","text_friendly_name": "elbow noodles","quantity": 12,"measurement": "oz"},{"name": "cheddar_cheese","text_friendly_name": "cheddar cheese","quantity": 6,"measurement": "oz"},{"name": "gouda_cheese","text_friendly_name": "gouda cheese","quantity": 6,"measurement": "oz"},{"name": "milk","text_friendly_name": "milk","quantity": 2,"measurement": "oz"}],"steps": ["Bring water to a boil","Cook noodels until al dente.","Add the milk and cheeses and melt down.","Stir constantly to ensure even coating and serve."],"course": ["dinner","lunch","side"],"prep_time": {"minutes": 15,"hours": 0},"cook_time":{"minutes": 25,"hours": 1},"cuisine": "italian","submitted_by": "User1","searchable": true};
-	var recipe2 = {"_id": new ObjectID("5b2abac30cd38878b65a4b03"), "search_name": "ice_cream", "text_friendly_name": "Ice Cream", "ingredients": [{"name": "sugar", "text_friendly_name": "sugar", "quantity": 8, "measurment": "tbsp"}, {"name": "vanilla", "text_friendly_name": "vanilla", "quantity": 2, "measurment": "tsp"}, {"name": "milk", "text_friendly_name": "milk", "quantity": 12, "measurment": "oz"}], "steps": ["Mix everything together.", "Tumble until solid."], "course": ["dessert"], "prep_time": {"minutes": 5, "hours": 0}, "cook_time": {"minutes": 40, "hours": 2}, "cuisine": "american", "submitted_by": "User1", "searchable": true};
-	
-
-	var recipe3 = {"_id": new ObjectID("4a4abac30cd38878b65a3c21"), "search_name": "test_1", "text_friendly_name": "Test 1","ingredients": [{"name": "cayenne_pepper","text_friendly_name": "cayenne peper","quantity": 2,"measurement": "tsp"},{"name": "milk","text_friendly_name": "milk","quantity": 3,"measurement": "c"}],"steps": ["Step1", "Step2"],"course": ["dinner","lunch","side"],"prep_time": {"minutes": 15,"hours": 0},"cook_time":{"minutes": 25,"hours": 1},"cuisine": "italian","submitted_by": "User1","searchable": true};
-	var recipe4 = {"_id": new ObjectID("3c4abac30cd38878b65a4b03"), "search_name": "ice_cream", "text_friendly_name": "Ice Cream", "ingredients": [{"name": "cayenne_pepper", "text_friendly_name": "cayenne pepper", "quantity": 2, "measurment": "tsp"}, {"name": "milk", "text_friendly_name": "milk", "quantity": 2, "measurment": "tbsp"}], "steps": ["Step 1.", "Step 2."], "course": ["dessert"], "prep_time": {"minutes": 5, "hours": 0}, "cook_time": {"minutes": 40, "hours": 2}, "cuisine": "american", "submitted_by": "User1", "searchable": true};
-
-	
-	var recipes = [recipe1, recipe2, recipe3, recipe4];
-	
-	// Grocery list for testing everything up until the shopping list.
-	var groceryList1 = {
-	    user: 'test.user',
-	    'recipes': [
-		'5b2abac30cd38878b65a3c21', '5b2abac30cd38878b65a4b03'
-	    ]
-	};
-
-	// Grocery list for testing the shopping list.
-	var groceryList2 = {
-	    user: 'test.user2',
-	    'recipes': [
-		'4a4abac30cd38878b65a3c21', '3c4abac30cd38878b65a4b03'
-	    ]
-	};
-
-	
 	db.collectionExists('recipes').then((exists) => {
 	    if (exists) {
 		db.getDb().dropCollection('recipes', (err, results) => {
@@ -898,30 +871,29 @@ describe('Testing the grocery list GET API', () => {
 		    {
 			throw err;
 		    }
-		});
-	    }
-
-	    db.collectionExists('grocery_lists').then((exists) => {
-		if (exists) {
-		    db.getDb().dropCollection('grocery_lists', (err, results) => {
-			if (err)
+		    db.collectionExists('grocery_lists').then((exists) => {
+			if (exists)
 			{
-			    throw err;
+			    db.getDb().dropCollection('grocery_lists', (err, results) => {
+				if (err)
+				{
+				    throw err;
+				}
+				done();
+			    });			    
+			}
+			else
+			{
+			    done();
 			}
 		    });
-		}
-		
-		db.getDb().collection('recipes').insertMany(recipes, (err, result) => {
-		    db.getDb().collection('grocery_lists').insertOne(groceryList1, (err, results) => {
-			db.getDb().collection('grocery_lists').insertOne(groceryList2, (err, results) => {
-			    done();
-			});
-		    });
 		});
-	    });
+	    }
 	});
-
+	
     });
+
+    // TODO(map) : Perform two recipe adds and grocerylist add.
 
     it('Should fail to return a grocery list because there is no userId', (done) => {
 	chai.request(server)
@@ -934,7 +906,9 @@ describe('Testing the grocery list GET API', () => {
 	    });
     });
     
-    it('Should return the recipes list with the correct IDs as well as the full grocery list', (done) => {
+    // TODO(map) : This needs to be updated to have the correct recipes by getting the id from the response
+    // in the adds.
+    /*it('Should return the recipes list with the correct IDs as well as the full grocery list', (done) => {
 	chai.request(server)
 	    .get('/groceryList')
 	    .set('userId', 'test.user')
@@ -945,32 +919,21 @@ describe('Testing the grocery list GET API', () => {
 		res.body['recipeList'][1]['_id'].should.be.equal('5b2abac30cd38878b65a4b03');
 		done();
 	    });
-    });
+    });*/
 
-    it('Should return the grocery list with cayenne pepper and milk to test same unit addition', (done) => {
+    // TODO(map) : Figure out logic for how I want to build up a grocery list.
+    /*it('Should return the grocery list with cayenne pepper and milk to test same unit addition', (done) => {
 	chai.request(server)
 	    .get('/groceryList')
 	    .set('userId', 'test.user2')
 	    .end((err, res) => {
 		res.should.have.status(200);
-		res.body['groceryList']['cayenne_pepper']['quantity'].should.be.equal(4);
-		res.body['groceryList']['cayenne_pepper']['measurement'].should.be.equal('tsp');
-		//res.body['groceryList']['milk']['quantity'].should.be.equal(5);
-		//res.body['groceryList']['milk']['measurement'].should.be.equal('c');
 		done();
 	    });
-    });
-
-    
-    // TODO(map) : Tests that still need to be written.
-    // 1. Test for different units with one being standard.
-    // 2. Test for different units with neither being standard.
-    // 3. Test for same units with neither being standards.
-
+    });*/
     
 });
 
-/* TODO(map) : Uncomment me when done testing.
 describe('Testing the grocery list PUT API', () => {
     before((done) => {
 	db.collectionExists('grocery_lists').then((exists) => {
@@ -982,6 +945,10 @@ describe('Testing the grocery list PUT API', () => {
 		    }
 		    done();
 		});
+	    }
+	    else
+	    {
+		done();
 	    }
 	    
 	});	
@@ -1080,4 +1047,3 @@ describe('Testing the grocery list PUT API', () => {
     });
 
 });
-*/

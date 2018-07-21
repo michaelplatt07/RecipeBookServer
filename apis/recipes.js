@@ -9,54 +9,37 @@ const debug = require('debug')('recipes');
 /**
  * Returns all recipes that are available.
  */
-exports.getRecipes = (db, req, res) => {
+exports.getRecipes = async (db, req, res) => {
     debug("In getRecipes");
-    query = {};
+    var query = {};
     query.searchable = true;
 
-    db.collection("recipes").find(query).toArray((err, results) => {
-	if (err)
-	{
-	    res.status(500).send({ message: 'Something went wrong.' });
-	}
-	else if (!results || results.length == 0)
-	{
-	    res.status(404).send({msg: 'There are currently no recipes in the database.'});
-	}
-	else
-	{
-	    res.setHeader('Content-Type', 'application/json');
-	    res.status(200).send({ title: 'All Recipes', recipes: results });
-	}
-    });
+    let recipes = await db.collection("recipes").find(query).toArray();
+    if (!recipes || recipes.length == 0)
+    {
+	return res.status(404).send({msg: 'There are currently no recipes in the database.'});
+    }
+    return res.status(200).send({ title: 'All Recipes', recipes: recipes });
 }
 
 
 /**
  * Returns a single recipe by name.
  */
-exports.getRecipeByName = (db, req, res) => {
+exports.getRecipeByName = async (db, req, res) => {
     debug("In getByName");
     var query = {};
     query.search_name =  req.params.recipeName;
     query.searchable = true;
 
-    db.collection("recipes").find(query).toArray((err, results) => {
-	if (err)
-	{
-	    res.status(500).send({ message: 'Something went wrong.' });
-	}
-	else if (!results || results.length == 0)
-	{
-	    res.setHeader('Content-Type', 'application/json');
-	    res.status(404).send({ msg: 'There are no recipes found by that name.' });
-	}	    
-	else
-	{
-	    res.setHeader('Content-Type', 'application/json');
-	    res.status(200).send({ title: results['name'], recipes: results });
-	}
-    });
+    let recipes = await db.collection("recipes").find(query).toArray();
+    if (!recipes || recipes.length == 0)
+    {
+	res.setHeader('Content-Type', 'application/json');
+	return res.status(404).send({ msg: 'There are no recipes found by that name.' });
+    }	    
+    res.setHeader('Content-Type', 'application/json');
+    return res.status(200).send({ title: recipes['name'], recipes: recipes });
 }
 
 
@@ -68,59 +51,24 @@ exports.getRecipeByName = (db, req, res) => {
  * CuisineA or CuisineB.  The individual parts commented below actually did that too but combined they create an
  * "AND" effect instead of an "AND+OR".
  */
-exports.getRecipesBySearchCriteria = (db, req, res) => {
+exports.getRecipesBySearchCriteria = async (db, req, res) => {
     debug("In search");
-        // NOTE(map) : Original code here in case I want to revert.
-    /*
-    var query = {};
-      if (req.query.ingredients) { // Check if ingredient parameter was provided.
-      query = {'ingredients.name': {$in: req.query.ingredients.split(' ')}};
-      }
-      if (req.query.course) { // Check if course parameter was provided.
-      query.course = {$in: req.query.course.split(' ')};
-      }
-      if (req.query.submitted_by)
-      {
-      query.submitted_by = req.query.submitted_by;
-      }
-      if (req.query.cuisine)
-      {
-      query.cuisine = {$in: req.query.cuisine.split(' ')};
-      }
-      query.searchable = true;
 
-      db.collection("recipes").find(query).toArray((err, results) => {
-      if (err)
-      {
-      res.status(500).send({ message: 'Something went wrong.' });	    
-      }
-      else if (!results || results.length == 0)
-      {
-      res.setHeader('Content-Type', 'application/json');
-      res.status(404).send({ msg: 'There were no recipes found that contained all the given criteria.' });
-      }	    
-      else {
-      res.setHeader('Content-Type', 'application/json');
-      res.status(200).send({ title: 'Recipes', recipes: results });
-      }
-      });    
-    */
+    var queryList = [];
+    var promiseList = [];
 
-    var queryPromiseList = [];
-    
-    // Create a series of promises that will be joined later.
     if (req.query.ingredients) { // Check if ingredient parameter was provided.
 	var query = {};
 	query.searchable = true;
 	query = {'ingredients.name': {$in: req.query.ingredients.split(' ')}};
-	queryPromiseList.push(db.collection("recipes").find(query).toArray());
+	queryList.push(query);
     }
 
     if (req.query.course) { // Check if course parameter was provided.
 	var query = {};
 	query.searchable = true;
 	query.course = {$in: req.query.course.split(' ')};
-	queryPromiseList.push(db.collection("recipes").find(query).toArray());
+	queryList.push(query);
     }
 
     if (req.query.submitted_by)
@@ -128,7 +76,7 @@ exports.getRecipesBySearchCriteria = (db, req, res) => {
 	var query = {};
 	query.searchable = true;
 	query.submitted_by = req.query.submitted_by;
-	queryPromiseList.push(db.collection("recipes").find(query).toArray());
+	queryList.push(query);
     }
 
     if (req.query.cuisine)
@@ -136,144 +84,133 @@ exports.getRecipesBySearchCriteria = (db, req, res) => {
 	var query = {};
 	query.searchable = true;
 	query.cuisine = {$in: req.query.cuisine.split(' ')};
-	queryPromiseList.push(db.collection("recipes").find(query).toArray());
+	queryList.push(query);
     }
 
-    Promise.all(queryPromiseList).then((values) => {
-	var recipeList = [];
-	for(let i = 0; i < values.length; ++i)
-	{
-	    for(let j = 0; j < values[i].length; ++j)
-	    {
-		if (!utils.mongoIdInArray(values[i][j]['_id'], recipeList))
-		{
-		    recipeList.push(values[i][j]);
-		}
-	    }
-	}
-
-	if (recipeList.length == 0)
+    if (queryList.length == 0) // No search criteria was provided so return all recipes instead.
+    {
+	let recipes = await db.collection("recipes").find().toArray();
+	if (recipes.length == 0)
 	{
 	    res.setHeader('Content-Type', 'application/json');
-	    res.status(404).send({ msg: 'There were no recipes found that contained all the given criteria.' });
+	    return res.status(404).send({ msg: 'There were no recipes found that contained all the given criteria.' });
 	}	    
-	else {
+	res.setHeader('Content-Type', 'application/json');
+	return res.status(200).send({ title: 'Recipes', recipes: recipes });   
+    }
+    else // Search criteria was provided so do the $or query and give back results.
+    {
+	let recipes = await db.collection("recipes").find({ searchable: true, $or: queryList }).toArray();
+	if (recipes.length == 0)
+	{
 	    res.setHeader('Content-Type', 'application/json');
-	    res.status(200).send({ title: 'Recipes', recipes: recipeList });
-	}
-
-    });
-
-};
+	    return res.status(404).send({ msg: 'There were no recipes found that contained all the given criteria.' });
+	}	    
+	res.setHeader('Content-Type', 'application/json');
+	return res.status(200).send({ title: 'Recipes', recipes: recipes });
+    }
+       
+}
 
 
 /**
  * Return recipes based on a list of ingredients.
  */
-exports.getRecipesByIngredients = (db, req, res) => {
+exports.getRecipesByIngredients = async (db, req, res) => {
     debug("In byIngredients");
     var query = {};
     query.searchable = true;
     if (req.query.list) {
 	query = {'ingredients.name': {$in: req.query.list.split(' ')}};
     }
+    else
+    {
+    	res.setHeader('Content-Type', 'application/json');
+	return res.status(404).send({msg: 'Please include one or more ingredients to filter by.'});
+    }
 
-    db.collection("recipes").find(query).toArray((err, results) => {
-	if (err)
-	{
-	    res.status(500).send({ message: 'Something went wrong.' });	    
-	}
-	else if (!results || results.length == 0)
-	{
-	    res.status(404).send({msg: 'There were no recipes found that use those ingredients.'});
-	}
-	else
-	{
-	    res.setHeader('Content-Type', 'application/json');
-	    res.status(200).send({ title: 'Recipes', recipes: results });
-	}
-    });
+    let recipes = await db.collection("recipes").find(query).toArray();
+    if (!recipes || recipes.length == 0)
+    {
+	res.setHeader('Content-Type', 'application/json');
+	return res.status(404).send({msg: 'There were no recipes found that use those ingredients.'});
+    }
+
+    res.setHeader('Content-Type', 'application/json');
+    return res.status(200).send({ title: 'Recipes', recipes: recipes });
 };
 
 
 /**
  * Return recipes based on a course.
  */
-exports.getRecipesByCourse = (db, req, res) => {
+exports.getRecipesByCourse = async (db, req, res) => {
     debug("In byCourse");
     var query = {};
     query.searchable = true;
     if (req.query.list) {
 	query.course = {$in: req.query.list.split(' ')};
     }
+    else
+    {
+	res.setHeader('Content-Type', 'application/json');
+	return res.status(404).send({msg: 'Please include one or more courses to filter by.'});
+    }
 
-    db.collection("recipes").find(query).toArray((err, results) => {
-	if (err)
-	{
-	    res.status(500).send({ message: 'Something went wrong.' });	    
-	}
-	else if (!results || results.length == 0)
-	{
-	    res.status(404).send({msg: 'There were no recipes found for that course.'});
-	}
-	else
-	{
-	    res.setHeader('Content-Type', 'application/json');
-	    res.status(200).send({ title: 'Recipes', recipes: results });
-	}
-    });
+    let recipes = await db.collection("recipes").find(query).toArray();
+    if (!recipes || recipes.length == 0)
+    {
+	res.setHeader('Content-Type', 'application/json');
+	return res.status(404).send({msg: 'There were no recipes found for that course.'});
+    }
+    res.setHeader('Content-Type', 'application/json');
+    return res.status(200).send({ title: 'Recipes', recipes: recipes });
 };
 
 
 /**
  * Returns recipes based on cuisine they are categorized to.
  */
-exports.getRecipesByCuisine = (db, req, res) => {
+exports.getRecipesByCuisine = async (db, req, res) => {
     debug('In byCuisine');
     var query = {}
     query.searchable = true;
     if (req.query.list) {
 	query.cuisine = {$in: req.query.list.split(' ')};
     }
-    db.collection('recipes').find(query).toArray((err, results) => {
-	if (err)
-	{
-	    res.status(500).send({ message: 'Something went wrong.' });	    
-	}
-	else if (!results || results.length == 0)
-	{
-	    res.status(404).send({msg: 'There were no recipes found using that cuisine.'});
-	}
-	else {
-	    res.setHeader('Content-Type', 'application/json');
-	    res.status(200).send({ title: 'Recipes', recipes: results });
-	}
-    });
+    else
+    {
+	res.setHeader('Content-Type', 'application/json');
+	return res.status(404).send({msg: 'Please include one or more cuisines to filter by.'});
+    }
+    
+    let recipes = await db.collection('recipes').find(query).toArray();
+    if (!recipes || recipes.length == 0)
+    {
+	res.setHeader('Content-Type', 'application/json');
+	return res.status(404).send({msg: 'There were no recipes found using that cuisine.'});
+    }
+    res.setHeader('Content-Type', 'application/json');
+    return res.status(200).send({ title: 'Recipes', recipes: recipes });
 };
 
 
 /**
  * Returns a random recipe from the collection of all recipes.
  */
-exports.getRandomRecipe = (db, req, res) => {
+exports.getRandomRecipe = async (db, req, res) => {
     debug("In random");
     var query = {};
     query.searchable = true;
-    db.collection("recipes").aggregate({$sample: {size: 1}}, (err, results) => {
-	if (err)
-	{
-	    res.status(500).send({ message: 'Something went wrong.' });	    
-	}
-	else if (!results || results.length == 0)
-	{
-	    res.status(404).send({msg: 'There are currently no recipes in the database.'});
-	}
-	else
-	{
-	    res.setHeader('Content-Type', 'application/json');
-	    res.status(200).send({ title: results[0]['name'], recipe: results[0] });
-	}
-    });
+    
+    let recipes = await db.collection("recipes").aggregate([{$match: {searchable: true}}, {$sample: {size: 1}}]).toArray();
+    if (!recipes || recipes.length == 0)
+    {
+	res.setHeader('Content-Type', 'application/json');
+	return res.status(404).send({msg: 'There are currently no recipes in the database.'});
+    }
+    res.setHeader('Content-Type', 'application/json');
+    return res.status(200).send({ title: recipes[0]['name'], recipe: recipes[0] });
 };
 
 
@@ -282,7 +219,7 @@ exports.getRandomRecipe = (db, req, res) => {
  * |     PUTS     |
  * ----------------
  */
-exports.addNewRecipe = (db, req, res) => {
+exports.addNewRecipe = async (db, req, res) => {
     debug('In addNewRecipe.');
     recipeData = req.body;
 
@@ -290,19 +227,16 @@ exports.addNewRecipe = (db, req, res) => {
 
     if (Object.keys(errMsgDict).length > 0)
     {
-	res.status(422).send({msg: errMsgDict});
+	res.setHeader('Content-Type', 'application/json');
+	return res.status(422).send({msg: errMsgDict});
     }
     else
     {
 	recipeData['search_name'] = utils.convertTextToSearch(recipeData['text_friendly_name']);
 	utils.insertIngredients(db, recipeData['ingredients']);
-	db.collection('recipes').insertOne(recipeData, (err, result) => {
-	    if (err)
-	    {
-		res.status(500).send({ message: 'Failed to insert data.' });
-	    }
-	    res.setHeader('Content-Type', 'application/json');
-	    res.status(200).send({ data: recipeData, message: 'Data successfully inserted' });
-	});
+
+	let recipe = await db.collection('recipes').insertOne(recipeData);
+	res.setHeader('Content-Type', 'application/json');
+	return res.status(200).send({ data: recipeData, message: 'Data successfully inserted' });
     }
 };

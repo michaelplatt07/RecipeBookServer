@@ -21,13 +21,15 @@ app.use(bodyParser.json());
  * --------------------------
  * |     RECIPE ROUTING     |
  * --------------------------
-*/
+ */
 /**
  * ----------------
  * |     GETS     |
  * ----------------
-*/
+ */
 // All recipes
+// TODO(map) : Check into express-joi
+// app.get('/recipes', expresJoi.joiValidate(mySchema), recipeApi.getRecipes());
 app.get('/recipes', (req, res) => {
     recipeApi.getRecipes(db.getDb(), req, res);
 });

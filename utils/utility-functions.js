@@ -59,7 +59,7 @@ exports.measurementInDb = (aMeasurement, measurementList) => {
 	    }
 	}
 
-	measurementList['measurement_ratios'][i]['percentage'] = measurementList['measurement_ratios'][i]['count'] / measurementList['total_measurements_added'];
+	measurementList['measurement_ratios'][i]['percentage'] = Math.floor(measurementList['measurement_ratios'][i]['count'] / measurementList['total_measurements_added'] * 100);
     } 
        
     return measurementList;
