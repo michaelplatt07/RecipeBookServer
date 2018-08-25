@@ -40,7 +40,6 @@ app.get('/recipes', (req, res) => {
 // ?course=course1+course2+...
 // ?submitted_by=authoer
 // ?cuisine=cuisine_1+cuisine_2+...
-
 app.get('/recipes/search', (req, res) => {
     recipeApi.getRecipesBySearchCriteria(db.getDb(), req, res);
 });

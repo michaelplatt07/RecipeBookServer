@@ -29,30 +29,29 @@ exports.getGroceryListByUser = async (db, req, res) => {
 	});
 	
 	let recipes = await Promise.all(recipePromiseList);
-	recipeList = []
-	groceryShoppingList = {};
-	recipes.forEach(recipe => {
+	let recipeList = []
+	let groceryShoppingList = {};
+
+	for (const recipe of recipes)
+	{
 	    recipeList.push(recipe);
-	    recipe.ingredients.forEach(ingredient => {
-		/*
-		 * Convert the ingredient to the most used as based on a query to the 
-		 * database to the ingredients collection.  
-		 *
-		 * Check if the ingredient has already been added to the grocery list.
-		 *
-		 */
-		let dbIngredient = await db.collection('ingredients').findOne({ 'text_friendly_name': ingredient.text_friendly_name })
-		if (dbIngredient.most_used_measurement != ingredient.measurment)
+	    for (const ingredient of recipe.ingredients)
+	    {
+		let dbIngredient = await db.collection('ingredients').findOne({ 'text_friendly_name': ingredient.text_friendly_name });
+		if (dbIngredient['most_used_measurement'] != ingredient['measurement'])
 		{
 		    ingredient.quantity = unitConverter.convertMeasurement(ingredient.quantity, ingredient.measurement, dbIngredient.most_used_measurement);
 		}
-		if (ingredient['name'] in groceryShoppingList) {
+		if (dbIngredient['name'] in groceryShoppingList)
+		{
+		    groceryShoppingList[dbIngredient['name']] += ingredient.quantity;
 		}
-		else {
-
-		}
-	    });
-	});
+		else
+		{
+		    groceryShoppingList[dbIngredient['name']] = ingredient.quantity;
+		}		
+	    }
+	}
 
 	res.setHeader('Content-Type', 'application/json');
 	return res.status(200).send({ recipeList: recipeList, groceryShoppingList: groceryShoppingList });

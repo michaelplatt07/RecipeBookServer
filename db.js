@@ -1,6 +1,8 @@
 // MongoClient import
 const MongoClient = require('mongodb').MongoClient;
 
+const debug = require('debug')('db');
+
 // DB config imports.
 const config = require('config');
 const dbUrl = 'mongodb://' + config.get('dbConfig.host');
@@ -70,6 +72,30 @@ exports.collectionExists = (collectionName) => {
     });
 };
 
+
+/**
+ * Function for checking if the collection exists before dropping it so there is no error.
+ */
+exports.collectionExistsAndDrop = (db, collectionName) => {
+    return new Promise((resolve, reject) => {
+	this.collectionExists(collectionName).then(async (exists) => {
+	    debug("Attempting to drop " + collectionName);
+	    if (exists)
+	    {
+		db.getDb().dropCollection(collectionName, (err, res) => {
+		    debug("Dropped " + collectionName);
+		    resolve(true);
+		});
+	    }
+	    else
+	    {
+		debug(collectionName + " did not exist and was not droppped.");
+		resolve(false);
+		// TODO(map) : Figure out what I want to do here.  Maybe a message of some sort.
+	    }
+	});
+    });
+}
 
 /**
  * Utility function to close the database connection manually if needed.

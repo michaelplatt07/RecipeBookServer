@@ -112,7 +112,7 @@ describe('All recipe endpoints with an empty database', () => {
 describe('All recipe endpoints with sample recipes in the database', () => {
     before((done) => {
 	var recipe1 = {"search_name": "mikes_mac_and_cheese", "text_friendly_name": "Mikes Mac and Cheese","ingredients": [{"name": "elbow_noodles","text_friendly_name": "elbow noodles","quantity": 12,"measurement": "oz"},{"name": "cheddar_cheese","text_friendly_name": "cheddar cheese","quantity": 6,"measurement": "oz"},{"name": "gouda_cheese","text_friendly_name": "gouda cheese","quantity": 6,"measurement": "oz"},{"name": "milk","text_friendly_name": "milk","quantity": 2,"measurement": "oz"}],"steps": ["Bring water to a boil","Cook noodels until al dente.","Add the milk and cheeses and melt down.","Stir constantly to ensure even coating and serve."],"course": ["dinner","lunch","side"],"prep_time": {"minutes": 15,"hours": 0},"cook_time":{"minutes": 25,"hours": 1},"cuisine": "italian","submitted_by": "User1","searchable": true};
-	var recipe2 = {"search_name": "ice_cream", "text_friendly_name": "Ice Cream", "ingredients": [{"name": "sugar", "text_friendly_name": "sugar", "quantity": 8, "measurment": "tbsp"}, {"name": "vanilla", "text_friendly_name": "vanilla", "quantity": 2, "measurment": "tsp"}, {"name": "milk", "text_friendly_name": "milk", "quantity": 12, "measurment": "oz"}], "steps": ["Mix everything together.", "Tumble until solid."], "course": ["dessert"], "prep_time": {"minutes": 5, "hours": 0}, "cook_time": {"minutes": 40, "hours": 2}, "cuisine": "american", "submitted_by": "User1", "searchable": true};
+	var recipe2 = {"search_name": "ice_cream", "text_friendly_name": "Ice Cream", "ingredients": [{"name": "sugar", "text_friendly_name": "sugar", "quantity": 8, "measurment": "Tbsp"}, {"name": "vanilla", "text_friendly_name": "vanilla", "quantity": 2, "measurment": "tsp"}, {"name": "milk", "text_friendly_name": "milk", "quantity": 12, "measurment": "oz"}], "steps": ["Mix everything together.", "Tumble until solid."], "course": ["dessert"], "prep_time": {"minutes": 5, "hours": 0}, "cook_time": {"minutes": 40, "hours": 2}, "cuisine": "american", "submitted_by": "User1", "searchable": true};
 
 	var recipes = [recipe1, recipe2];
 	
@@ -474,7 +474,7 @@ describe('Various tests for PUTting recipe data in the databse', () => {
 		ingredients: [
 		    {
 			quantity: 8,
-			measurement: 'tbsp'
+			measurement: 'Tbsp'
 		    }
 		]
 	    })
@@ -493,7 +493,7 @@ describe('Various tests for PUTting recipe data in the databse', () => {
 		ingredients: [
 		    {
 			text_friendly_name: 'Ingredient 1',
-			measurement: 'tbsp'
+			measurement: 'Tbsp'
 		    }
 		]
 	    })
@@ -532,7 +532,7 @@ describe('Various tests for PUTting recipe data in the databse', () => {
 		    {
 			text_friendly_name: 'Ingredient 1',
 			quantity: 8,
-			measurement: 'tbsp'
+			measurement: 'Tbsp'
 		    }
 		]
 	    })
@@ -552,7 +552,7 @@ describe('Various tests for PUTting recipe data in the databse', () => {
 		    {
 			text_friendly_name: 'Ingredient 1',
 			quantity: 8,
-			measurement: 'tbsp'
+			measurement: 'Tbsp'
 		    }
 		],
 		steps: [
@@ -577,7 +577,7 @@ describe('Various tests for PUTting recipe data in the databse', () => {
 		    {
 			text_friendly_name: 'Ingredient 1',
 			quantity: 8,
-			measurement: 'tbsp'
+			measurement: 'Tbsp'
 		    }
 		],
 		steps: [
@@ -605,7 +605,7 @@ describe('Various tests for PUTting recipe data in the databse', () => {
 		    {
 			text_friendly_name: 'Ingredient 1',
 			quantity: 8,
-			measurement: 'tbsp'
+			measurement: 'Tbsp'
 		    }
 		],
 		steps: [
@@ -637,7 +637,7 @@ describe('Various tests for PUTting recipe data in the databse', () => {
 		    {
 			text_friendly_name: 'Ingredient 1',
 			quantity: 8,
-			measurement: 'tbsp'
+			measurement: 'Tbsp'
 		    }
 		],
 		steps: [
@@ -673,7 +673,7 @@ describe('Various tests for PUTting recipe data in the databse', () => {
 		    {
 			text_friendly_name: 'Ingredient 1',
 			quantity: 8,
-			measurement: 'tbsp'
+			measurement: 'Tbsp'
 		    }
 		],
 		steps: [
@@ -712,7 +712,7 @@ describe('Various tests for PUTting recipe data in the databse', () => {
 		    {
 			text_friendly_name: 'Ingredient 1',
 			quantity: 8,
-			measurement: 'tbsp'
+			measurement: 'Tbsp'
 		    },
 		    {
 			text_friendly_name: 'Ingredient 2',
@@ -835,11 +835,11 @@ describe('Various tests for PUTting recipe data in the databse', () => {
 	    });
     });
 
-    it('Should return tbsp because that is the only measurement given for ingredient 1.', (done) => {
+    it('Should return Tbsp because that is the only measurement given for ingredient 1.', (done) => {
 	db.getDb().collection('ingredients').find({name: "ingredient_1"}).toArray((err, results) => {
 	    results.length.should.be.equal(1);
-	    results[0]['most_used_measurement'].should.be.equal('tbsp');
-	    results[0]['measurement_ratios'][0]["measurement"].should.be.equal('tbsp');
+	    results[0]['most_used_measurement'].should.be.equal('Tbsp');
+	    results[0]['measurement_ratios'][0]["measurement"].should.be.equal('Tbsp');
 	    results[0]['measurement_ratios'][0]["percentage"].should.be.equal(1);
 	    done();
 	});
@@ -863,37 +863,23 @@ describe('Various tests for PUTting recipe data in the databse', () => {
 });
 
 describe('Testing the grocery list GET API', () => {
+    var recipe1 = {_id: ObjectID("5b69bea0d125e430b8d6eca2"), "text_friendly_name": 'Sample Recipe', "ingredients": [{"text_friendly_name": 'Ingredient 1', "quantity": 8, "measurement": 'Tbsp'}, {"text_friendly_name": 'Ingredient 2',	"quantity": 1, "measurement": 'tsp'}],"steps": ["Cut stuff up.", "Mix stuff together.", "Cook it and enjoy"], "course": [ "brinner" ], "prep_time": { "minutes": 5, "hours": 0 }, "cook_time": { "minutes": 10, "hours": 1 }, "cuisine": [ 'american' ], "searchable": true };
+    var recipe2 = {_id: ObjectID("5b69bea0d125e430b8d6eca3"), "text_friendly_name": 'Sample Recipe 2', "ingredients": [{ "text_friendly_name": 'Ingredient 2', "quantity": 3, "measurement": 'c'}], "steps": [ "Cut stuff up.", "Mix stuff together.", "Cook it and enjoy" ], "course": [ "brinner" ],"prep_time": {"minutes": 5,"hours": 0},"cook_time": {"minutes": 10,"hours": 1},cuisine: ['american'],"searchable": true};
+    var recipe3 = {_id: ObjectID("5b69bea0d125e430b8d6eca1"), "text_friendly_name": 'Sample Recipe 3',"ingredients": [{"text_friendly_name": 'Ingredient 2',"quantity": 1.5,"measurement": 'Tbsp'}],"steps": [ "Cut stuff up.", "Mix stuff together.", "Cook it and enjoy"],"course": ["brinner"],"prep_time": { "minutes": 5, "hours": 0},"cook_time": { "minutes": 10, "hours": 1},"cuisine": ['american'],"searchable": true};
+    let recipes = [recipe1, recipe2, recipe3];
+    let grocery_list = { "user": "test.user", "recipes":["5b69bea0d125e430b8d6eca2","5b69bea0d125e430b8d6eca1","5b69bea0d125e430b8d6eca3"]}
+    
     before((done) => {
-	db.collectionExists('recipes').then((exists) => {
-	    if (exists) {
-		db.getDb().dropCollection('recipes', (err, results) => {
-		    if (err)
-		    {
-			throw err;
-		    }
-		    db.collectionExists('grocery_lists').then((exists) => {
-			if (exists)
-			{
-			    db.getDb().dropCollection('grocery_lists', (err, results) => {
-				if (err)
-				{
-				    throw err;
-				}
-				done();
-			    });			    
-			}
-			else
-			{
-			    done();
-			}
-		    });
+	db.collectionExistsAndDrop(db, 'recipes').then((dropped) => {
+	    db.collectionExistsAndDrop(db, 'grocery_lists').then((dropped) => {
+		db.getDb().collection('recipes').insertMany(recipes, (err, result) => {
+		    db.getDb().collection('grocery_lists').insertOne(grocery_list, (err, result) => {
+			done()
+		    })
 		});
-	    }
+	    });
 	});
-	
     });
-
-    // TODO(map) : Perform two recipe adds and grocerylist add.
 
     it('Should fail to return a grocery list because there is no userId', (done) => {
 	chai.request(server)
@@ -905,34 +891,21 @@ describe('Testing the grocery list GET API', () => {
 		done()
 	    });
     });
-    
-    // TODO(map) : This needs to be updated to have the correct recipes by getting the id from the response
-    // in the adds.
-    /*it('Should return the recipes list with the correct IDs as well as the full grocery list', (done) => {
+
+    it('Should return the recipes list with the correct IDs as well as the full grocery list', (done) => {
 	chai.request(server)
 	    .get('/groceryList')
 	    .set('userId', 'test.user')
 	    .end((err, res) => {
 		res.should.have.status(200);
-		res.body['recipeList'].length.should.be.equal(2);
-		res.body['recipeList'][0]['_id'].should.be.equal('5b2abac30cd38878b65a3c21');
-		res.body['recipeList'][1]['_id'].should.be.equal('5b2abac30cd38878b65a4b03');
+		res.body['recipeList'].length.should.be.equal(3);
+		res.body['groceryShoppingList']['ingredient_2'].should.be.equal(3.1145833333333335);
 		done();
 	    });
-    });*/
-
-    // TODO(map) : Figure out logic for how I want to build up a grocery list.
-    /*it('Should return the grocery list with cayenne pepper and milk to test same unit addition', (done) => {
-	chai.request(server)
-	    .get('/groceryList')
-	    .set('userId', 'test.user2')
-	    .end((err, res) => {
-		res.should.have.status(200);
-		done();
-	    });
-    });*/
+    });
     
 });
+
 
 describe('Testing the grocery list PUT API', () => {
     before((done) => {
@@ -958,7 +931,7 @@ describe('Testing the grocery list PUT API', () => {
 	chai.request(server)
 	    .post('/groceryList/add')
 	    .send({
-		"user": "test.user",
+		")user": "test.user",
 		"recipes": [
 		]
 	    })

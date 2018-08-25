@@ -49,8 +49,8 @@ describe('cupToTsp() number', function () {
 
 describe('tbspToCup() number', function () {
   it('Should convert tbsp to cup', function () {
-      var tbsp = 16;
-      var expectedCup = 1;
+      var tbsp = 1.5;
+      var expectedCup = 0.09375;
 
       var cup = unitConverter.convertMeasurement(tbsp, 'Tbsp', 'c');
 

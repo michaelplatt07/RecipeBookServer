@@ -11,7 +11,7 @@ exports.convertMeasurement = (aMeasurement, unitFrom, unitTo) => {
 	case 'q':
 	    return this.tspToQuart(aMeasurement);
 	default:
-	    console.log("That conversion doesn't exist.");
+	    console.log(unitFrom + " to " + unitTo + " does not exist.");
 	}
     }
     else if (unitFrom == 'Tbsp')
@@ -24,7 +24,7 @@ exports.convertMeasurement = (aMeasurement, unitFrom, unitTo) => {
 	case 'q':
 	    return this.tbspToQuart(aMeasurement);
 	default:
-	    console.log("'That conversion doesn't exist.");
+	    console.log(unitFrom + " to " + unitTo + " does not exist.");
 	}
     }
     else if (unitFrom == 'c')
@@ -37,7 +37,7 @@ exports.convertMeasurement = (aMeasurement, unitFrom, unitTo) => {
 	case 'q':
 	    return this.cupToQuart(aMeasurement);
 	default:
-	    console.log("'That conversion doesn't exist.");
+	    console.log(unitFrom + " to " + unitTo + " does not exist.");
 	}
     }
     else if (unitFrom == 'q')
@@ -50,7 +50,7 @@ exports.convertMeasurement = (aMeasurement, unitFrom, unitTo) => {
 	case 'c':
 	    return this.quartToCup(aMeasurement);
 	default:
-	    console.log("'That conversion doesn't exist.");
+	    console.log(unitFrom + " to " + unitTo + " does not exist.");
 	}
     }
     else if (unitFrom == 'lb')
@@ -59,7 +59,7 @@ exports.convertMeasurement = (aMeasurement, unitFrom, unitTo) => {
 	case 'oz':
 	    return this.poundToOunce(aMeasurement);
 	default:
-	    console.log("'That conversion doesn't exist.");
+	    console.log(unitFrom + " to " + unitTo + " does not exist.");
 	}
     }
     else if (unitFrom == 'oz')
@@ -68,13 +68,13 @@ exports.convertMeasurement = (aMeasurement, unitFrom, unitTo) => {
 	case 'lb':
 	    return this.ounceToPound(aMeasurement);
 	default:
-	    console.log("'That conversion doesn't exist.");
+	    console.log(unitFrom + " to " + unitTo + " does not exist.");
 	}
     }
     else
     {
 	// TODO(map) : Think about maybe throwing an error here instead.
-	console.log("That conversion doesn't exist.");
+	console.log(unitFrom + " to " + unitTo + " does not exist.");
     }
 }
 
@@ -143,5 +143,5 @@ exports.poundToOunce = (pound) => {
  * ----------------------------------
  * |     STRING REPRESENTATIONS     |
  * ----------------------------------
-*/
+ */
 
