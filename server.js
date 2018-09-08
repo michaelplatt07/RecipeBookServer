@@ -35,6 +35,12 @@ app.get('/recipes', (req, res) => {
 });
 
 
+// Search for single recipe with an ID
+app.get('/recipes/id/:id?', (req, res) => {
+    recipeApi.getRecipeById(db.getDb(), req, res);
+});
+
+
 // Search recipe by criteria.
 // ?ingredients=ingredient1+ingredient2+...
 // ?course=course1+course2+...

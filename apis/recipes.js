@@ -1,4 +1,5 @@
 const utils = require('../utils/utility-functions');
+const mongo = require('mongodb');
 const debug = require('debug')('recipes');
 
 /**
@@ -24,7 +25,27 @@ exports.getRecipes = async (db, req, res) => {
 
 
 /**
- * Returns a single recipe by name.
+* Gets a single recipe by id.
+*/
+exports.getRecipeById = async (db, req, res) => {
+    debug("In getById");
+    var query = {};
+    query._id =  new mongo.ObjectID(req.params.id);
+    query.searchable = true;
+
+    let recipe = await db.collection("recipes").findOne(query);
+    if (!recipe || recipe.length == 0)
+    {
+	res.setHeader('Content-Type', 'application/json');
+	return res.status(404).send({ msg: 'There were no recipes found for the given ID.' });
+    }	    
+    res.setHeader('Content-Type', 'application/json');
+    return res.status(200).send({ title: recipe['name'], recipe: recipe });
+}
+
+
+/**
+ * Returns all recipes with the given name.
  */
 exports.getRecipeByName = async (db, req, res) => {
     debug("In getByName");
@@ -233,6 +254,7 @@ exports.addNewRecipe = async (db, req, res) => {
     else
     {
 	recipeData['search_name'] = utils.convertTextToSearch(recipeData['text_friendly_name']);
+	recipeData['short_description'] = utils.createShortDescription(recipeData['description']);
 	utils.insertIngredients(db, recipeData['ingredients']);
 
 	let recipe = await db.collection('recipes').insertOne(recipeData);

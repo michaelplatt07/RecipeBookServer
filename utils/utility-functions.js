@@ -75,6 +75,13 @@ exports.convertTextToSearch = (textFriendlyString) => {
 
 
 /**
+* Creates the short description of the recipe
+*/
+exports.createShortDescription = (description) => {
+    return description.substring(0, 100) + "...";
+}
+
+/**
  * Checks the data and ensures the correc information is available and no constraints are violated.  If there is
  * a violation in the data we build up an error report to return.
  */
@@ -144,6 +151,11 @@ exports.checkRecipePostData = (jsonData) => {
     if (!jsonData['searchable'])
     {
 	errMsgDict['noSearchableError'] = 'Please select if you want the recipe to be private or public.';
+    }
+
+    if (!jsonData['description'])
+    {
+	errMsgDict['noDescriptionError'] = 'Please include a description of the dish.'; 
     }
     
     return errMsgDict;

@@ -47,6 +47,16 @@ describe('All recipe endpoints with an empty database', () => {
 	    });
     });
     
+    it('Should return no recipes found for the given ID', (done) => {
+	chai.request(server)
+	    .get('/recipes/id/5b69bea0d125e430b8d6eca2')
+	    .end((err, res) => {
+		res.should.have.status(404);
+		res.body['msg'].should.be.equal('There were no recipes found for the given ID.');
+		done();
+	    });
+    });    
+
     it('Should return no recipes found for the given criteria', (done) => {
 	chai.request(server)
 	    .get('/recipes/search')
@@ -111,8 +121,8 @@ describe('All recipe endpoints with an empty database', () => {
 
 describe('All recipe endpoints with sample recipes in the database', () => {
     before((done) => {
-	var recipe1 = {"search_name": "mikes_mac_and_cheese", "text_friendly_name": "Mikes Mac and Cheese","ingredients": [{"name": "elbow_noodles","text_friendly_name": "elbow noodles","quantity": 12,"measurement": "oz"},{"name": "cheddar_cheese","text_friendly_name": "cheddar cheese","quantity": 6,"measurement": "oz"},{"name": "gouda_cheese","text_friendly_name": "gouda cheese","quantity": 6,"measurement": "oz"},{"name": "milk","text_friendly_name": "milk","quantity": 2,"measurement": "oz"}],"steps": ["Bring water to a boil","Cook noodels until al dente.","Add the milk and cheeses and melt down.","Stir constantly to ensure even coating and serve."],"course": ["dinner","lunch","side"],"prep_time": {"minutes": 15,"hours": 0},"cook_time":{"minutes": 25,"hours": 1},"cuisine": "italian","submitted_by": "User1","searchable": true};
-	var recipe2 = {"search_name": "ice_cream", "text_friendly_name": "Ice Cream", "ingredients": [{"name": "sugar", "text_friendly_name": "sugar", "quantity": 8, "measurment": "Tbsp"}, {"name": "vanilla", "text_friendly_name": "vanilla", "quantity": 2, "measurment": "tsp"}, {"name": "milk", "text_friendly_name": "milk", "quantity": 12, "measurment": "oz"}], "steps": ["Mix everything together.", "Tumble until solid."], "course": ["dessert"], "prep_time": {"minutes": 5, "hours": 0}, "cook_time": {"minutes": 40, "hours": 2}, "cuisine": "american", "submitted_by": "User1", "searchable": true};
+	var recipe1 = {_id: ObjectID("5b69bea0d125e430b8d6eca2"), "search_name": "mikes_mac_and_cheese", "text_friendly_name": "Mikes Mac and Cheese","ingredients": [{"name": "elbow_noodles","text_friendly_name": "elbow noodles","quantity": 12,"measurement": "oz"},{"name": "cheddar_cheese","text_friendly_name": "cheddar cheese","quantity": 6,"measurement": "oz"},{"name": "gouda_cheese","text_friendly_name": "gouda cheese","quantity": 6,"measurement": "oz"},{"name": "milk","text_friendly_name": "milk","quantity": 2,"measurement": "oz"}],"steps": ["Bring water to a boil","Cook noodels until al dente.","Add the milk and cheeses and melt down.","Stir constantly to ensure even coating and serve."],"course": ["dinner","lunch","side"],"prep_time": {"minutes": 15,"hours": 0},"cook_time":{"minutes": 25,"hours": 1},"cuisine": "italian","submitted_by": "User1","searchable": true};
+	var recipe2 = {_id: ObjectID("5b69bea0d125e430b8d6eca3"), "search_name": "ice_cream", "text_friendly_name": "Ice Cream", "ingredients": [{"name": "sugar", "text_friendly_name": "sugar", "quantity": 8, "measurment": "Tbsp"}, {"name": "vanilla", "text_friendly_name": "vanilla", "quantity": 2, "measurment": "tsp"}, {"name": "milk", "text_friendly_name": "milk", "quantity": 12, "measurment": "oz"}], "steps": ["Mix everything together.", "Tumble until solid."], "course": ["dessert"], "prep_time": {"minutes": 5, "hours": 0}, "cook_time": {"minutes": 40, "hours": 2}, "cuisine": "american", "submitted_by": "User1", "searchable": true};
 
 	var recipes = [recipe1, recipe2];
 	
@@ -142,7 +152,17 @@ describe('All recipe endpoints with sample recipes in the database', () => {
 		done();
 	    });
     });
-    
+
+    it('Should return a single recipe given the correct ID', (done) => {
+	chai.request(server)
+	    .get('/recipes/id/5b69bea0d125e430b8d6eca2')
+	    .end((err, res) => {
+		res.should.have.status(200);
+		res.body['recipe']['search_name'].should.be.equal('mikes_mac_and_cheese');
+		done();
+	    });
+    });
+
     it('Should return the mac and cheese recipe as we are only searching by the cheese ingredient', (done) => {
 	chai.request(server)
 	    .get('/recipes/search?ingredients=gouda_cheese')
@@ -703,7 +723,7 @@ describe('Various tests for PUTting recipe data in the databse', () => {
 	    });
     });
 
-    it('Should successfully insert Recipe 1 because all data is there', (done) => {
+    it('Should should fail because there is no description', (done) => {
 	chai.request(server)
 	    .post('/recipes/add')
 	    .send({
@@ -742,6 +762,51 @@ describe('Various tests for PUTting recipe data in the databse', () => {
 		searchable: true
 	    })
 	    .end((err, res) => {
+		res.should.have.status(422);
+		res.body['msg']['noDescriptionError'].should.be.equal('Please include a description of the dish.');		done();
+	    });
+    });
+    
+    it('Should successfully insert Recipe 1 because all data is there', (done) => {
+	chai.request(server)
+	    .post('/recipes/add')
+	    .send({
+		text_friendly_name: 'Sample Recipe',
+		ingredients: [
+		    {
+			text_friendly_name: 'Ingredient 1',
+			quantity: 8,
+			measurement: 'Tbsp'
+		    },
+		    {
+			text_friendly_name: 'Ingredient 2',
+			quantity: 1,
+			measurement: 'oz'
+		    }
+		],
+		steps: [
+		    "Cut stuff up.",
+		    "Mix stuff together.",
+		    "Cook it and enjoy"
+		],
+		course: [
+		    "brinner"
+		],
+		prep_time: {
+		    "minutes": 5,
+		    "hours": 0
+		},
+		cook_time: {
+		    "minutes": 10,
+		    "hours": 1
+		},
+		cuisine: [
+		    'american'
+		],
+		searchable: true,
+		description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras ornare urna imperdiet nisl semper maximus. Duis egestas elit a mi ornare, at fringilla lorem mattis. Duis feugiat velit nisi, in placerat dolor facilisis sit amet. In pulvinar et felis eget sagittis. Phasellus ac ipsum et orci interdum ultricies. Suspendisse mauris nibh, euismod in neque et, elementum sagittis eros. Sed mi justo, luctus sed tortor quis, vulputate hendrerit felis. Nunc tincidunt ultricies luctus. Donec imperdiet id nunc nec tempus. Suspendisse sit amet nunc pellentesque, facilisis mauris quis, gravida est. Suspendisse dapibus risus ut aliquam rutrum. Pellentesque erat arcu, pretium eu nisi ut, vestibulum euismod nunc. Mauris ac pulvinar ipsum, quis rutrum quam. Nam non tincidunt nisi. Nam nec arcu ut risus dapibus convallis. Vestibulum nisl elit, congue eu purus eu, luctus mollis risus."
+	    })
+	    .end((err, res) => {
 		res.should.have.status(200);
 		done();
 	    });
@@ -778,7 +843,8 @@ describe('Various tests for PUTting recipe data in the databse', () => {
 		cuisine: [
 		    'american'
 		],
-		searchable: true
+		searchable: true,
+		description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras ornare urna imperdiet nisl semper maximus. Duis egestas elit a mi ornare, at fringilla lorem mattis. Duis feugiat velit nisi, in placerat dolor facilisis sit amet. In pulvinar et felis eget sagittis. Phasellus ac ipsum et orci interdum ultricies. Suspendisse mauris nibh, euismod in neque et, elementum sagittis eros. Sed mi justo, luctus sed tortor quis, vulputate hendrerit felis. Nunc tincidunt ultricies luctus. Donec imperdiet id nunc nec tempus. Suspendisse sit amet nunc pellentesque, facilisis mauris quis, gravida est. Suspendisse dapibus risus ut aliquam rutrum. Pellentesque erat arcu, pretium eu nisi ut, vestibulum euismod nunc. Mauris ac pulvinar ipsum, quis rutrum quam. Nam non tincidunt nisi. Nam nec arcu ut risus dapibus convallis. Vestibulum nisl elit, congue eu purus eu, luctus mollis risus."
 	    })
 	    .end((err, res) => {
 		res.should.have.status(200);
@@ -817,7 +883,8 @@ describe('Various tests for PUTting recipe data in the databse', () => {
 		cuisine: [
 		    'american'
 		],
-		searchable: true
+		searchable: true,
+		description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras ornare urna imperdiet nisl semper maximus. Duis egestas elit a mi ornare, at fringilla lorem mattis. Duis feugiat velit nisi, in placerat dolor facilisis sit amet. In pulvinar et felis eget sagittis. Phasellus ac ipsum et orci interdum ultricies. Suspendisse mauris nibh, euismod in neque et, elementum sagittis eros. Sed mi justo, luctus sed tortor quis, vulputate hendrerit felis. Nunc tincidunt ultricies luctus. Donec imperdiet id nunc nec tempus. Suspendisse sit amet nunc pellentesque, facilisis mauris quis, gravida est. Suspendisse dapibus risus ut aliquam rutrum. Pellentesque erat arcu, pretium eu nisi ut, vestibulum euismod nunc. Mauris ac pulvinar ipsum, quis rutrum quam. Nam non tincidunt nisi. Nam nec arcu ut risus dapibus convallis. Vestibulum nisl elit, congue eu purus eu, luctus mollis risus."
 	    })
 	    .end((err, res) => {
 		res.should.have.status(200);
