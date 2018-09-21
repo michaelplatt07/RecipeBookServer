@@ -91,8 +91,7 @@ exports.collectionExistsAndDrop = (db, collectionName) => {
 	    {
 		debug(collectionName + " did not exist and was not droppped.");
 		resolve(false);
-		// TODO(map) : Figure out what I want to do here.  Maybe a message of some sort.
-	    }
+		}
 	});
     });
 }

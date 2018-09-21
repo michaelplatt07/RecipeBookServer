@@ -87,6 +87,7 @@ exports.createShortDescription = (description) => {
  */
 // TODO(map) : Make this error checking more robust to include checks for valid values on certain fields such as
 // making sure course is something like 'dinner' and not 'foo'.
+// TODO(map) :  Need to fix so we can include ingredients without units (ie. whole tomatoes)
 exports.checkRecipePostData = (jsonData) => {
     var errMsgDict = {};
 
@@ -169,6 +170,7 @@ exports.checkRecipePostData = (jsonData) => {
  *
  * This will ensure the most commonly used unit is what we build the grocery list up with.
  */
+// TODO(map) : This function needs to be rewritten for ingredients that don't have measurements (ie. whole tomatoes)
 exports.insertIngredients = (db, ingredientList) => {
     ingredientList.forEach((ingredient) => {
 	var query = {};
