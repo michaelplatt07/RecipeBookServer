@@ -20,53 +20,6 @@ exports.mongoIdInArray = (value, anArray) => {
 
 
 /**
- * Method to check if a measurment exists in the list of measurements that are returned for a mongo query.  This is
- * used in the addIngredients method and might be re-used elsewhere.
- */
-exports.measurementInDb = (aMeasurement, measurementList) => {
-    var duplicate = false;
-    for (let i = 0; i < measurementList['measurement_ratios'].length; ++i)
-    {
-	// Searching for duplicates and if so update the information.
-	if (measurementList['measurement_ratios'][i]['measurement'] == aMeasurement)
-	{
-	    duplicate = true;
-	    measurementList['measurement_ratios'][i]['count'] += 1;
-	    measurementList['total_measurements_added'] += 1;
-	    break;
-	}
-    }
-
-    if (!duplicate) // This is a new measurement and has to be added to the list.
-    {
-	var aRatio = { measurement: aMeasurement, percentage: 0, count: 1 };
-	measurementList['measurement_ratios'].push(aRatio);
-	measurementList['total_measurements_added'] += 1;
-    }
-
-    // Recaclulate percentages and update most used.
-    for (let i = 0; i < measurementList['measurement_ratios'].length; ++i) 
-    {
-	if (i > 0)
-	{
-	    if (measurementList['measurement_ratios'][i -1]['percentage'] < measurementList['measurement_ratios'][i]['percentage']) // The previous measurement has a higher percentage of being used.
-	    {
-		measurementList['most_used_measurement'] = measurementList['measurement_ratios'][i]['measurement']
-	    }
-	    else
-	    { // The later measurement has a higher percentage of being used.
-		measurementList['most_used_measurement'] = measurementList['measurement_ratios'][i -1]['measurement']
-	    }
-	}
-
-	measurementList['measurement_ratios'][i]['percentage'] = Math.floor(measurementList['measurement_ratios'][i]['count'] / measurementList['total_measurements_added'] * 100);
-    } 
-       
-    return measurementList;
-};
-
-
-/**
 * Converts a text friendly name to the searchable name
 */
 exports.convertTextToSearch = (textFriendlyString) => {
@@ -81,13 +34,13 @@ exports.createShortDescription = (description) => {
     return description.substring(0, 100) + "...";
 }
 
+
 /**
  * Checks the data and ensures the correc information is available and no constraints are violated.  If there is
  * a violation in the data we build up an error report to return.
  */
 // TODO(map) : Make this error checking more robust to include checks for valid values on certain fields such as
 // making sure course is something like 'dinner' and not 'foo'.
-// TODO(map) :  Need to fix so we can include ingredients without units (ie. whole tomatoes)
 exports.checkRecipePostData = (jsonData) => {
     var errMsgDict = {};
 
@@ -116,7 +69,7 @@ exports.checkRecipePostData = (jsonData) => {
 		break;
 	    }
 
-	    if (!jsonData['ingredients'][i]['measurement'] || jsonData['ingredients'][i]['measurement'] == '')
+	    if (!jsonData['ingredients'][i]['measurement'] && jsonData['ingredients'][i]['measurement'] !== '')
 	    {
 		errMsgDict['noIngredientMeasurementError'] = 'One or more of the ingredients did not have a measurement given.';
 		break;
@@ -164,15 +117,66 @@ exports.checkRecipePostData = (jsonData) => {
 
 
 /**
+ * Method to check if a measurment exists in the list of measurements that are returned for a mongo query.  This is
+ * used in the addIngredients method and might be re-used elsewhere.
+ */
+exports.measurementInDb = (aMeasurement, measurementList) => {
+    var duplicate = false;
+    for (let i = 0; i < measurementList['measurement_ratios'].length; ++i)
+    {
+	// Searching for duplicates and if so update the information.
+	if (measurementList['measurement_ratios'][i]['measurement'] == aMeasurement)
+	{
+	    duplicate = true;
+	    measurementList['measurement_ratios'][i]['count'] += 1;
+	    measurementList['total_measurements_added'] += 1;
+	    break;
+	}
+    }
+
+    if (!duplicate) // This is a new measurement and has to be added to the list.
+    {
+	var aRatio = { measurement: aMeasurement, percentage: 0, count: 1 };
+	measurementList['measurement_ratios'].push(aRatio);
+	measurementList['total_measurements_added'] += 1;
+    }
+
+    // Recaclulate percentages and update most used.
+    for (let i = 0; i < measurementList['measurement_ratios'].length; ++i) 
+    {
+	if (i > 0)
+	{
+	    if ((measurementList['measurement_ratios'][i - 1]['percentage'] < measurementList['measurement_ratios'][i]['percentage'])  && (measurementList['measurement_ratios'][i]['measurement'] !== '')) // The previous measurement has a higher percentage of being used.
+	    {
+		measurementList['most_used_measurement'] = measurementList['measurement_ratios'][i]['measurement']
+	    }
+	    else if ((measurementList['measurement_ratios'][i - 1]['percentage'] > measurementList['measurement_ratios'][i]['percentage']) && (measurementList['measurement_ratios'][i - 1]['measurement'] !== ''))
+	    { // The later measurement has a higher percentage of being used.
+		measurementList['most_used_measurement'] = measurementList['measurement_ratios'][i -1]['measurement']
+	    }
+	    else
+	    {
+		// Do nothing because there was no enough of a change in the percentages
+	    }
+	}
+
+	measurementList['measurement_ratios'][i]['percentage'] = Math.floor(measurementList['measurement_ratios'][i]['count'] / measurementList['total_measurements_added'] * 100);
+    } 
+       
+    return measurementList;
+};
+
+
+/**
  * This method does a number of things.  It checks to see if the ingredient already exists in the collection.  In
  * the event that it doesn't, we add the ingredient.  If it does, we get the units, we add +1 to the unit counter,
  * and update the most used unit if needed.
  *
  * This will ensure the most commonly used unit is what we build the grocery list up with.
  */
-// TODO(map) : This function needs to be rewritten for ingredients that don't have measurements (ie. whole tomatoes)
 exports.insertIngredients = (db, ingredientList) => {
     ingredientList.forEach((ingredient) => {
+
 	var query = {};
 	query.name = this.convertTextToSearch(ingredient['text_friendly_name']);
 	db.collection('ingredients').findOne(query, (err, results) => {
@@ -205,7 +209,6 @@ exports.insertIngredients = (db, ingredientList) => {
 		    }
 		});
 	    }
-	});
+	});	    
     });
-    
-};
+}

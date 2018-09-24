@@ -1,36 +1,36 @@
 {
-   "name": "recipebook",
-   "version": "1.0.0",
-   "description": "Node JS web application that includes a server as well as a UI.  The application serves to deliver recipes as well as build a grocery list of necessary items to make a number of selected recipes.",
-   "main": "index.js",
-   "scripts": {
-      "test": "NODE_ENV=test mocha test/*.js",
-      "start": "NODE_ENV=dev DEBUG=recipes,groceryList,db nodejs bin/www"
-   },
-   "repository": {
-      "type": "git",
-      "url": "git+https://github.com/michaelplatt07/RecipeBook.git"
-   },
-   "author": "Michael Platt",
-   "license": "ISC",
-   "bugs": {
-      "url": "https://github.com/michaelplatt07/RecipeBook/issues"
-   },
-   "homepage": "https://github.com/michaelplatt07/RecipeBook#readme",
-   "dependencies": {
-      "await": "^0.2.6",
-      "bluebird": "^3.5.1",
-      "body-parser": "^1.18.2",
-      "chai": "^4.1.2",
-      "chai-http": "^4.0.0",
-      "config": "^1.30.0",
-      "debug": "^3.1.0",
-      "ejs": "^2.5.9",
-      "express": "^4.16.3",
-      "hoek": "^5.0.3",
-      "mocha": "^5.1.1",
-      "mongodb": "^2.2.35",
-      "request": "^2.86.0",
-      "request-promise": "^4.2.2"
-   }
+    "name": "recipebook",
+    "version": "1.0.0",
+    "description": "Node JS web application that includes a server as well as a UI.  The application serves to deliver recipes as well as build a grocery list of necessary items to make a number of selected recipes.",
+    "main": "index.js",
+    "scripts": {
+	"test": "NODE_ENV=test mocha test/*.js",
+	"start": "NODE_ENV=dev DEBUG=recipes,groceryList,db nodejs bin/www"
+    },
+    "repository": {
+	"type": "git",
+	"url": "git+https://github.com/michaelplatt07/RecipeBook.git"
+    },
+    "author": "Michael Platt",
+    "license": "ISC",
+    "bugs": {
+	"url": "https://github.com/michaelplatt07/RecipeBook/issues"
+    },
+    "homepage": "https://github.com/michaelplatt07/RecipeBook#readme",
+    "dependencies": {
+	"await": "^0.2.6",
+	"bluebird": "^3.5.1",
+	"body-parser": "^1.18.2",
+	"chai": "^4.1.2",
+	"chai-http": "^4.0.0",
+	"config": "^1.30.0",
+	"debug": "^3.1.0",
+	"ejs": "^2.5.9",
+	"express": "^4.16.3",
+	"hoek": "^5.0.3",
+	"mocha": "^5.1.1",
+	"mongodb": "^2.2.35",
+	"request": "^2.86.0",
+	"request-promise": "^4.2.2"
+    }
 }
