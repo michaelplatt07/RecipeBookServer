@@ -11,6 +11,7 @@ db.connect();
 // API imports.
 var recipeApi = require('./apis/recipes.js');
 var groceryListApi = require('./apis/groceryList.js');
+var ingredientApi = require('./apis/ingredients.js');
 
 
 // Config stuff for server.
@@ -100,11 +101,21 @@ app.post('/recipes/add', (req, res) => {
  * |     GROCERY LIST ROUTING     |
  * --------------------------------
  */
+/**
+ * ----------------
+ * |     GETS     |
+ * ----------------
+ */
 app.get('/groceryList', (req, res) => {
     groceryListApi.getGroceryListByUser(db.getDb(), req, res);
 });
 
 
+/**
+ * ----------------
+ * |     PUTS     |
+ * ----------------
+*/
 // Add new grocery list.
 app.post('/groceryList/add', (req, res) => {
     groceryListApi.createNewGroceryList(db.getDb(), req, res);
@@ -121,5 +132,23 @@ app.post('/groceryList/addRecipe', (req, res) => {
 app.post('/groceryList/removeRecipe', (req, res) => {
     groceryListApi.removeRecipeFromGroceryList(db.getDb(), req, res);
 });
+
+
+
+/**
+ * --------------------------------
+ * |      INGREDIENT ROUTING      |
+ * --------------------------------
+ */
+/**
+ * ----------------
+ * |     GETS     |
+ * ----------------
+ */
+app.get('/ingredients', (req, res) => {
+    ingredientApi.getAllIngredients(db.getDb(), req, res);
+});
+
+
 
 module.exports = app;
