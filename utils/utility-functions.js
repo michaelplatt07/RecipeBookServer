@@ -196,7 +196,6 @@ exports.insertIngredients = (db, ingredientList) => {
 	    }
 	    else // New ingredient
 	    {
-		ingredient['name'] = this.convertTextToSearch(ingredient['text_friendly_name']);
 		ingredient['most_used_measurement'] = ingredient['measurement'];
 		ingredient['total_measurements_added'] = 1;
 		ingredient['measurement_ratios'] = [{measurement: ingredient['measurement'], percentage: 1, count: 1}];
