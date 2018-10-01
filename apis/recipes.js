@@ -81,7 +81,7 @@ exports.getRecipesBySearchCriteria = async (db, req, res) => {
     if (req.query.ingredients) { // Check if ingredient parameter was provided.
 	var query = {};
 	query.searchable = true;
-	query = {'ingredients.name': {$in: req.query.ingredients.split(' ')}};
+	query = {'ingredients.name': {$regex: req.query.ingredients.split(" ").join("|")}};
 	queryList.push(query);
     }
 
