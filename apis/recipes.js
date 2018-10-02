@@ -80,14 +80,12 @@ exports.getRecipesBySearchCriteria = async (db, req, res) => {
 
     if (req.query.ingredients) { // Check if ingredient parameter was provided.
 	var query = {};
-	query.searchable = true;
 	query = {'ingredients.name': {$regex: req.query.ingredients.split(" ").join("|")}};
 	queryList.push(query);
     }
 
     if (req.query.course) { // Check if course parameter was provided.
 	var query = {};
-	query.searchable = true;
 	query.course = {$in: req.query.course.split(' ')};
 	queryList.push(query);
     }
@@ -95,7 +93,6 @@ exports.getRecipesBySearchCriteria = async (db, req, res) => {
     if (req.query.submitted_by)
     {
 	var query = {};
-	query.searchable = true;
 	query.submitted_by = req.query.submitted_by;
 	queryList.push(query);
     }
@@ -103,7 +100,6 @@ exports.getRecipesBySearchCriteria = async (db, req, res) => {
     if (req.query.cuisine)
     {
 	var query = {};
-	query.searchable = true;
 	query.cuisine = {$in: req.query.cuisine.split(' ')};
 	queryList.push(query);
     }
