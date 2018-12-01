@@ -78,29 +78,31 @@ exports.getRecipesBySearchCriteria = async (db, req, res) => {
     var queryList = [];
     var promiseList = [];
 
-    if (req.query.ingredients) { // Check if ingredient parameter was provided.
+    console.log("TODO(map) : REMOVE ME : " + req.body.ingredients)
+    
+    if (req.body.ingredients) { // Check if ingredient parameter was provided.
 	var query = {};
-	query = {'ingredients.name': {$regex: req.query.ingredients.split(" ").join("|")}};
+	query = {'ingredients.name': {$regex: req.body.ingredients.includes(" ") ? req.body.ingredients.split(" ").join("|") : req.body.ingredients.toString()}};
 	queryList.push(query);
     }
 
-    if (req.query.course) { // Check if course parameter was provided.
+    if (req.body.course) { // Check if course parameter was provided.
 	var query = {};
-	query.course = {$in: req.query.course.split(' ')};
+	query.course = req.body.course.includes(" ") ? {$in: req.body.course.split(' ')} : req.body.course.toString();
 	queryList.push(query);
     }
 
-    if (req.query.submitted_by)
+    if (req.body.submitted_by)
     {
 	var query = {};
-	query.submitted_by = req.query.submitted_by;
+	query.submitted_by = req.body.submitted_by;
 	queryList.push(query);
     }
 
-    if (req.query.cuisine)
+    if (req.body.cuisine)
     {
 	var query = {};
-	query.cuisine = {$in: req.query.cuisine.split(' ')};
+	query.cuisine = req.body.cuisine.includes(" ") ? {$in: req.body.cuisine.split(' ')} : req.body.cuisine.toString();
 	queryList.push(query);
     }
 
@@ -137,8 +139,8 @@ exports.getRecipesByIngredients = async (db, req, res) => {
     debug("In byIngredients");
     var query = {};
     query.searchable = true;
-    if (req.query.list) {
-	query = {'ingredients.name': {$in: req.query.list.split(' ')}};
+    if (req.body.list) {
+	query = {'ingredients.name': {$in: req.body.list.split(' ')}};
     }
     else
     {
@@ -165,8 +167,8 @@ exports.getRecipesByCourse = async (db, req, res) => {
     debug("In byCourse");
     var query = {};
     query.searchable = true;
-    if (req.query.list) {
-	query.course = {$in: req.query.list.split(' ')};
+    if (req.body.list) {
+	query.course = {$in: req.body.list.split(' ')};
     }
     else
     {
@@ -192,8 +194,8 @@ exports.getRecipesByCuisine = async (db, req, res) => {
     debug('In byCuisine');
     var query = {}
     query.searchable = true;
-    if (req.query.list) {
-	query.cuisine = {$in: req.query.list.split(' ')};
+    if (req.body.list) {
+	query.cuisine = {$in: req.body.list.split(' ')};
     }
     else
     {

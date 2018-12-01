@@ -17,6 +17,109 @@ const ObjectID = require('mongodb').ObjectID;
 const db = require('../db');
 db.connect();
 
+describe('User registration, deletion, and logging in.', () => {
+    beforeEach((done) => {
+	db.collectionExists('users').then((exists) => {
+	    if (exists) {
+		db.getDb().dropCollection('users', (err, results) => {
+		    if (err)
+		    {
+			throw err;
+		    }
+		});
+	    }
+	    
+	    db.getDb().createCollection('users', (err, results) => {
+		if (err)
+		{
+		    throw err;
+		}
+		done();
+	    });
+	});
+    });
+
+    
+    it('Should fail with no username being supplied.', (done) => {
+	chai.request(server)
+	    .post('/users/register')
+	    .send({})
+	    .end((err, res) => {
+		res.should.have.status(401);
+		res.body['message'].should.be.equal('Must include a username.');
+		done();
+	    });
+    });
+
+    it('Should fail with no username being supplied.', (done) => {
+	chai.request(server)
+	    .post('/users/register')
+	    .send({ username: "" })
+	    .end((err, res) => {
+		res.should.have.status(401);
+		res.body['message'].should.be.equal('Must include a username.');
+		done();
+	    });
+    });
+
+    it('Should fail with no username being supplied.', (done) => {
+	chai.request(server)
+	    .post('/users/register')
+	    .send({ username: " " })
+	    .end((err, res) => {
+		res.should.have.status(401);
+		res.body['message'].should.be.equal('Must include a username.');
+		done();
+	    });
+    });
+
+    it('Should fail with no password being supplied.', (done) => {
+	chai.request(server)
+	    .post('/users/register')
+	    .send({ username: "test.user" })
+	    .end((err, res) => {
+		res.should.have.status(401);
+		res.body['message'].should.be.equal('Must include a password.');
+		done();
+	    });
+    });
+
+    it('Should fail with a blank password being supplied.', (done) => {
+	chai.request(server)
+	    .post('/users/register')
+	    .send({ username: "test.user", password: "" })
+	    .end((err, res) => {
+		res.should.have.status(401);
+		res.body['message'].should.be.equal('Must include a password.');
+		done();
+	    });
+    });
+
+    it('Should fail with a blank password being supplied.', (done) => {
+	chai.request(server)
+	    .post('/users/register')
+	    .send({ username: "test.user", password: "" })
+	    .end((err, res) => {
+		res.should.have.status(401);
+		res.body['message'].should.be.equal('Must include a password.');
+		done();
+	    });
+    });
+
+    
+    it('Should create the user.', (done) => {
+	chai.request(server)
+	    .post('/users/register')
+	    .send({ username: "test.user", password: "test1234" })
+	    .end((err, res) => {
+		res.should.have.status(200);
+		res.body['message'].should.be.equal('Successfully created user account.');
+		done();
+	    });
+    });
+
+})
+
 describe('All recipe endpoints with an empty database', () => {
     beforeEach((done) => {
 	db.collectionExists('recipes').then((exists) => {

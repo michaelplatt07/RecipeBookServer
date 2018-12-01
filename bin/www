@@ -1,6 +1,14 @@
 // Imports
 const app = require('../server');
 const http = require('http');
+const https = require('https');
+const fs = require('fs');
+
+// HTTPS keys
+var privateKey  = fs.readFileSync('/home/michael/Desktop/RecipeApp/RecipeBookServer/config/key.pem', 'utf8');
+var certificate = fs.readFileSync('/home/michael/Desktop/RecipeApp/RecipeBookServer/config/server.crt', 'utf8');
+var credentials = {key: privateKey, cert: certificate};
+
 
 // Settings.
 const appDomain = 'localhost';
@@ -11,8 +19,11 @@ const port = 3000;
 app.set('port', port);
 
 
-// Create the server.
+// Create the HTTP server.
 const server = http.createServer(app);
+
+// Create the HTTPS server.
+// const server = https.createServer(credentials, app);
 
 
 // Start listening on the specified port.

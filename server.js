@@ -2,6 +2,13 @@
 const url = require('url');
 const express = require('express');
 const bodyParser = require('body-parser');
+var jwt = require('jsonwebtoken');
+
+var passport = require("passport");
+var passportJWT = require("passport-jwt");
+
+var ExtractJwt = passportJWT.ExtractJwt;
+var JwtStrategy = passportJWT.Strategy;
 const app = express();
 
 // DB import.
@@ -9,13 +16,60 @@ const db = require('./db');
 db.connect();
 
 // API imports.
-var recipeApi = require('./apis/recipes.js');
-var groceryListApi = require('./apis/groceryList.js');
-var ingredientApi = require('./apis/ingredients.js');
+const recipeApi = require('./apis/recipes.js');
+const groceryListApi = require('./apis/groceryList.js');
+const ingredientApi = require('./apis/ingredients.js');
+const usersApi = require('./apis/users.js');
+
+
+// Passport config.
+var jwtOptions = {}
+jwtOptions.jwtFromRequest = ExtractJwt.fromAuthHeaderWithScheme("jwt");
+jwtOptions.secretOrKey = 'basicSecret';
+
+var strategy = new JwtStrategy(jwtOptions, async (jwt_payload, next) => {
+    const user = await db.getDb().collection('users').findOne({ username: jwt_payload.id })
+    if (user) {
+	next(null, user);
+    } else {
+	next(null, false);
+    }
+});
+
+passport.use(strategy);
 
 
 // Config stuff for server.
 app.use(bodyParser.json());
+app.use(passport.initialize());
+
+
+/**
+ * --------------------------------
+ * |         USER ROUTING         |
+ * --------------------------------
+ */
+/**
+ * ----------------
+ * |     PUTS     |
+ * ----------------
+ */
+// Register a new user
+app.post('/users/register', (req, res) => {
+    usersApi.createUserAccount(db.getDb(), req, res);
+});
+
+
+// Delete a user.
+app.get('/users/delete/:userName?', (req, res) => {
+    usersApi.deleteUserAccount(db.getDb(), req, res);
+})
+
+
+// Register a new user
+app.post('/users/login', (req, res) => {
+    usersApi.loginUser(db.getDb(), req, res);
+});
 
 
 /**
@@ -31,7 +85,7 @@ app.use(bodyParser.json());
 // All recipes
 // TODO(map) : Check into express-joi
 // app.get('/recipes', expresJoi.joiValidate(mySchema), recipeApi.getRecipes());
-app.get('/recipes', (req, res) => {
+app.get('/recipes', passport.authenticate('jwt', { session: false }), (req, res) => {
     recipeApi.getRecipes(db.getDb(), req, res);
 });
 
@@ -89,9 +143,9 @@ app.get('/recipes/name/:recipeName?', (req, res) => {
  * ----------------
  * |     PUTS     |
  * ----------------
-*/
+ */
 // Add new Recipe.
-app.post('/recipes/add', (req, res) => {
+app.post('/recipes/add', passport.authenticate('jwt', { session: false }), (req, res) => {
     recipeApi.addNewRecipe(db.getDb(), req, res);
 });
 
@@ -106,32 +160,40 @@ app.post('/recipes/add', (req, res) => {
  * |     GETS     |
  * ----------------
  */
-app.get('/groceryList', (req, res) => {
-    groceryListApi.getGroceryListByUser(db.getDb(), req, res);
-});
+app.get('/groceryList',
+	passport.authenticate('basic', { session: false }),
+	(req, res) => {
+	    groceryListApi.getGroceryListByUser(db.getDb(), req, res);
+	});
 
 
 /**
  * ----------------
  * |     PUTS     |
  * ----------------
-*/
+ */
 // Add new grocery list.
-app.post('/groceryList/add', (req, res) => {
-    groceryListApi.createNewGroceryList(db.getDb(), req, res);
-});
+app.post('/groceryList/add',
+	 passport.authenticate('basic', { session: false }),
+	 (req, res) => {
+	     groceryListApi.createNewGroceryList(db.getDb(), req, res);
+	 });
 
 
 // Add recipe to grocery list.
-app.post('/groceryList/addRecipe', (req, res) => {
-    groceryListApi.addRecipeToGroceryList(db.getDb(), req, res);
-});
+app.post('/groceryList/addRecipe',
+	 passport.authenticate('basic', { session: false }),
+	 (req, res) => {
+	     groceryListApi.addRecipeToGroceryList(db.getDb(), req, res);
+	 });
 
 
 // Remove recipe from grocery list.
-app.post('/groceryList/removeRecipe', (req, res) => {
-    groceryListApi.removeRecipeFromGroceryList(db.getDb(), req, res);
-});
+app.post('/groceryList/removeRecipe',
+	 passport.authenticate('basic', { session: false }),
+	 (req, res) => {
+	     groceryListApi.removeRecipeFromGroceryList(db.getDb(), req, res);
+	 });
 
 
 
@@ -148,7 +210,6 @@ app.post('/groceryList/removeRecipe', (req, res) => {
 app.get('/ingredients', (req, res) => {
     ingredientApi.getAllIngredients(db.getDb(), req, res);
 });
-
 
 
 module.exports = app;

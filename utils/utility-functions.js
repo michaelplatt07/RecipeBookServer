@@ -1,3 +1,5 @@
+const _ = require('lodash')
+
 /**
  * Takes a value and an array of mongo db entries and checks to see if the ID exists.  This is just a small util
  * function that I felt like pulling out and could probably be optimized later.
@@ -102,7 +104,7 @@ exports.checkRecipePostData = (jsonData) => {
 	errMsgDict['noCuisineError'] = 'Please include one or more cuisines this dish is a part of.';
     }
 
-    if (!jsonData['searchable'])
+    if (_.isNil(jsonData['searchable']))
     {
 	errMsgDict['noSearchableError'] = 'Please select if you want the recipe to be private or public.';
     }
