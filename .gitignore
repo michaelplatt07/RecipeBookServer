@@ -1,4 +1,2 @@
 node_modules
-config/csr.pem
-config/key.pem
-config/server.crt
+config
