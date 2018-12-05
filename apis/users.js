@@ -45,10 +45,9 @@ exports.createUserAccount = async (db, req, res) => {
 }
 
 
-// TODO(map) : Write test cases for this.
 exports.loginUser = async (db, req, res) => {
     debug("In loginUser")
-
+    
     var decipher = crypto.createDecipher('aes-128-cbc', 'baseSecret')
     var decryptedPass = decipher.update(req.body.password, 'hex', 'utf8')
     decryptedPass += decipher.final('utf8');

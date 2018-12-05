@@ -4,7 +4,7 @@
 			"description": "Node JS web application that includes a server as well as a UI.  The application serves to deliver recipes as well as build a grocery list of necessary items to make a number of selected recipes.",
 			"main": "index.js",
 			"scripts": {
-						"test": "NODE_ENV=test mocha test/*.js",
+						"test": "NODE_ENV=test mocha test/test.js",
 						"start": "NODE_ENV=dev DEBUG=recipes,groceryList,users,db nodejs bin/www"
 			},
 			"repository": {
@@ -42,6 +42,7 @@
 						"passport-jwt": "^4.0.0",
 						"passport-local": "^1.0.0",
 						"request": "^2.88.0",
-						"request-promise": "^4.2.2"
+						"request-promise": "^4.2.2",
+						"supertest": "^3.3.0"
 			}
 }

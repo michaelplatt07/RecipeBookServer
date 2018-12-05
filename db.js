@@ -22,18 +22,13 @@ var dbObj = {
  * object and if not we attempt to conect based on the configuration specified by the NODE_ENV variable and
  * store the database object in the JSON object.
  */
-exports.connect = () => {
+exports.connect = async () => {
     if (dbObj.db)
     {
 	console.log('Already connected to the database.');
     }
     
-    MongoClient.connect(dbUrl + ":" + dbPort + "/" + dbName, {poolSize: 10}, function(err, database) {
-	if(err) throw err;
-
-	dbObj.db = database; // Set the db variable for reuse.
-
-    }); 
+    dbObj.db = await MongoClient.connect(dbUrl + ":" + dbPort + "/" + dbName, {poolSize: 10}); 
 };
 
 

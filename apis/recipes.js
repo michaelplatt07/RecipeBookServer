@@ -77,8 +77,6 @@ exports.getRecipesBySearchCriteria = async (db, req, res) => {
 
     var queryList = [];
     var promiseList = [];
-
-    console.log("TODO(map) : REMOVE ME : " + req.body.ingredients)
     
     if (req.body.ingredients) { // Check if ingredient parameter was provided.
 	var query = {};
@@ -168,7 +166,7 @@ exports.getRecipesByCourse = async (db, req, res) => {
     var query = {};
     query.searchable = true;
     if (req.body.list) {
-	query.course = {$in: req.body.list.split(' ')};
+	query.course = req.body.list.includes(" ") ? {$in: req.body.list.split(' ')} : req.body.list.toString()
     }
     else
     {
@@ -195,7 +193,7 @@ exports.getRecipesByCuisine = async (db, req, res) => {
     var query = {}
     query.searchable = true;
     if (req.body.list) {
-	query.cuisine = {$in: req.body.list.split(' ')};
+	query.cuisine = req.body.list.includes(" ") ? {$in: req.body.list.split(' ')} : req.body.list.toString()
     }
     else
     {

@@ -85,7 +85,7 @@ app.post('/users/login', (req, res) => {
 // All recipes
 // TODO(map) : Check into express-joi
 // app.get('/recipes', expresJoi.joiValidate(mySchema), recipeApi.getRecipes());
-app.get('/recipes', passport.authenticate('jwt', { session: false }), (req, res) => {
+app.get('/recipes', (req, res) => {
     recipeApi.getRecipes(db.getDb(), req, res);
 });
 
