@@ -3,10 +3,11 @@ const app = require('../server');
 const http = require('http');
 const https = require('https');
 const fs = require('fs');
+const path = require('path');
 
 // HTTPS keys
-var privateKey  = fs.readFileSync('/home/michael/Desktop/RecipeApp/RecipeBookServer/config/key.pem', 'utf8');
-var certificate = fs.readFileSync('/home/michael/Desktop/RecipeApp/RecipeBookServer/config/server.crt', 'utf8');
+var privateKey  = fs.readFileSync(path.join(__dirname, '..', 'config/key.pem'), 'utf8');
+var certificate = fs.readFileSync(path.join(__dirname, '..', 'config/server.crt'), 'utf8');
 var credentials = {key: privateKey, cert: certificate};
 
 

@@ -97,3 +97,14 @@ In an attempt to standardize how the grocery list will display relevant units of
 
 ## Testing
 To run the unit tests for this application, navigate to the root directory.  From there, you can run the command `npm test` which will kickstart an entire suite of tests that cover the entire application.
+
+## Generating Certs
+Follow these steps to generate keys and certifications to be used in the API.
+
+NOTE: This has only been tested for Linux distributions.
+
+1. `sudo openssl genrsa -des3 -out server.key 2048`
+2. `sudo openssl req -new -key server.key -out server.csr`
+3. `sudo openssl x509 -req -days 365 -in server.csr -signkey server.key -out server.crt`
+4. `sudo openssl req -x509 -newkey rsa:2048 -keyout keytmp.pem -out cert.pem -days 365`
+5. `sudo openssl rsa -in keytmp.pem -out key.pem`
