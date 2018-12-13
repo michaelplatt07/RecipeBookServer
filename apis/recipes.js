@@ -25,8 +25,8 @@ exports.getRecipes = async (db, req, res) => {
 
 
 /**
-* Gets a single recipe by id.
-*/
+ * Gets a single recipe by id.
+ */
 exports.getRecipeById = async (db, req, res) => {
     debug("In getById");
     var query = {};
@@ -77,30 +77,30 @@ exports.getRecipesBySearchCriteria = async (db, req, res) => {
 
     var queryList = [];
     var promiseList = [];
-    
-    if (req.body.ingredients) { // Check if ingredient parameter was provided.
-	var query = {};
-	query = {'ingredients.name': {$regex: req.body.ingredients.includes(" ") ? req.body.ingredients.split(" ").join("|") : req.body.ingredients.toString()}};
+
+    if (req.query.ingredients) { // Check if ingredient parameter was provided.
+    	var query = {};
+	query = {'ingredients.name': {$regex: req.query.ingredients.includes(" ") ? req.query.ingredients.split(" ").join("|") : req.query.ingredients.toString()}};
 	queryList.push(query);
     }
 
-    if (req.body.course) { // Check if course parameter was provided.
+    if (req.query.course) { // Check if course parameter was provided.
 	var query = {};
-	query.course = req.body.course.includes(" ") ? {$in: req.body.course.split(' ')} : req.body.course.toString();
+	query.course = req.query.course.includes(" ") ? {$in: req.query.course.split(' ')} : req.query.course.toString();
 	queryList.push(query);
     }
 
-    if (req.body.submitted_by)
+    if (req.query.submitted_by)
     {
 	var query = {};
-	query.submitted_by = req.body.submitted_by;
+	query.submitted_by = req.query.submitted_by;
 	queryList.push(query);
     }
 
-    if (req.body.cuisine)
+    if (req.query.cuisine)
     {
 	var query = {};
-	query.cuisine = req.body.cuisine.includes(" ") ? {$in: req.body.cuisine.split(' ')} : req.body.cuisine.toString();
+	query.cuisine = req.query.cuisine.includes(" ") ? {$in: req.query.cuisine.split(' ')} : req.query.cuisine.toString();
 	queryList.push(query);
     }
 
@@ -126,7 +126,7 @@ exports.getRecipesBySearchCriteria = async (db, req, res) => {
 	res.setHeader('Content-Type', 'application/json');
 	return res.status(200).send({ title: 'Recipes', recipes: recipes });
     }
-       
+    
 }
 
 

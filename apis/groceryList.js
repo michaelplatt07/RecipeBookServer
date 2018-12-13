@@ -22,7 +22,7 @@ exports.getGroceryListByUser = async (db, req, res) => {
 	var query = {};
 	query.user =  req.get('userId');
 	let groceryList = await db.collection('grocery_lists').findOne(query);
-	recipePromiseList = []
+	let recipePromiseList = [];
 	groceryList.recipes.forEach((recipe) => {
 	    var o_id = new ObjectID(recipe);
 	    recipePromiseList.push(db.collection("recipes").findOne({ '_id': o_id }));

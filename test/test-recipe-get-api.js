@@ -181,8 +181,7 @@ describe('All recipe endpoints with sample recipes in the database', () => {
 
     it('Should return the ice cream recipe as we are only searching by the vanilla ingredient', (done) => {
 	chai.request(server)
-	    .get('/recipes/search')
-	    .send({ ingredients: "vanilla" })
+	    .get('/recipes/search?ingredients=vanilla&course=vanilla&submitted_by=vanilla&cuisine=vanilla')
 	    .end((err, res) => {
 		res.should.have.status(200);
 		res.body['recipes'][0]['search_name'].should.be.equal('ice_cream');
@@ -192,8 +191,7 @@ describe('All recipe endpoints with sample recipes in the database', () => {
 
     it('Should return both the mac and cheese recipe and ice cream recipe since we are using an ingredient from each', (done) => {
 	chai.request(server)
-	    .get('/recipes/search')
-	    .send({ ingredients: "gouda_cheese vanilla" })
+	    .get('/recipes/search?ingredients=gouda_cheese vanilla&course=gouda_cheese vanilla&submitted_by=gouda_cheese vanilla&cuisine=gouda_cheese vanilla')
 	    .end((err, res) => {
 		res.should.have.status(200);
 		res.body['recipes'].length.should.be.equal(2);
@@ -203,8 +201,7 @@ describe('All recipe endpoints with sample recipes in the database', () => {
 
     it('Should return the mac and cheese recipe because we searched by its course', (done) => {
 	chai.request(server)
-	    .get('/recipes/search')
-	    .send({ course: "dinner" })
+	    .get('/recipes/search?ingredients=dinner&course=dinner&submitted_by=dinner&cuisine=dinner')
 	    .end((err, res) => {
 		res.should.have.status(200);
 		res.body['recipes'][0]['search_name'].should.be.equal('mikes_mac_and_cheese');
@@ -214,8 +211,7 @@ describe('All recipe endpoints with sample recipes in the database', () => {
 
     it('Should return the ice cream recipe because we searched by its course', (done) => {
 	chai.request(server)
-	    .get('/recipes/search')
-	    .send({ course: "dessert" })
+	    .get('/recipes/search?ingredients=dessert&course=dessert&submitted_by=dessert&cuisine=dessert')
 	    .end((err, res) => {
 		res.should.have.status(200);
 		res.body['recipes'][0]['search_name'].should.be.equal('ice_cream');
@@ -225,8 +221,7 @@ describe('All recipe endpoints with sample recipes in the database', () => {
 
     it('Should return both recipes because we searched by multiple', (done) => {
 	chai.request(server)
-	    .get('/recipes/search')
-	    .send({ course: "dessert side" })
+	    .get('/recipes/search?ingredients=dessert+side&course=dessert+side&submitted_by=dessert+side&cuisine=dessert+side')
 	    .end((err, res) => {
 		res.should.have.status(200);
 		res.body['recipes'].length.should.be.equal(2);
@@ -236,8 +231,7 @@ describe('All recipe endpoints with sample recipes in the database', () => {
 
     it('Should return both recipes because we searched by their author', (done) => {
 	chai.request(server)
-	    .get('/recipes/search')
-	    .send({ submitted_by: "User1" })
+	    .get('/recipes/search?ingredients=User1&course=User1&submitted_by=User1&cuisine=User1')
 	    .end((err, res) => {
 		res.should.have.status(200);
 		res.body['recipes'].length.should.be.equal(2);
@@ -247,8 +241,7 @@ describe('All recipe endpoints with sample recipes in the database', () => {
     
     it('Should return the mac and cheese recipe because we searched by its cuisine', (done) => {
 	chai.request(server)
-	    .get('/recipes/search')
-	    .send({ cuisine: "italian" })
+	    .get('/recipes/search?ingredients=italian&course=italian&submitted_by=italian&cuisine=italian')
 	    .end((err, res) => {
 		res.should.have.status(200);
 		res.body['recipes'][0]['search_name'].should.be.equal('mikes_mac_and_cheese');
@@ -258,8 +251,7 @@ describe('All recipe endpoints with sample recipes in the database', () => {
 
     it('Should return the ice cream recipe because we searched by its cuisine', (done) => {
 	chai.request(server)
-	    .get('/recipes/search')
-	    .send({ cuisine: "american" })
+	    .get('/recipes/search?ingredients=american&course=american&submitted_by=american&cuisine=american')
 	    .end((err, res) => {
 		res.should.have.status(200);
 		res.body['recipes'][0]['search_name'].should.be.equal('ice_cream');
@@ -269,9 +261,8 @@ describe('All recipe endpoints with sample recipes in the database', () => {
 
     it('Should return both recipes because we searched by multiple cuisines', (done) => {
 	chai.request(server)
-	    .get('/recipes/search')
-	    .send({ cuisine: "american italian" })
-	    .end((err, res) => {
+	    .get('/recipes/search?ingredients=american+italian&course=american+italian&submitted_by=american+italian&cuisine=american+italian')
+            .end((err, res) => {
 		res.should.have.status(200);
 		res.body['recipes'].length.should.be.equal(2);
 		done();
@@ -280,8 +271,7 @@ describe('All recipe endpoints with sample recipes in the database', () => {
 
     it('Should return no recipes because we searched by parameters that don\'t all fall into a single recipe', (done) => {
 	chai.request(server)
-	    .get('/recipes/search')
-	    .send({ cuisine: "american", course: "dinner"})
+	    .get('/recipes/search?ingredients=american+dinner&course=american+dinner&submitted_by=american+dinner&cuisine=american+dinner')
 	    .end((err, res) => {
 		res.should.have.status(200);
 		res.body['recipes'].length.should.be.equal(2);
@@ -291,8 +281,7 @@ describe('All recipe endpoints with sample recipes in the database', () => {
 
     it('Should return mac and cheese because all parameters fall into that recipe.', (done) => {
 	chai.request(server)
-	    .get('/recipes/search')
-	    .send({ cuisine: "italian", course: "dinner" })
+	    .get('/recipes/search?ingredients=italian+dinner&course=italian+dinner&submitted_by=italian+dinner&cuisine=italian+dinner')
 	    .end((err, res) => {
 		res.should.have.status(200);
 		res.body['recipes'][0]['search_name'].should.be.equal('mikes_mac_and_cheese');
