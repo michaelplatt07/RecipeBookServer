@@ -1,0 +1,10 @@
+{"_id":{"$oid":"5c34f47b7b495c0aea92fd98"},"name":"Breakfast","search_name":"breakfast"}
+{"_id":{"$oid":"5c34f47b7b495c0aea92fd99"},"name":"Brunch","search_name":"brunch"}
+{"_id":{"$oid":"5c34f47b7b495c0aea92fd9a"},"name":"Lunch","search_name":"lunch"}
+{"_id":{"$oid":"5c34f47b7b495c0aea92fd9b"},"name":"Dinner","search_name":"dinner"}
+{"_id":{"$oid":"5c34f47b7b495c0aea92fd9c"},"name":"Snack","search_name":"snack"}
+{"_id":{"$oid":"5c34f47b7b495c0aea92fd9d"},"name":"Dessert","search_name":"dessert"}
+{"_id":{"$oid":"5c34f47b7b495c0aea92fd9e"},"name":"Drink","search_name":"drink"}
+{"_id":{"$oid":"5c34f47b7b495c0aea92fd9f"},"name":"Side","search_name":"side"}
+{"_id":{"$oid":"5c34f47b7b495c0aea92fda0"},"name":"Appetizer","search_name":"appetizer"}
+{"_id":{"$oid":"5c34f47b7b495c0aea92fda1"},"name":"Entree","search_name":"entree"}

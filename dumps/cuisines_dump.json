@@ -1,0 +1,23 @@
+{"_id":{"$oid":"5c34f6b67b495c0aea92fda2"},"name":"African","search_name":"african"}
+{"_id":{"$oid":"5c34f6b67b495c0aea92fda3"},"name":"American","search_name":"american"}
+{"_id":{"$oid":"5c34f6b67b495c0aea92fda4"},"name":"British","search_name":"british"}
+{"_id":{"$oid":"5c34f6b67b495c0aea92fda5"},"name":"Carribean","search_name":"carribean"}
+{"_id":{"$oid":"5c34f6b67b495c0aea92fda6"},"name":"Chinese","search_name":"chinese"}
+{"_id":{"$oid":"5c34f6b67b495c0aea92fda7"},"name":"East European","search_name":"east_european"}
+{"_id":{"$oid":"5c34f6b67b495c0aea92fda8"},"name":"French","search_name":"french"}
+{"_id":{"$oid":"5c34f6b67b495c0aea92fda9"},"name":"Greek","search_name":"greek"}
+{"_id":{"$oid":"5c34f6b67b495c0aea92fdaa"},"name":"Indian","search_name":"indian"}
+{"_id":{"$oid":"5c34f6b67b495c0aea92fdab"},"name":"Irish","search_name":"irish"}
+{"_id":{"$oid":"5c34f6b67b495c0aea92fdac"},"name":"Italian","search_name":"italian"}
+{"_id":{"$oid":"5c34f6b67b495c0aea92fdad"},"name":"Japanese","search_name":"japanese"}
+{"_id":{"$oid":"5c34f6b67b495c0aea92fdae"},"name":"Korean","search_name":"korean"}
+{"_id":{"$oid":"5c34f6b67b495c0aea92fdaf"},"name":"Mexican","search_name":"mexican"}
+{"_id":{"$oid":"5c34f6b67b495c0aea92fdb0"},"name":"Nordic","search_name":"nordic"}
+{"_id":{"$oid":"5c34f6b67b495c0aea92fdb1"},"name":"North African","search_name":"north_african"}
+{"_id":{"$oid":"5c34f6b67b495c0aea92fdb2"},"name":"Pakistani","search_name":"pakistani"}
+{"_id":{"$oid":"5c34f6b67b495c0aea92fdb3"},"name":"Portuguese","search_name":"portuguese"}
+{"_id":{"$oid":"5c34f6b67b495c0aea92fdb4"},"name":"South American","search_name":"south_american"}
+{"_id":{"$oid":"5c34f6b67b495c0aea92fdb5"},"name":"Spanish","search_name":"spanish"}
+{"_id":{"$oid":"5c34f6b67b495c0aea92fdb6"},"name":"Thai and Southeat-Asian","search_name":"thai_and_southeast_asian"}
+{"_id":{"$oid":"5c34f6b67b495c0aea92fdb7"},"name":"Middle Eastern and Persian","search_name":"middle_eastern_and_persian"}
+{"_id":{"$oid":"5c34f6b67b495c0aea92fdb8"},"name":"Other","search_name":"other"}
