@@ -20,6 +20,8 @@ const recipeApi = require('./apis/recipes.js');
 const groceryListApi = require('./apis/groceryList.js');
 const ingredientApi = require('./apis/ingredients.js');
 const usersApi = require('./apis/users.js');
+const cuisineApi = require('./apis/cuisines.js');
+const courseApi = require('./apis/courses.js');
 
 
 // Passport config.
@@ -210,6 +212,38 @@ app.post('/groceryList/removeRecipe',
 app.get('/ingredients', (req, res) => {
     ingredientApi.getAllIngredients(db.getDb(), req, res);
 });
+
+
+/**
+ * --------------------------------
+ * |       CUISINE ROUTING        |
+ * --------------------------------
+ */
+/**
+ * ----------------
+ * |     GETS     |
+ * ----------------
+ */
+app.get('/cuisines', (req, res) => {
+    cuisineApi.getAllCuisines(db.getDb(), req, res);
+});
+
+
+
+/**
+ * --------------------------------
+ * |        COURSE ROUTING        |
+ * --------------------------------
+ */
+/**
+ * ----------------
+ * |     GETS     |
+ * ----------------
+ */
+app.get('/courses', (req, res) => {
+    courseApi.getAllCourses(db.getDb(), req, res);
+});
+
 
 
 module.exports = app;
