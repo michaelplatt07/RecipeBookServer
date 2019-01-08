@@ -1,5 +1,5 @@
 const ObjectID = require('mongodb').ObjectID;
-const debug = require('debug')('groceryList');
+const debug = require('debug')('courses');
 const Promise = require('bluebird');
 const unitConverter = require('../utils/unit-converter');
 
@@ -18,6 +18,6 @@ exports.getAllCourses = async (db, req, res) => {
     {
 	return res.status(404).send({msg: 'There are currently no courses in the database.'});
     }
-    return res.status(200).send({ title: 'All Cuisines', courses: courses });
+    return res.status(200).send({ title: 'All Courses', courses: courses });
 
 };

@@ -1,5 +1,5 @@
 const ObjectID = require('mongodb').ObjectID;
-const debug = require('debug')('groceryList');
+const debug = require('debug')('cuisines');
 const Promise = require('bluebird');
 const unitConverter = require('../utils/unit-converter');
 
