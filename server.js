@@ -22,6 +22,7 @@ const ingredientApi = require('./apis/ingredients.js');
 const usersApi = require('./apis/users.js');
 const cuisineApi = require('./apis/cuisines.js');
 const courseApi = require('./apis/courses.js');
+const measurementApi = require('./apis/measurements.js');
 
 
 // Passport config.
@@ -242,6 +243,22 @@ app.get('/cuisines', (req, res) => {
  */
 app.get('/courses', (req, res) => {
     courseApi.getAllCourses(db.getDb(), req, res);
+});
+
+
+
+/**
+ * --------------------------------
+ * |     MEASUREMENT ROUTING      |
+ * --------------------------------
+ */
+/**
+ * ----------------
+ * |     GETS     |
+ * ----------------
+ */
+app.get('/measurements', (req, res) => {
+    measurementApi.getAllMeasurements(db.getDb(), req, res);
 });
 
 

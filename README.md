@@ -93,7 +93,10 @@ In an attempt to standardize how the grocery list will display relevant units of
 2. Get the MongoDB from the following URL: https://www.mongodb.com/cloud/atlas?jmp=nav
 3. Make sure Mongo is installed and up and running.
 4. Install the modules using `npm install` on the root directory of this project.
-5. Once the modules have been installed the application should be all set to run.  Navigate to the directory of the application and run via the command `npm start`.
+5. Import the default database documents in the `/dumps` directory with the following command:
+    * `mongoimport --db <db_name> --collection <collection_name> --file <file_name.json>`
+    * You can dump more recent versions of the files with this command: `mongoexport --db <db_name> --collection <collection_name> --file <file_name.json>`
+6. Once the modules have been installed the application should be all set to run.  Navigate to the directory of the application and run via the command `npm start`.
 
 ## Testing
 To run the unit tests for this application, navigate to the root directory.  From there, you can run the command `npm test` which will kickstart an entire suite of tests that cover the entire application.
