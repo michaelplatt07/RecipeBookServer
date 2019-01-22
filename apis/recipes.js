@@ -137,8 +137,8 @@ exports.getRecipesByIngredients = async (db, req, res) => {
     debug("In byIngredients");
     var query = {};
     query.searchable = true;
-    if (req.body.list) {
-	query = {'ingredients.name': {$in: req.body.list.split(' ')}};
+    if (req.query.list) {
+	query = {'ingredients.name': {$in: req.query.list.split(' ')}};
     }
     else
     {
@@ -165,8 +165,8 @@ exports.getRecipesByCourse = async (db, req, res) => {
     debug("In byCourse");
     var query = {};
     query.searchable = true;
-    if (req.body.list) {
-	query.course = req.body.list.includes(" ") ? {$in: req.body.list.split(' ')} : req.body.list.toString()
+    if (req.query.list) {
+	query.course = req.query.list.includes(" ") ? {$in: req.query.list.split(' ')} : req.query.list.toString()
     }
     else
     {
@@ -192,8 +192,8 @@ exports.getRecipesByCuisine = async (db, req, res) => {
     debug('In byCuisine');
     var query = {}
     query.searchable = true;
-    if (req.body.list) {
-	query.cuisine = req.body.list.includes(" ") ? {$in: req.body.list.split(' ')} : req.body.list.toString()
+    if (req.query.list) {
+	query.cuisine = req.query.list.includes(" ") ? {$in: req.query.list.split(' ')} : req.query.list.toString()
     }
     else
     {
@@ -245,7 +245,7 @@ exports.addNewRecipe = async (db, req, res) => {
     if (Object.keys(errMsgDict).length > 0)
     {
 	res.setHeader('Content-Type', 'application/json');
-	return res.status(422).send({msg: errMsgDict});
+     	return res.status(422).send({msg: errMsgDict});
     }
     else
     {
