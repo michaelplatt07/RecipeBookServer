@@ -41,8 +41,6 @@ exports.createShortDescription = (description) => {
  * Checks the data and ensures the correc information is available and no constraints are violated.  If there is
  * a violation in the data we build up an error report to return.
  */
-// TODO(map) : Make this error checking more robust to include checks for valid values on certain fields such as
-// making sure course is something like 'dinner' and not 'foo'.
 exports.checkRecipePostData = (jsonData) => {
     var errMsgDict = {};
 
@@ -84,7 +82,7 @@ exports.checkRecipePostData = (jsonData) => {
 	errMsgDict['noStepsError'] = 'Please include steps in your recipe.';
     }
 
-    if(!jsonData['course'] || jsonData['course'].length == 0)
+    if(!jsonData['courses'] || jsonData['courses'].length == 0)
     {
 	errMsgDict['noCoursesError'] = 'Please include at least one course this recipe belongs to.';
     }
@@ -99,9 +97,9 @@ exports.checkRecipePostData = (jsonData) => {
 	errMsgDict['noCookTimeError'] = 'Please include a cook time.';
     }
 
-    if (!jsonData['cuisine'] || jsonData['cuisine'].length == 0)
+    if (!jsonData['cuisines'] || jsonData['cuisines'].length == 0)
     {
-	errMsgDict['noCuisineError'] = 'Please include one or more cuisines this dish is a part of.';
+	errMsgDict['noCuisinesError'] = 'Please include one or more cuisines this dish is a part of.';
     }
 
     if (_.isNil(jsonData['searchable']))

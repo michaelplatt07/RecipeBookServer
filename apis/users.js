@@ -8,8 +8,6 @@ const crypto = require('crypto')
  * |     PUTS     |
  * ----------------
  */
-// TODO(map) : See about returning a correct error here instead of just breaking.
-// TODO(map) : Add regex to check for any number of white spaces only being used.
 exports.createUserAccount = async (db, req, res) => {
     debug("In createUser");
 

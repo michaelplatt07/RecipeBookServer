@@ -73,7 +73,6 @@ exports.convertMeasurement = (aMeasurement, unitFrom, unitTo) => {
     }
     else
     {
-	// TODO(map) : Think about maybe throwing an error here instead.
 	console.log(unitFrom + " to " + unitTo + " does not exist.");
     }
 }

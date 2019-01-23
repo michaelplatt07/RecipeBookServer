@@ -15,7 +15,6 @@ const ObjectID = require('mongodb').ObjectID;
 const db = require('../db');
 
 // Token for testing.
-// TODO(map) : Look into a way to authenticate and get the token back appropriately instead of making this a const.
 let token = "JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InRlc3RVc2VyIiwiaWF0IjoxNTM5MDUwMzQwfQ.lu84aP6OBUpgPdLdmj8BRJMoBH19BHcBBT_VQ6Jm9TI"
 
 describe('Various tests for PUTting recipe data in the databse', () => {
@@ -205,7 +204,7 @@ describe('Various tests for PUTting recipe data in the databse', () => {
 		    "Mix stuff together.",
 		    "Cook it and enjoy"
 		],
-		course: [
+		courses: [
 		    "brinner"
 		]
 	    })
@@ -234,7 +233,7 @@ describe('Various tests for PUTting recipe data in the databse', () => {
 		    "Mix stuff together.",
 		    "Cook it and enjoy"
 		],
-		course: [
+		courses: [
 		    "brinner"
 		],
 		prep_time: {
@@ -267,7 +266,7 @@ describe('Various tests for PUTting recipe data in the databse', () => {
 		    "Mix stuff together.",
 		    "Cook it and enjoy"
 		],
-		course: [
+		courses: [
 		    "brinner"
 		],
 		prep_time: {
@@ -281,7 +280,7 @@ describe('Various tests for PUTting recipe data in the databse', () => {
 	    })
 	    .end((err, res) => {
 		res.should.have.status(422);
-		res.body['msg']['noCuisineError'].should.be.equal('Please include one or more cuisines this dish is a part of.');
+		res.body['msg']['noCuisinesError'].should.be.equal('Please include one or more cuisines this dish is a part of.');
 		done();
 	    });
     });
@@ -304,7 +303,7 @@ describe('Various tests for PUTting recipe data in the databse', () => {
 		    "Mix stuff together.",
 		    "Cook it and enjoy"
 		],
-		course: [
+		courses: [
 		    "brinner"
 		],
 		prep_time: {
@@ -315,7 +314,7 @@ describe('Various tests for PUTting recipe data in the databse', () => {
 		    "minutes": 10,
 		    "hours": 1
 		},
-		cuisine: [
+		cuisines: [
 		    'american'
 		]
 	    })
@@ -349,7 +348,7 @@ describe('Various tests for PUTting recipe data in the databse', () => {
 		    "Mix stuff together.",
 		    "Cook it and enjoy"
 		],
-		course: [
+		courses: [
 		    "brinner"
 		],
 		prep_time: {
@@ -360,7 +359,7 @@ describe('Various tests for PUTting recipe data in the databse', () => {
 		    "minutes": 10,
 		    "hours": 1
 		},
-		cuisine: [
+		cuisines: [
 		    'american'
 		],
 		searchable: true
@@ -394,7 +393,7 @@ describe('Various tests for PUTting recipe data in the databse', () => {
 		    "Mix stuff together.",
 		    "Cook it and enjoy"
 		],
-		course: [
+		courses: [
 		    "brinner"
 		],
 		prep_time: {
@@ -405,7 +404,7 @@ describe('Various tests for PUTting recipe data in the databse', () => {
 		    "minutes": 10,
 		    "hours": 1
 		},
-		cuisine: [
+		cuisines: [
 		    'american'
 		],
 		searchable: true,
@@ -435,7 +434,7 @@ describe('Various tests for PUTting recipe data in the databse', () => {
 		    "Mix stuff together.",
 		    "Cook it and enjoy"
 		],
-		course: [
+		courses: [
 		    "brinner"
 		],
 		prep_time: {
@@ -446,7 +445,7 @@ describe('Various tests for PUTting recipe data in the databse', () => {
 		    "minutes": 10,
 		    "hours": 1
 		},
-		cuisine: [
+		cuisines: [
 		    'american'
 		],
 		searchable: true,
@@ -476,7 +475,7 @@ describe('Various tests for PUTting recipe data in the databse', () => {
 		    "Mix stuff together.",
 		    "Cook it and enjoy"
 		],
-		course: [
+		courses: [
 		    "brinner"
 		],
 		prep_time: {
@@ -487,7 +486,7 @@ describe('Various tests for PUTting recipe data in the databse', () => {
 		    "minutes": 10,
 		    "hours": 1
 		},
-		cuisine: [
+		cuisines: [
 		    'american'
 		],
 		searchable: true,

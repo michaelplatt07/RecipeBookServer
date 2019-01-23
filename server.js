@@ -86,8 +86,6 @@ app.post('/users/login', (req, res) => {
  * ----------------
  */
 // All recipes
-// TODO(map) : Check into express-joi
-// app.get('/recipes', expresJoi.joiValidate(mySchema), recipeApi.getRecipes());
 app.get('/recipes', (req, res) => {
     recipeApi.getRecipes(db.getDb(), req, res);
 });
@@ -109,6 +107,19 @@ app.get('/recipes/search', (req, res) => {
 });
 
 
+// Filter recipes by up to 3 options.
+// Object for filtering should be formatted like so:
+/*
+ * { 
+ * FILTEROPTION1: [OPTION1, OPTION2, ...],
+ * FILTEROPTION2: {OPTION3, OPTION4, ...],
+ * }
+ */
+app.get('/recipes/filter', (req, res) => {
+    recipeApi.getRecipesByFitlerOptions(db.getDb(), req, res);
+});
+
+
 // Recipe by any number of ingredients
 // ?list=1+2+3...
 app.get('/recipes/ingredients', (req, res) => {
@@ -118,15 +129,15 @@ app.get('/recipes/ingredients', (req, res) => {
 
 // Recipe by course search
 // ?list=1+2+3...
-app.get('/recipes/course', (req, res) => {
-    recipeApi.getRecipesByCourse(db.getDb(), req, res);
+app.get('/recipes/courses', (req, res) => {
+    recipeApi.getRecipesByCourses(db.getDb(), req, res);
 });
 
 
 // Recipe by cuisine
 // ?list=1+2+3...
-app.get('/recipes/cuisine', (req, res) => {
-    recipeApi.getRecipesByCuisine(db.getDb(), req, res);
+app.get('/recipes/cuisines', (req, res) => {
+    recipeApi.getRecipesByCuisines(db.getDb(), req, res);
 });
 
 

@@ -2,6 +2,8 @@ const utils = require('../utils/utility-functions');
 const mongo = require('mongodb');
 const debug = require('debug')('recipes');
 
+const _ = require('lodash');
+
 /**
  * ----------------
  * |     GETS     |
@@ -68,7 +70,7 @@ exports.getRecipeByName = async (db, req, res) => {
  * The overall search call for recipes.
  *
  * NOTE(map) : This was originally designed to only return recipes that had all the of the searching parameters
- * but that is not how the rest of the app functioned.  For instance, cuisine returns any recipe that has
+ * but that is not how the rest of the app functioned.  For instance, cuisines returns any recipe that has
  * CuisineA or CuisineB.  The individual parts commented below actually did that too but combined they create an
  * "AND" effect instead of an "AND+OR".
  */
@@ -84,9 +86,9 @@ exports.getRecipesBySearchCriteria = async (db, req, res) => {
 	queryList.push(query);
     }
 
-    if (req.query.course) { // Check if course parameter was provided.
+    if (req.query.courses) { // Check if courses parameter was provided.
 	var query = {};
-	query.course = req.query.course.includes(" ") ? {$in: req.query.course.split(' ')} : req.query.course.toString();
+	query.courses = req.query.courses.includes(" ") ? {$in: req.query.courses.split(' ')} : req.query.courses.toString();
 	queryList.push(query);
     }
 
@@ -97,10 +99,10 @@ exports.getRecipesBySearchCriteria = async (db, req, res) => {
 	queryList.push(query);
     }
 
-    if (req.query.cuisine)
+    if (req.query.cuisines)
     {
 	var query = {};
-	query.cuisine = req.query.cuisine.includes(" ") ? {$in: req.query.cuisine.split(' ')} : req.query.cuisine.toString();
+	query.cuisines = req.query.cuisines.includes(" ") ? {$in: req.query.cuisines.split(' ')} : req.query.cuisines.toString();
 	queryList.push(query);
     }
 
@@ -128,6 +130,48 @@ exports.getRecipesBySearchCriteria = async (db, req, res) => {
     }
     
 }
+
+
+/**
+ * Return recipes based on a list of filterable options.
+ */
+exports.getRecipesByFitlerOptions = async (db, req, res) => {
+    debug("In filterOptions");
+    var query = {};
+    query.searchable = true;
+
+    //console.log(req.query);
+    
+    if (!req.query.courses && !req.query.ingredients && !req.query.cuisines) {
+	res.setHeader('Content-Type', 'application/json');
+	return res.status(404).send({ msg: 'There were no recipes found given the filter options.' });        
+    }
+    else {
+        const queryList = [];
+        for (var filter in req.query) {
+            if (filter === "ingredients") {
+                const formattedParams = {$regex: req.query[filter].includes(" ") ? req.query[filter].split(" ").join("|") : req.query[filter].toString()};
+                const name = [filter] + '.name';
+                queryList.push({[name]: formattedParams});
+            }
+            else {
+                const formattedParams = req.query[filter].includes(" ") ? {$in: req.query[filter].split(' ')} : req.query[filter].toString();
+                queryList.push({[filter]: formattedParams});
+            }
+        }
+
+        let recipes = await db.collection("recipes").find({ searchable: true, $or: queryList }).toArray();
+	if (recipes.length == 0)
+	{
+	    res.setHeader('Content-Type', 'application/json');
+	    return res.status(404).send({ msg: 'There were no recipes found that contained all the given criteria.' });
+	}	    
+	res.setHeader('Content-Type', 'application/json');
+	return res.status(200).send({ title: 'Recipes', recipes: recipes });
+    }
+    
+
+};
 
 
 /**
@@ -159,14 +203,14 @@ exports.getRecipesByIngredients = async (db, req, res) => {
 
 
 /**
- * Return recipes based on a course.
+ * Return recipes based on a courses.
  */
-exports.getRecipesByCourse = async (db, req, res) => {
-    debug("In byCourse");
+exports.getRecipesByCourses = async (db, req, res) => {
+    debug("In byCourses");
     var query = {};
     query.searchable = true;
     if (req.query.list) {
-	query.course = req.query.list.includes(" ") ? {$in: req.query.list.split(' ')} : req.query.list.toString()
+	query.courses = req.query.list.includes(" ") ? {$in: req.query.list.split(' ')} : req.query.list.toString()
     }
     else
     {
@@ -178,7 +222,7 @@ exports.getRecipesByCourse = async (db, req, res) => {
     if (!recipes || recipes.length == 0)
     {
 	res.setHeader('Content-Type', 'application/json');
-	return res.status(404).send({msg: 'There were no recipes found for that course.'});
+	return res.status(404).send({msg: 'There were no recipes found for that courses.'});
     }
     res.setHeader('Content-Type', 'application/json');
     return res.status(200).send({ title: 'Recipes', recipes: recipes });
@@ -186,14 +230,14 @@ exports.getRecipesByCourse = async (db, req, res) => {
 
 
 /**
- * Returns recipes based on cuisine they are categorized to.
+ * Returns recipes based on cuisines they are categorized to.
  */
-exports.getRecipesByCuisine = async (db, req, res) => {
-    debug('In byCuisine');
+exports.getRecipesByCuisines = async (db, req, res) => {
+    debug('In byCuisines');
     var query = {}
     query.searchable = true;
     if (req.query.list) {
-	query.cuisine = req.query.list.includes(" ") ? {$in: req.query.list.split(' ')} : req.query.list.toString()
+	query.cuisines = req.query.list.includes(" ") ? {$in: req.query.list.split(' ')} : req.query.list.toString()
     }
     else
     {
@@ -205,7 +249,7 @@ exports.getRecipesByCuisine = async (db, req, res) => {
     if (!recipes || recipes.length == 0)
     {
 	res.setHeader('Content-Type', 'application/json');
-	return res.status(404).send({msg: 'There were no recipes found using that cuisine.'});
+	return res.status(404).send({msg: 'There were no recipes found using that cuisines.'});
     }
     res.setHeader('Content-Type', 'application/json');
     return res.status(200).send({ title: 'Recipes', recipes: recipes });

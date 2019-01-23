@@ -32,7 +32,7 @@ Currently I'm setting this up to connect to a Mongo database.  I chose this data
       "Mix everything together.",
       "Tumble until solid."
   ],
-  "course": [
+  "courses": [
       "dessert"
   ],
   "prep_time":
@@ -45,7 +45,7 @@ Currently I'm setting this up to connect to a Mongo database.  I chose this data
     "minutes": 40,
     "hours": 2
   },
-  "cuisine": [
+  "cuisines": [
        "american"
   ],
   "submitted_by": "User1", // This would be grabbed from the headers.

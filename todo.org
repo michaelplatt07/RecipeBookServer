@@ -1,0 +1,55 @@
+TODO List for the Server Application.
+-------------------------------------
+
+* DONE Refactor out the course to be plural courses
+  CLOSED: [2019-01-23 Wed 15:44]
+
+* DONE Refactor out the cuisine to be plural cuisines
+  CLOSED: [2019-01-23 Wed 15:44]
+
+* DONE Check for any other plurals that aren't done correctly.
+  CLOSED: [2019-01-23 Wed 15:47]
+
+* DONE Fix associated tests with the plural changes. '[2/2]'
+  CLOSED: [2019-01-23 Wed 15:44]
+1. [X] Courses
+2. [X] Cuisines
+
+* DONE Finish the filter option.
+  CLOSED: [2019-01-23 Wed 16:18]
+
+* DONE Update the README with the correct JSON file structure.
+  CLOSED: [2019-01-23 Wed 15:45]
+  This means we need to update to have everything that wasn't plural now become plural.  So far that list only
+  consists of cuisines and courses.
+
+* DONE Need to update the post so the fields check correctly.
+  CLOSED: [2019-01-23 Wed 15:47]
+
+* DONE Fix post tests.
+  CLOSED: [2019-01-23 Wed 15:49]
+
+* TODO Make the error checking more robust in the utility-function.js file.
+  To make it more robust the testing should including checking for some basic valid inputs.  For example, we should
+  not allow for people to do something like include a curse word in the name.  This should probably use a natural
+  language processor at some point and may prove to be a huge task.  Checklist to follow as needed.
+
+* TODO Fix const token in test-recipe-put-api.js
+  We are currently just declaring a token object in the file and instead should maybe look to authenticate initially
+  and then use that token to go forward.  Not sure if this is going to actually happen though.
+
+* TODO Fix const token in test-recipe-get-api.js
+  We might not even need it in there as we should be able to search for all recipes anyways.  Check to see if we
+  actually do use this and if so handle appropriately.
+
+* TODO Throw error on unit-converter.js converting from unit to unit.
+  This should probably be a promise that I will be reject instead and kickng up the ladder.
+
+* TODO Look into express-joi for data validation.
+  This is a low priority and quite frankly something that would a nice to have in my toolbelt but we are already
+  doing some major validation on the data ourselves.
+
+* TODO Implement error for user creation.
+  We curently just break the server if the user account creation attempt fails.  Probaly not the best way to handle
+  things and it should be fixed at some point.  Also should do proper validation to make sure user accounts being
+  created are legitimate accounts instead of spooofed accounts.
