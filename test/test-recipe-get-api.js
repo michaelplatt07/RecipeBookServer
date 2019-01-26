@@ -178,7 +178,7 @@ describe('All recipe endpoints with sample recipes in the database', () => {
 
     it('Should return the mac and cheese recipe as we are only searching by the cheese ingredient', (done) => {
 	chai.request(server)
-	    .get('/recipes/search?ingredients=gouda_cheese')
+	    .get('/recipes/search?searchParams=gouda_cheese')
 	    .end((err, res) => {
 		res.should.have.status(200);
 		res.body['recipes'][0]['search_name'].should.be.equal('mikes_mac_and_cheese');
@@ -188,7 +188,7 @@ describe('All recipe endpoints with sample recipes in the database', () => {
 
     it('Should return the ice cream recipe as we are only searching by the vanilla ingredient', (done) => {
 	chai.request(server)
-	    .get('/recipes/search?ingredients=vanilla&courses=vanilla&submitted_by=vanilla&cuisines=vanilla')
+	    .get('/recipes/search?searchParams=vanilla')
 	    .end((err, res) => {
 		res.should.have.status(200);
 		res.body['recipes'][0]['search_name'].should.be.equal('ice_cream');
@@ -198,7 +198,7 @@ describe('All recipe endpoints with sample recipes in the database', () => {
 
     it('Should return both the mac and cheese recipe and ice cream recipe since we are using an ingredient from each', (done) => {
 	chai.request(server)
-	    .get('/recipes/search?ingredients=gouda_cheese vanilla&courses=gouda_cheese vanilla&submitted_by=gouda_cheese vanilla&cuisines=gouda_cheese vanilla')
+	    .get('/recipes/search?searchParams=gouda_cheese+vanilla')
 	    .end((err, res) => {
 		res.should.have.status(200);
 		res.body['recipes'].length.should.be.equal(2);
@@ -208,7 +208,7 @@ describe('All recipe endpoints with sample recipes in the database', () => {
 
     it('Should return the mac and cheese recipe because we searched by its courses', (done) => {
 	chai.request(server)
-	    .get('/recipes/search?ingredients=dinner&courses=dinner&submitted_by=dinner&cuisines=dinner')
+	    .get('/recipes/search?searchParams=dinner')
 	    .end((err, res) => {
 		res.should.have.status(200);
 		res.body['recipes'][0]['search_name'].should.be.equal('mikes_mac_and_cheese');
@@ -218,7 +218,7 @@ describe('All recipe endpoints with sample recipes in the database', () => {
 
     it('Should return the ice cream recipe because we searched by its courses', (done) => {
 	chai.request(server)
-	    .get('/recipes/search?ingredients=dessert&courses=dessert&submitted_by=dessert&cuisines=dessert')
+	    .get('/recipes/search?searchParams=dessert')
 	    .end((err, res) => {
 		res.should.have.status(200);
 		res.body['recipes'][0]['search_name'].should.be.equal('ice_cream');
@@ -228,7 +228,7 @@ describe('All recipe endpoints with sample recipes in the database', () => {
 
     it('Should return both recipes because we searched by multiple', (done) => {
 	chai.request(server)
-	    .get('/recipes/search?ingredients=dessert+side&courses=dessert+side&submitted_by=dessert+side&cuisines=dessert+side')
+	    .get('/recipes/search?searchParams=dessert+side')
 	    .end((err, res) => {
 		res.should.have.status(200);
 		res.body['recipes'].length.should.be.equal(2);
@@ -238,7 +238,7 @@ describe('All recipe endpoints with sample recipes in the database', () => {
 
     it('Should return both recipes because we searched by their author', (done) => {
 	chai.request(server)
-	    .get('/recipes/search?ingredients=User1&courses=User1&submitted_by=User1&cuisines=User1')
+	    .get('/recipes/search?searchParams=User1')
 	    .end((err, res) => {
 		res.should.have.status(200);
 		res.body['recipes'].length.should.be.equal(2);
@@ -248,7 +248,7 @@ describe('All recipe endpoints with sample recipes in the database', () => {
     
     it('Should return the mac and cheese recipe because we searched by its cuisines', (done) => {
 	chai.request(server)
-	    .get('/recipes/search?ingredients=italian&courses=italian&submitted_by=italian&cuisines=italian')
+	    .get('/recipes/search?searchParams=italian')
 	    .end((err, res) => {
 		res.should.have.status(200);
 		res.body['recipes'][0]['search_name'].should.be.equal('mikes_mac_and_cheese');
@@ -258,7 +258,7 @@ describe('All recipe endpoints with sample recipes in the database', () => {
 
     it('Should return the ice cream recipe because we searched by its cuisines', (done) => {
 	chai.request(server)
-	    .get('/recipes/search?ingredients=american&courses=american&submitted_by=american&cuisines=american')
+	    .get('/recipes/search?searchParams=american')
 	    .end((err, res) => {
 		res.should.have.status(200);
 		res.body['recipes'][0]['search_name'].should.be.equal('ice_cream');
@@ -268,7 +268,7 @@ describe('All recipe endpoints with sample recipes in the database', () => {
 
     it('Should return both recipes because we searched by multiple cuisines', (done) => {
 	chai.request(server)
-	    .get('/recipes/search?ingredients=american+italian&courses=american+italian&submitted_by=american+italian&cuisines=american+italian')
+	    .get('/recipes/search?searchParams=american+italian')
             .end((err, res) => {
 		res.should.have.status(200);
 		res.body['recipes'].length.should.be.equal(2);
@@ -278,7 +278,7 @@ describe('All recipe endpoints with sample recipes in the database', () => {
 
     it('Should return no recipes because we searched by parameters that don\'t all fall into a single recipe', (done) => {
 	chai.request(server)
-	    .get('/recipes/search?ingredients=american+dinner&courses=american+dinner&submitted_by=american+dinner&cuisines=american+dinner')
+	    .get('/recipes/search?searchParams=american+dinner')
 	    .end((err, res) => {
 		res.should.have.status(200);
 		res.body['recipes'].length.should.be.equal(2);
@@ -288,7 +288,7 @@ describe('All recipe endpoints with sample recipes in the database', () => {
 
     it('Should return mac and cheese because all parameters fall into that recipe.', (done) => {
 	chai.request(server)
-	    .get('/recipes/search?ingredients=italian+dinner&courses=italian+dinner&submitted_by=italian+dinner&cuisines=italian+dinner')
+	    .get('/recipes/search?searchParams=italian+dinner')
 	    .end((err, res) => {
 		res.should.have.status(200);
 		res.body['recipes'][0]['search_name'].should.be.equal('mikes_mac_and_cheese');
@@ -304,7 +304,7 @@ describe('All recipe endpoints with sample recipes in the database', () => {
 		res.body['recipes'][0]['search_name'].should.be.equal('mikes_mac_and_cheese');
 		done();
 	    });
-    })
+    });
 
     it('Should return the mac and cheese because we filtered on its course and cuisine.', (done) => {
 	chai.request(server)
