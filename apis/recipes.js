@@ -10,7 +10,20 @@ const _ = require('lodash');
  * ----------------
  */
 /**
- * Returns all recipes that are available.
+ * @swagger
+ *
+ * /recipes:
+ *   get:
+ *     description: Returns all recipes that are available
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         Success: There was one or more recipes in the database and they will be returned.
+ *       404:
+ *         NoRecipesError: There were no recipes in the database.
+ *     example:
+ *       /recipes
  */
 exports.getRecipes = async (db, req, res) => {
     debug("In getRecipes");
@@ -23,11 +36,30 @@ exports.getRecipes = async (db, req, res) => {
 	return res.status(404).send({msg: 'There are currently no recipes in the database.'});
     }
     return res.status(200).send({ title: 'All Recipes', recipes: recipes });
-}
+};
 
 
 /**
- * Gets a single recipe by id.
+ * @swagger
+ *
+ * /recipes/id/:id?:
+ *   get:
+ *     description: Gets a single recipe based on the Mongo ObjectID
+ *     produces:
+ *       - application/json
+ *     parameter: 
+ *       - name: id
+ *         description: The Mongo ObjectID of the recipe that is created on insert.
+ *         in: URL parameters
+ *         require: true
+ *         type: String
+ *     responses:
+ *       200:
+ *         Success: There was one or more recipes in the database and they will be returned.
+ *       404:
+ *         NoMatchesError: There were no recipes in the database.
+ *     example:
+ *       /recipes/id/1234
  */
 exports.getRecipeById = async (db, req, res) => {
     debug("In getById");
@@ -43,11 +75,30 @@ exports.getRecipeById = async (db, req, res) => {
     }	    
     res.setHeader('Content-Type', 'application/json');
     return res.status(200).send({ title: recipe['name'], recipe: recipe });
-}
+};
 
 
 /**
- * Returns all recipes with the given name.
+ * @swagger
+ *
+ * /recipes/name/:recipeName?:
+ *   get:
+ *     description: Gets any recipes that match the name of the search parameter passed in.
+ *     produces:
+ *       - application/json
+ *     parameter: 
+ *       - name: recipeName
+ *         description: The name of a recipe for which you want to return.
+ *         in: URL parameters
+ *         require: true
+ *         type: String
+ *     responses:
+ *       200:
+ *         Success: There was one or more recipes in the database whose name matches the search paraemter.
+ *       404:
+ *         NoMatchesError: There were no recipes whose name matches the searched parameter passed in.
+ *     example:
+ *       /recipes/name/SampleRecipe
  */
 exports.getRecipeByName = async (db, req, res) => {
     debug("In getByName");
@@ -63,51 +114,39 @@ exports.getRecipeByName = async (db, req, res) => {
     }	    
     res.setHeader('Content-Type', 'application/json');
     return res.status(200).send({ title: recipes['name'], recipes: recipes });
-}
+};
 
 
 /**
- * The overall search call for recipes.
+ * @swagger
  *
- * NOTE(map) : This was originally designed to only return recipes that had all the of the searching parameters
- * but that is not how the rest of the app functioned.  For instance, cuisines returns any recipe that has
- * CuisineA or CuisineB.  The individual parts commented below actually did that too but combined they create an
- * "AND" effect instead of an "AND+OR".
+ * /recipes/search:
+ *   get:
+ *     description: Gets any recipes that have any fields that match the search parameters that were passed in.  
+ *                  Note that this searches across 4 fields that include ingredients, courses, cuisines, and 
+ *                  submitted by with any search parameters passed in an returns any matches.  If no parameters are
+ *                  passed in then the search defaults to getting all recipes.
+ *     produces:
+ *       - application/json
+ *     parameter: 
+ *       - name: searchParams
+ *         description: The parameters for which you want to search.
+ *         in: Query parameters
+ *         require: false
+ *         type: String
+ *     responses:
+ *       200:
+ *         Success: There was one or more recipes in the database that had a field that matched the search parameters.
+ *       404:
+ *         NoMatchesError: There were no recipes that matched the search criteria.
+ *         NoRecipesError: There were no recipes in the database.
+ *     example:
+ *       /recipes/search?searchParams=Param1+Param2+...+ParamN
  */
 exports.getRecipesBySearchCriteria = async (db, req, res) => {
     debug("In search");
 
-    var queryList = [];
-    var promiseList = [];
-
-    if (req.query.ingredients) { // Check if ingredient parameter was provided.
-    	var query = {};
-	query = {'ingredients.name': {$regex: req.query.ingredients.includes(" ") ? req.query.ingredients.split(" ").join("|") : req.query.ingredients.toString()}};
-	queryList.push(query);
-    }
-
-    if (req.query.courses) { // Check if courses parameter was provided.
-	var query = {};
-	query.courses = req.query.courses.includes(" ") ? {$in: req.query.courses.split(' ')} : req.query.courses.toString();
-	queryList.push(query);
-    }
-
-    if (req.query.submitted_by)
-    {
-	var query = {};
-	query.submitted_by = req.query.submitted_by;
-	queryList.push(query);
-    }
-
-    if (req.query.cuisines)
-    {
-	var query = {};
-	query.cuisines = req.query.cuisines.includes(" ") ? {$in: req.query.cuisines.split(' ')} : req.query.cuisines.toString();
-	queryList.push(query);
-    }
-
-    if (queryList.length == 0) // No search criteria was provided so return all recipes instead.
-    {
+    if (!req.query.searchParams) {
 	let recipes = await db.collection("recipes").find().toArray();
 	if (recipes.length == 0)
 	{
@@ -115,11 +154,16 @@ exports.getRecipesBySearchCriteria = async (db, req, res) => {
 	    return res.status(404).send({ msg: 'There were no recipes found that contained all the given criteria.' });
 	}	    
 	res.setHeader('Content-Type', 'application/json');
-	return res.status(200).send({ title: 'Recipes', recipes: recipes });   
+	return res.status(200).send({ title: 'Recipes', recipes: recipes });           
     }
-    else // Search criteria was provided so do the $or query and give back results.
-    {
-	let recipes = await db.collection("recipes").find({ searchable: true, $or: queryList }).toArray();
+    else {    
+        const ingredientQuery = {'ingredients.name': {$regex: req.query.searchParams.includes(" ") ? req.query.searchParams.split(" ").join("|") : req.query.searchParams.toString()}};
+        const cuisineQuery = {cuisines: req.query.searchParams.includes(" ") ? {$in: req.query.searchParams.split(' ')} : req.query.searchParams.toString()};
+        const courseQuery = {courses: req.query.searchParams.includes(" ") ? {$in: req.query.searchParams.split(' ')} : req.query.searchParams.toString()};
+        const submittedByQuery = {submitted_by: req.query.searchParams.includes(" ") ? {$in: req.query.searchParams.split(' ')} : req.query.searchParams.toString()};
+        const queryList = [ingredientQuery, cuisineQuery, courseQuery, submittedByQuery];
+
+        let recipes = await db.collection("recipes").find({ searchable: true, $or: queryList }).toArray();
 	if (recipes.length == 0)
 	{
 	    res.setHeader('Content-Type', 'application/json');
@@ -127,20 +171,53 @@ exports.getRecipesBySearchCriteria = async (db, req, res) => {
 	}	    
 	res.setHeader('Content-Type', 'application/json');
 	return res.status(200).send({ title: 'Recipes', recipes: recipes });
-    }
+    }    
     
-}
+};
 
 
 /**
- * Return recipes based on a list of filterable options.
+ * @swagger
+ *
+ * /recipes/filter:
+ *   get:
+ *     description: Method for filtering based on course, cuisine, or ingredients.  This differs from the search in
+ *                  that it won't explicitly search across all three options.  If one of the options is not included
+ *                  it won't be used.  In that regards this is a generally a faster way to look things up.  Like the 
+ *                  search method if nothing is passed it will bring back all recipes.
+ *     produces:
+ *       - application/json
+ *     parameter: 
+ *       - name: cuisines
+ *         description: The cuisines that you want to filter on.
+ *         in: Query parameters
+ *         require: false
+ *         type: String
+ *       - name: courses
+ *         description: The courses for which you want to filter on.
+ *         in: Query parameters
+ *         require: false
+ *         type: String
+ *       - name: ingredients
+ *         description: The ingredients for which you want to filter on.
+ *         in: Query parameters
+ *         require: false
+ *         type: String
+ *     responses:
+ *       200:
+ *         Success: There was one or more recipes in the database that have some fields that match up with the filter
+ *                  options.
+ *       404:
+ *         Error: There were no recipes in the database.
+ *     example:
+ *       /recipes/filter?ingredients=Ingredient1+Ingredient2+...+IngredientN
+ *                      &cuisines=Cuisine1+Cuisine2+...+CuisineN
+ *                      &ingredients=Course1+Course2+...+CourseN
  */
 exports.getRecipesByFitlerOptions = async (db, req, res) => {
     debug("In filterOptions");
     var query = {};
     query.searchable = true;
-
-    //console.log(req.query);
     
     if (!req.query.courses && !req.query.ingredients && !req.query.cuisines) {
 	res.setHeader('Content-Type', 'application/json');
@@ -175,7 +252,28 @@ exports.getRecipesByFitlerOptions = async (db, req, res) => {
 
 
 /**
- * Return recipes based on a list of ingredients.
+ * @swagger
+ *
+ * /recipes/ingredients:
+ *   get:
+ *     description: Searches for recipes that have specific ingredients.
+ *     produces:
+ *       - application/json
+ *     parameter: 
+ *       - name: list
+ *         description: The list of ingredients that will be used to search.
+ *         in: Query parameters
+ *         require: true
+ *         type: String
+ *     responses:
+ *       200:
+ *         Success: There was one or more recipes in the database that have some fields that match up with the filter
+ *                  options.
+ *       404:
+ *         NoIngredientsError: There were no ingredients passed in to search by.
+ *         NoMatchesError: There were no recipes that matches any of the ingredients passed in.
+ *     example:
+ *       /recipes/ingredients?list=Ingredient1+Ingredient2+...+IngredientN
  */
 exports.getRecipesByIngredients = async (db, req, res) => {
     debug("In byIngredients");
@@ -203,14 +301,35 @@ exports.getRecipesByIngredients = async (db, req, res) => {
 
 
 /**
- * Return recipes based on a courses.
+ * @swagger
+ *
+ * /recipes/courses:
+ *   get:
+ *     description: Searches for recipes that have specific courses.
+ *     produces:
+ *       - application/json
+ *     parameter: 
+ *       - name: list
+ *         description: The list of courses that will be used to search.
+ *         in: Query parameters
+ *         require: true
+ *         type: String
+ *     responses:
+ *       200:
+ *         Success: There was one or more recipes in the database that have some fields that match up with the filter
+ *                  options.
+ *       404:
+ *         NoCoursesError: There were no courses passed in to search by.
+ *         NoMatchesError: There were no recipes that matches any of the courses passed in.
+ *     example:
+ *       /recipes/courses?list=Ingredient1+Ingredient2+...+IngredientN
  */
 exports.getRecipesByCourses = async (db, req, res) => {
     debug("In byCourses");
     var query = {};
     query.searchable = true;
     if (req.query.list) {
-	query.courses = req.query.list.includes(" ") ? {$in: req.query.list.split(' ')} : req.query.list.toString()
+	query.courses = req.query.list.includes(" ") ? {$in: req.query.list.split(' ')} : req.query.list.toString();
     }
     else
     {
@@ -230,14 +349,35 @@ exports.getRecipesByCourses = async (db, req, res) => {
 
 
 /**
- * Returns recipes based on cuisines they are categorized to.
+ * @swagger
+ *
+ * /recipes/cuisines:
+ *   get:
+ *     description: Searches for recipes that have specific cuisines.
+ *     produces:
+ *       - application/json
+ *     parameter: 
+ *       - name: list
+ *         description: The list of cuisines that will be used to search.
+ *         in: Query parameters
+ *         require: true
+ *         type: String
+ *     responses:
+ *       200:
+ *         Success: There was one or more recipes in the database that have some fields that match up with the filter
+ *                  options.
+ *       404:
+ *         NoCuisinesError: There were no cuisines passed in to search by.
+ *         NoMatchesError: There were no recipes that matches any of the cuisines passed in.
+ *     example:
+ *       /recipes/cuisines?list=Ingredient1+Ingredient2+...+IngredientN
  */
 exports.getRecipesByCuisines = async (db, req, res) => {
     debug('In byCuisines');
-    var query = {}
+    var query = {};
     query.searchable = true;
     if (req.query.list) {
-	query.cuisines = req.query.list.includes(" ") ? {$in: req.query.list.split(' ')} : req.query.list.toString()
+	query.cuisines = req.query.list.includes(" ") ? {$in: req.query.list.split(' ')} : req.query.list.toString();
     }
     else
     {
@@ -257,7 +397,20 @@ exports.getRecipesByCuisines = async (db, req, res) => {
 
 
 /**
- * Returns a random recipe from the collection of all recipes.
+ * @swagger
+ *
+ * /recipes/random:
+ *   get:
+ *     description: Pulls a random recipe from the database.
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         Success: There was a random recipe that could be pulled back.
+ *       404:
+ *         NoRecipesError: There are no recipes in the database.
+ *     example:
+ *       /recipes/random
  */
 exports.getRandomRecipe = async (db, req, res) => {
     debug("In random");
@@ -280,6 +433,70 @@ exports.getRandomRecipe = async (db, req, res) => {
  * |     PUTS     |
  * ----------------
  */
+/**
+ * @swagger
+ *
+ * /recipes/add:
+ *   post:
+ *     description: Adds a new recipe to the database.
+ *     produces:
+ *       - application/json
+ *     parameter: 
+ *       - name: text_friendly_name
+ *         description: The name of the recipe as a user would read it.
+ *         in: Form Body
+ *         require: true
+ *         type: String
+ *       - name: ingredients
+ *         description: The list of ingredients.  Each one must contain a name, quantity, and measurement field.
+ *         in: Form Body
+ *         require: true
+ *         type: List of JSON objects
+ *       - name: steps
+ *         description: The list of steps required to execute the recipe.
+ *         in: Form Body
+ *         require: true
+ *         type: List of Strings
+ *       - name: courses
+ *         description: The list of courses the recipe can be classified as.
+ *         in: Form Body
+ *         require: true
+ *         type: List of Strings
+ *       - name: prep_time
+ *         description: The time it takes, in minutes, to prep the ingredients for the recipes.
+ *         in: Form Body
+ *         require: true
+ *         type: int
+ *       - name: cook_time
+ *         description: The time it takes, in minutes, to cook the recipe.
+ *         in: Form Body
+ *         require: true
+ *         type: int
+ *       - name: cuisines
+ *         description: The list of cuisines the recipe can be classified on.
+ *         in: Form Body
+ *         require: true
+ *         type: List of Strings
+ *       - name: submitted_by
+ *         description: The User that is submitting the recipe.
+ *         in: Form Body
+ *         require: true
+ *         type: List of Strings
+ *       - name: searchable
+ *         description: Boolean representing if the recipe is public facing or not.
+ *         in: Form Body
+ *         require: true
+ *         type: boolean
+ *     responses:
+ *       200:
+ *         Success: Recipe was successfully inserted.
+ *       422:
+ *         UnprocessableEntityError: There are one or more of the required fields missing.  The errors are returned
+ *                                   as a dictionary with more specific error names and descriptions of what is 
+ *                                   missing.
+ *     example:
+ *       /recipes/add
+ */
 exports.addNewRecipe = async (db, req, res) => {
     debug('In addNewRecipe.');
     recipeData = req.body;
@@ -298,7 +515,7 @@ exports.addNewRecipe = async (db, req, res) => {
 
 	recipeData['ingredients'].forEach((ingredient) => {
 	    ingredient['name'] = utils.convertTextToSearch(ingredient['text_friendly_name']);
-	})
+	});
 	
 	utils.insertIngredients(db, recipeData['ingredients']);
 
