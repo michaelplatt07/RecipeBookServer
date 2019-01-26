@@ -9,6 +9,22 @@ const unitConverter = require('../utils/unit-converter');
  * |     GETS     |
  * ----------------
  */
+/**
+ * @swagger
+ *
+ * /groceryList:
+ *   get:
+ *     description: Returns the grocery list for a given logged in user.
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         Success: Returns a list of recipes as well as the grocery list built from that recipe list.
+ *       401:
+ *         NoUserIdError: There was no userId provided in the request.
+ *     example:
+ *       /groceryList
+ */
 exports.getGroceryListByUser = async (db, req, res) => {
     debug("In getGroceryList");
 
@@ -29,7 +45,7 @@ exports.getGroceryListByUser = async (db, req, res) => {
 	});
 	
 	let recipes = await Promise.all(recipePromiseList);
-	let recipeList = []
+	let recipeList = [];
 	let groceryShoppingList = {};
 
 	for (const recipe of recipes)
@@ -56,7 +72,7 @@ exports.getGroceryListByUser = async (db, req, res) => {
 	res.setHeader('Content-Type', 'application/json');
 	return res.status(200).send({ recipeList: recipeList, groceryShoppingList: groceryShoppingList });
     }
-}
+};
 
 
 /**
@@ -65,26 +81,51 @@ exports.getGroceryListByUser = async (db, req, res) => {
  * ----------------
  */
 /**
- * creates an empty grocery list for the user.
+ * @swagger
+ *
+ * /groceryList/add:
+ *   post:
+ *     description: Creates an empty grocery list for the user to add ingredients to.
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         Success: The grocery list was added to the database.
+ *     example:
+ *       /groceryList/add
  */
 exports.createNewGroceryList = async (db, req, res) => {
     debug("In newGroceryList");
 
-    groceryList = req.body;
+    const groceryList = req.body;
     let result = await db.collection('grocery_lists').insertOne(groceryList);
     res.setHeader('Content-Type', 'application/json');
     return res.status(200).send({ data: groceryList, message: 'Data successfully inserted' });
-}
+};
 
 
 /**
- * Adds a selected recipe to the grocery list for the given user.
+ * @swagger
+ *
+ * /groceryList/addRecipe:
+ *   post:
+ *     description: Adds a recipe to the user's grocery list.
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         Success: The recipe was successfully added to the grocery list.
+ *       422:
+ *         NoUserIdError: There was no user ID provided in the request.
+ *         NoRecipeIdError: There was no recipe ID provided to inser to the list.
+ *     example:
+ *       /groceryList/addRecipe
  */
 exports.addRecipeToGroceryList = async (db, req, res) => {
     debug("In addRecipeToList");
 
-    recipeId = req.body['recipeId'];
-    user = req.body['user'];
+    const recipeId = req.body['recipeId'];
+    const user = req.body['user'];
 
     if (!recipeId || recipeId == "")
     {
@@ -104,17 +145,31 @@ exports.addRecipeToGroceryList = async (db, req, res) => {
 	res.setHeader('Content-Type', 'application/json');
 	return res.status(200).send({ message: 'Data successfully inserted' });
     }
-}
+};
 
 
 /**
- * Removes a selected recipe from the grocery list for a given user.
+ * @swagger
+ *
+ * /groceryList/removeRecipe:
+ *   post:
+ *     description: Removes a recipe to the user's grocery list.
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         Success: The recipe was successfully removed from the grocery list.
+ *       422:
+ *         NoUserIdError: There was no user ID provided in the request.
+ *         NoRecipeIdError: There was no recipe ID provided to inser to the list.
+ *     example:
+ *       /groceryList/removeRecipe
  */
 exports.removeRecipeFromGroceryList = async (db, req, res) => {
     debug("In removeRecipeFromList");
 
-    recipeId = req.body['recipeId'];
-    user = req.body['user'];
+    const recipeId = req.body['recipeId'];
+    const user = req.body['user'];
     if (!recipeId || recipeId == "")
     {
 	res.setHeader('Content-Type', 'application/json');
@@ -129,8 +184,8 @@ exports.removeRecipeFromGroceryList = async (db, req, res) => {
     {
 	var query = {};
 	query.user = user;
-	let result = db.collection('grocery_lists').update(query, { $pull: { recipes: recipeId }  })
+	let result = db.collection('grocery_lists').update(query, { $pull: { recipes: recipeId }  });
 	res.setHeader('Content-Type', 'application/json');
 	return res.status(200).send({ message: 'Recipe removed from grocery list.' });
     }
-}
+};
