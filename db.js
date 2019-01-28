@@ -14,7 +14,7 @@ const appPort = 3000;
 // Db JSON object that may hold more data in the future.
 var dbObj = {
     db: null
-}
+};
 
 
 /**

@@ -29,7 +29,8 @@ TODO List for the Server Application.
 * DONE Fix post tests.
   CLOSED: [2019-01-23 Wed 15:49]
 
-* Create endpoint to serve URLs '[4/7]'
+* DONE Create endpoint to serve URLs '[7/7]'
+  CLOSED: [2019-01-28 Mon 14:38]
   This endpoint will serve the possible routes that a consumer of the API can hit.  It should be served as a JSON
   file with the appropriate routes and their associated methods and other additional information such as are 
   credentials required to use it or not.
@@ -44,13 +45,17 @@ TODO List for the Server Application.
      5. [X] Measurements
      6. [X] Courses
      7. [X] Configs
-  4. [ ] Create the configuration stuff I need
+  4. [X] Create the configuration stuff I need
      - Not sure what these are just yet it might be better to move this to a living document.
   5. [X] Implement the endpoints in the config API
      - This would include creating a swagger endpoint to dump everything.
-  6. [ ] Write tests to ensure endpoint config file is server correctly.
-  7. [ ] Add additional information like base URL
+  6. [X] Write tests to ensure endpoint config file is server correctly.
+     - I changed my mind about tests here.  This would be increasingly tough to test and quite frankly isn't worth it
+       given that I would just be copying the swagger JSON output and comparing and the config changes with each
+       environment I use.
+  7. [X] Add additional information like base URL
      Maybe make this a configuration file that is loaded up and add additional information as necessary
+     - This point becomes moot because the config setup plus swagger docs will cover everything I need.
 
 * TODO Fix grocery list
   There is a lack of error handling in the groceryList API.  I need to make sure to handle errors like a user not
@@ -92,6 +97,10 @@ TODO List for the Server Application.
   We curently just break the server if the user account creation attempt fails.  Probaly not the best way to handle
   things and it should be fixed at some point.  Also should do proper validation to make sure user accounts being
   created are legitimate accounts instead of spooofed accounts.
+
+* TODO Clean up tests so the order of execution does not matter.
+  I believe this will mean making a dump of the test database after creating it once, saving off that dump, and
+  loading it up each time we run a new test.
 
 * TODO General Cleanup '[1/4]'
   1. [ ] Clean up imports that aren't being used.

@@ -1,4 +1,6 @@
 const debug = require('debug')('configs');
+const config = require('config');
+const serverConfigInfo = config.get('serverConfig');
 
 /**
  * ----------------
@@ -43,4 +45,7 @@ exports.getAllRoutes = async (swaggerSpec, req, res) => {
  */
 exports.getConfigurations = async (db, req, res) => {
     debug("In getConfigurations");
+
+    res.setHeader('Content-Type', 'application/json');
+    res.send(serverConfigInfo);
 };

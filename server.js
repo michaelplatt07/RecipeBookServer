@@ -2,6 +2,7 @@
 const url = require('url');
 const express = require('express');
 const bodyParser = require('body-parser');
+const config = require('config');
 var jwt = require('jsonwebtoken');
 
 var passport = require("passport");
@@ -27,19 +28,7 @@ const configApi = require('./apis/configs.js');
 
 // Swagger configuration.
 const swaggerJSDoc = require('swagger-jsdoc');
-const options = {
-  definition: {
-    openapi: '3.0.0',
-    info: {
-      title: 'Recipe Book Server API Description',
-      version: '1.0.0',
-    },
-  },
-  // Path to the API docs
-  apis: ['./apis/*'],
-};
-// Initialize swagger-jsdoc -> returns validated swagger spec in json format
-const swaggerSpec = swaggerJSDoc(options);
+const swaggerSpec = swaggerJSDoc(config.get("swaggerConfig"));
 
 // Passport config.
 var jwtOptions = {};
@@ -80,12 +69,7 @@ app.get('/config/routes', (req, res) => {
 
 // Gets a configuration for the server
 app.get('/config/configurations', (req, res) => {
-    configApi.getAllRoutes(db.getDb(), req, res);
-});
-
-// Gets a combination of configurations and routes
-app.get('/config/allsettings', (req, res) => {
-    configApi.getAllRoutes(db.getDb(), req, res);
+    configApi.getConfigurations(db.getDb(), req, res);
 });
 
 

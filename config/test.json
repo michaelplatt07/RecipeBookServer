@@ -4,5 +4,23 @@
 	"host": "localhost",
 	"port": 27017,
 	"name": "testRecipeDb"
+    },
+    "serverConfig":
+    {
+	"baseUrl": "http://localhost",
+	"basePort": 3000
+    },
+    "swaggerConfig":
+    {
+	"definition":
+	{
+	    "openapi": "3.0.0",
+	    "info":
+	    {
+		"title": "Recipe Book Server API Description",
+		"version": "1.0.0"
+	    }
+	},
+	"apis": ["./apis/*"]
     }
 }
