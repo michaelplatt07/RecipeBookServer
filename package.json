@@ -5,7 +5,7 @@
 			"main": "index.js",
 			"scripts": {
 						"test": "NODE_ENV=test mocha test/test.js",
-						"start": "NODE_ENV=dev DEBUG=recipes,groceryList,users,db,cuisines,courses,measurements nodejs bin/www"
+						"start": "NODE_ENV=dev DEBUG=recipes,groceryList,users,db,cuisines,courses,measurements,configs nodejs bin/www"
 			},
 			"repository": {
 						"type": "git",
@@ -43,6 +43,7 @@
 						"passport-local": "^1.0.0",
 						"request": "^2.88.0",
 						"request-promise": "^4.2.2",
-						"supertest": "^3.3.0"
+						"supertest": "^3.3.0",
+						"swagger-jsdoc": "^3.2.6"
 			}
 }

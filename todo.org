@@ -29,6 +29,44 @@ TODO List for the Server Application.
 * DONE Fix post tests.
   CLOSED: [2019-01-23 Wed 15:49]
 
+* Create endpoint to serve URLs '[4/7]'
+  This endpoint will serve the possible routes that a consumer of the API can hit.  It should be served as a JSON
+  file with the appropriate routes and their associated methods and other additional information such as are 
+  credentials required to use it or not.
+  
+  1. [X] Update the server.js file for the routes.
+  2. [X] Add the debug to the NPM script.
+  3. [X] Add swagger documentation to all the APIs: '[7/7]'
+     1. [X] Recipes
+     2. [X] GroceryList
+     3. [X] Users
+     4. [X] Cuisines
+     5. [X] Measurements
+     6. [X] Courses
+     7. [X] Configs
+  4. [ ] Create the configuration stuff I need
+     - Not sure what these are just yet it might be better to move this to a living document.
+  5. [X] Implement the endpoints in the config API
+     - This would include creating a swagger endpoint to dump everything.
+  6. [ ] Write tests to ensure endpoint config file is server correctly.
+  7. [ ] Add additional information like base URL
+     Maybe make this a configuration file that is loaded up and add additional information as necessary
+
+* TODO Fix grocery list
+  There is a lack of error handling in the groceryList API.  I need to make sure to handle errors like a user not
+  being authenticated, a user ID not existing in the request, and grabbing that data out for insertion anywhere the
+  grocery list API call is happening.  I also need to ensure that the posts that create empty object have a way of 
+  loading that empty object, probably from a config.
+
+  Once that's done I can update the swagger docs accordingly and move forward from this API.
+
+* TODO Move encryption to better location
+  The code is basically sitting in the open that anyone could take a look at and use to decrypt the user password
+  because of the secret.  This should probably be in an area that is never commited but sits on the server.
+
+* TODO Implement some kind of logging for errors
+  Not sure what I want here yet but I know I need it.
+
 * TODO Make the error checking more robust in the utility-function.js file.
   To make it more robust the testing should including checking for some basic valid inputs.  For example, we should
   not allow for people to do something like include a curse word in the name.  This should probably use a natural
@@ -45,7 +83,8 @@ TODO List for the Server Application.
 * TODO Throw error on unit-converter.js converting from unit to unit.
   This should probably be a promise that I will be reject instead and kickng up the ladder.
 
-* TODO Look into express-joi for data validation.
+* DONE Look into express-joi for data validation.
+  CLOSED: [2019-01-24 Thu 16:07] - Moved this to a different area.  It's not actually done.
   This is a low priority and quite frankly something that would a nice to have in my toolbelt but we are already
   doing some major validation on the data ourselves.
 
@@ -53,3 +92,12 @@ TODO List for the Server Application.
   We curently just break the server if the user account creation attempt fails.  Probaly not the best way to handle
   things and it should be fixed at some point.  Also should do proper validation to make sure user accounts being
   created are legitimate accounts instead of spooofed accounts.
+
+* TODO General Cleanup '[1/4]'
+  1. [ ] Clean up imports that aren't being used.
+  2. [ ] Refactor routing to ExpressRouter
+     I need to look into this and make sure it's the right thing to do
+  3. [X] Check into integrating swagger.
+     - Looked into it and it's pretty trivial to integrate swagger by just using swagger-jsdoc
+  4. [ ] ExpressJoi
+     Check into this for validating.

@@ -23,15 +23,31 @@ const usersApi = require('./apis/users.js');
 const cuisineApi = require('./apis/cuisines.js');
 const courseApi = require('./apis/courses.js');
 const measurementApi = require('./apis/measurements.js');
+const configApi = require('./apis/configs.js');
 
+// Swagger configuration.
+const swaggerJSDoc = require('swagger-jsdoc');
+const options = {
+  definition: {
+    openapi: '3.0.0',
+    info: {
+      title: 'Recipe Book Server API Description',
+      version: '1.0.0',
+    },
+  },
+  // Path to the API docs
+  apis: ['./apis/*'],
+};
+// Initialize swagger-jsdoc -> returns validated swagger spec in json format
+const swaggerSpec = swaggerJSDoc(options);
 
 // Passport config.
-var jwtOptions = {}
+var jwtOptions = {};
 jwtOptions.jwtFromRequest = ExtractJwt.fromAuthHeaderWithScheme("jwt");
 jwtOptions.secretOrKey = 'basicSecret';
 
 var strategy = new JwtStrategy(jwtOptions, async (jwt_payload, next) => {
-    const user = await db.getDb().collection('users').findOne({ username: jwt_payload.id })
+    const user = await db.getDb().collection('users').findOne({ username: jwt_payload.id });
     if (user) {
 	next(null, user);
     } else {
@@ -45,6 +61,32 @@ passport.use(strategy);
 // Config stuff for server.
 app.use(bodyParser.json());
 app.use(passport.initialize());
+
+
+/**
+ * -----------------------------------------
+ * |         CONFIGURATION ROUTING         |
+ * -----------------------------------------
+ */
+/**
+ * ----------------
+ * |     GETS     |
+ * ----------------
+ */
+// Get a list of all routes in the API.
+app.get('/config/routes', (req, res) => {
+    configApi.getAllRoutes(swaggerSpec, req, res);
+});
+
+// Gets a configuration for the server
+app.get('/config/configurations', (req, res) => {
+    configApi.getAllRoutes(db.getDb(), req, res);
+});
+
+// Gets a combination of configurations and routes
+app.get('/config/allsettings', (req, res) => {
+    configApi.getAllRoutes(db.getDb(), req, res);
+});
 
 
 /**
@@ -66,7 +108,7 @@ app.post('/users/register', (req, res) => {
 // Delete a user.
 app.get('/users/delete/:userName?', (req, res) => {
     usersApi.deleteUserAccount(db.getDb(), req, res);
-})
+});
 
 
 // Register a new user
@@ -87,13 +129,19 @@ app.post('/users/login', (req, res) => {
  */
 // All recipes
 app.get('/recipes', (req, res) => {
-    recipeApi.getRecipes(db.getDb(), req, res);
+    recipeApi.getRecipes(db.getDb(), req, res);    
 });
 
 
 // Search for single recipe with an ID
 app.get('/recipes/id/:id?', (req, res) => {
     recipeApi.getRecipeById(db.getDb(), req, res);
+});
+
+
+// Recipe by search_name
+app.get('/recipes/name/:recipeName?', (req, res) => {
+    recipeApi.getRecipeByName(db.getDb(), req, res);
 });
 
 
@@ -144,12 +192,6 @@ app.get('/recipes/cuisines', (req, res) => {
 // Random recipe
 app.get('/recipes/random', (req, res) => {
     recipeApi.getRandomRecipe(db.getDb(), req, res);
-});
-
-
-// Recipe by search_name
-app.get('/recipes/name/:recipeName?', (req, res) => {
-    recipeApi.getRecipeByName(db.getDb(), req, res);
 });
 
 
@@ -271,7 +313,6 @@ app.get('/courses', (req, res) => {
 app.get('/measurements', (req, res) => {
     measurementApi.getAllMeasurements(db.getDb(), req, res);
 });
-
 
 
 module.exports = app;
