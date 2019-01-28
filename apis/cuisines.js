@@ -8,6 +8,22 @@ const unitConverter = require('../utils/unit-converter');
  * |     GETS     |
  * ----------------
  */
+/**
+ * @swagger
+ *
+ * /cuisines:
+ *   get:
+ *     description: Gets all cuisines in the database.
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         Success: Returns the list of cuisines.
+ *       404:
+ *         NoCuisinesError: There are no cuisines in the database.
+ *     example:
+ *       /cuisines
+ */
 exports.getAllCuisines = async (db, req, res) => {
     debug("In cuisines");
 

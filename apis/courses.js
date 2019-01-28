@@ -8,6 +8,22 @@ const unitConverter = require('../utils/unit-converter');
  * |     GETS     |
  * ----------------
  */
+/**
+ * @swagger
+ *
+ * /courses:
+ *   get:
+ *     description: Gets all courses in the database.
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         Success: Returns the list of courses.
+ *       404:
+ *         NoCuisinesError: There are no courses in the database.
+ *     example:
+ *       /cuisines
+ */
 exports.getAllCourses = async (db, req, res) => {
     debug("In courses");
 

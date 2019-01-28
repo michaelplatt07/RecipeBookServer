@@ -7,6 +7,22 @@ const Promise = require('bluebird');
  * |     GETS     |
  * ----------------
  */
+/**
+ * @swagger
+ *
+ * /measurements:
+ *   get:
+ *     description: Gets all measurements in the database.
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         Success: Returns the list of measurements.
+ *       404:
+ *         NoCuisinesError: There are no measurements in the database.
+ *     example:
+ *       /cuisines
+ */
 exports.getAllMeasurements = async (db, req, res) => {
     debug("In measurements");
 
