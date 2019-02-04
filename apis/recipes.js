@@ -212,7 +212,7 @@ exports.getRecipesBySearchCriteria = async (db, req, res) => {
  *     example:
  *       /recipes/filter?ingredients=Ingredient1+Ingredient2+...+IngredientN
  *                      &cuisines=Cuisine1+Cuisine2+...+CuisineN
- *                      &ingredients=Course1+Course2+...+CourseN
+ *                      &courses=Course1+Course2+...+CourseN
  */
 exports.getRecipesByFitlerOptions = async (db, req, res) => {
     debug("In filterOptions");
