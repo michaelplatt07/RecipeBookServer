@@ -12,8 +12,8 @@ TODO List for the Server Application.
 
 * DONE Fix associated tests with the plural changes. '[2/2]'
   CLOSED: [2019-01-23 Wed 15:44]
-1. [X] Courses
-2. [X] Cuisines
+  1. [X] Courses
+  2. [X] Cuisines
 
 * DONE Finish the filter option.
   CLOSED: [2019-01-23 Wed 16:18]
@@ -56,6 +56,23 @@ TODO List for the Server Application.
   7. [X] Add additional information like base URL
      Maybe make this a configuration file that is loaded up and add additional information as necessary
      - This point becomes moot because the config setup plus swagger docs will cover everything I need.
+
+* TODO Clean up test dependency and inconsistency issues.
+  This is a huge TODO as I'm not sure exactly the scope.  Right now the tests are dependent on being completed in a 
+  certain order to ensure some data exists in the database.  In reality I should find a way to load a list of test
+  fixtures into the database when needed and remove the DB after each set of tests are ran.
+
+* TODO Create an endpoint for giving a recipe a rating '[0/2]'
+  1. [ ] Create endpoint.
+     This endpoint should take into account all the ratings for before as well as the most recent rating.  The average
+     should work very similarly to the endpoint for updating measurements in the database.  Use that as a starting
+     point to see how to get it working.
+  2. [ ] Add swagger documentation.
+
+* TODO Create an activate URL '[0/2]'
+  1. [ ] Modify the create endpoint to default to user not being activated.
+  2. [ ] Create the activate endpoint
+     I'll need an email server to send the activate email on user creation.
 
 * TODO Fix grocery list
   There is a lack of error handling in the groceryList API.  I need to make sure to handle errors like a user not
@@ -102,11 +119,14 @@ TODO List for the Server Application.
   I believe this will mean making a dump of the test database after creating it once, saving off that dump, and
   loading it up each time we run a new test.
 
-* TODO General Cleanup '[1/4]'
-  1. [ ] Clean up imports that aren't being used.
-  2. [ ] Refactor routing to ExpressRouter
+* General Cleanup '[1/5]'
+  1. [-] Add more robust debug statements so I don't constantly have to do console.logs().
+     1. [X] Complete all Recipes API call.
+     2. [ ] Complete all other calls
+  2. [ ] Clean up imports that aren't being used.
+  3. [ ] Refactor routing to ExpressRouter
      I need to look into this and make sure it's the right thing to do
-  3. [X] Check into integrating swagger.
+  4. [X] Check into integrating swagger.
      - Looked into it and it's pretty trivial to integrate swagger by just using swagger-jsdoc
-  4. [ ] ExpressJoi
+  5. [ ] ExpressJoi
      Check into this for validating.

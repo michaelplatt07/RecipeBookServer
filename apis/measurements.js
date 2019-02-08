@@ -21,7 +21,7 @@ const Promise = require('bluebird');
  *       404:
  *         NoCuisinesError: There are no measurements in the database.
  *     example:
- *       /cuisines
+ *       /measurements
  */
 exports.getAllMeasurements = async (db, req, res) => {
     debug("In measurements");

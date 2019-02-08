@@ -63,6 +63,8 @@ exports.getRecipes = async (db, req, res) => {
  */
 exports.getRecipeById = async (db, req, res) => {
     debug("In getById");
+    debug(`ID value -> ${req.params.id}`);
+
     var query = {};
     query._id =  new mongo.ObjectID(req.params.id);
     query.searchable = true;
@@ -102,6 +104,8 @@ exports.getRecipeById = async (db, req, res) => {
  */
 exports.getRecipeByName = async (db, req, res) => {
     debug("In getByName");
+    debug(`Recipe name -> ${req.params.recipeName}`);
+
     var query = {};
     query.search_name =  req.params.recipeName;
     query.searchable = true;
@@ -145,7 +149,8 @@ exports.getRecipeByName = async (db, req, res) => {
  */
 exports.getRecipesBySearchCriteria = async (db, req, res) => {
     debug("In search");
-
+    debug(`Search Parameters -> ${req.query.searchParams}`);
+    
     if (!req.query.searchParams) {
 	let recipes = await db.collection("recipes").find().toArray();
 	if (recipes.length == 0)
@@ -216,6 +221,10 @@ exports.getRecipesBySearchCriteria = async (db, req, res) => {
  */
 exports.getRecipesByFitlerOptions = async (db, req, res) => {
     debug("In filterOptions");
+    debug(`Fitler options -> Cuisines: ${req.query.cuisines}`);
+    debug(`Fitler options -> Courses: ${req.query.courses}`);
+    debug(`Fitler options -> Ingredients: ${req.query.ingredients}`);
+
     var query = {};
     query.searchable = true;
     
@@ -277,6 +286,8 @@ exports.getRecipesByFitlerOptions = async (db, req, res) => {
  */
 exports.getRecipesByIngredients = async (db, req, res) => {
     debug("In byIngredients");
+    debug(`Ingredients -> ${req.query.list}`);
+
     var query = {};
     query.searchable = true;
     if (req.query.list) {
@@ -326,6 +337,8 @@ exports.getRecipesByIngredients = async (db, req, res) => {
  */
 exports.getRecipesByCourses = async (db, req, res) => {
     debug("In byCourses");
+    debug(`Courses -> ${req.query.list}`);
+
     var query = {};
     query.searchable = true;
     if (req.query.list) {
@@ -374,6 +387,8 @@ exports.getRecipesByCourses = async (db, req, res) => {
  */
 exports.getRecipesByCuisines = async (db, req, res) => {
     debug('In byCuisines');
+    debug(`Cuisines -> ${req.query.list}`);
+
     var query = {};
     query.searchable = true;
     if (req.query.list) {

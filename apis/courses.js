@@ -22,7 +22,7 @@ const unitConverter = require('../utils/unit-converter');
  *       404:
  *         NoCuisinesError: There are no courses in the database.
  *     example:
- *       /cuisines
+ *       /courses
  */
 exports.getAllCourses = async (db, req, res) => {
     debug("In courses");
