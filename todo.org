@@ -62,6 +62,16 @@ TODO List for the Server Application.
   certain order to ensure some data exists in the database.  In reality I should find a way to load a list of test
   fixtures into the database when needed and remove the DB after each set of tests are ran.
 
+* TODO Set up ElasticSearch '[0/5]'
+  This isn't necessary right now because I don't have a lot of recipes in the database but it will become something
+  I think I will want to leverage.  I should do set this up early while I have the chance though before things get 
+  too out of control.
+  1. [ ] Install on computer
+  2. [ ] Set up
+  3. [ ] Import data
+  4. [ ] Connect to Node.js
+  5. [ ] Investigate a service that would reimport every few days.
+
 * TODO Create an endpoint for giving a recipe a rating '[0/2]'
   1. [ ] Create endpoint.
      This endpoint should take into account all the ratings for before as well as the most recent rating.  The average

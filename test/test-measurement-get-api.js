@@ -1,5 +1,8 @@
 process.env.NODE_ENV = 'test';
 
+// Test fixture imports.
+const testFixtures = require('./test-fixtures');
+
 // Test module imports.
 const chai = require('chai');
 const chaiHttp = require('chai-http');
@@ -9,22 +12,16 @@ chai.use(chaiHttp);
 // Server import and creation
 const server = require('../server');
 
-const ObjectID = require('mongodb').ObjectID;
-
 // DB import.
 const db = require('../db');
 
 
 describe('All measurements endpoints with no data in database', () => {
-    beforeEach(async () => {
-        let exists = await db.collectionExists('measurements');
-        if (exists) {
-            db.getDb().dropCollection('measurements', (err, results) => {
-                if (err) {
-                    throw err;
-                }
-            });
-        }
+    before(async () => {
+        await db.connect();
+        await db.dropAllCollections();
+
+        await db.getDb().createCollection('measurements');
     });
 
     it('Should return 404 because there are no measurements.', (done) => {
@@ -40,19 +37,12 @@ describe('All measurements endpoints with no data in database', () => {
 });
 
 describe('All measurements endpoints with data in database', () => {
-    beforeEach(async () => {
-        const measurements = [{name: "Tbsp"},{name: "c"},{name: "tsp"},{name: "oz"}];
-        let exists = await db.collectionExists('measurements');
-        if (exists) {
-            db.getDb().dropCollection('measurements', (err, results) => {
-                if (err) {
-                    throw err;
-                }
-            });
-        }
-	
-	await db.getDb().collection('measurements').insertMany(measurements, (err, result) => {
-	});
+    before(async () => {
+        await db.connect();
+        await db.dropAllCollections();
+        
+        await db.getDb().createCollection('measurements');        
+	await db.getDb().collection('measurements').insertMany(testFixtures.sampleMeasurements);
     });
 
     it('Should return four measurements because we hit the return all endpoint.', (done) => {

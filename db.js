@@ -11,6 +11,8 @@ const dbName = config.get('dbConfig.name');
 const appDomain = 'localhost';
 const appPort = 3000;
 
+const _ = require('lodash');
+
 // Db JSON object that may hold more data in the future.
 var dbObj = {
     db: null
@@ -89,7 +91,28 @@ exports.collectionExistsAndDrop = (db, collectionName) => {
 		}
 	});
     });
-}
+};
+
+
+/**
+ * Drops all collections from the database.
+ */
+exports.dropAllCollections = () => {
+    return new Promise(async (resolve,reject) => {
+        try {
+        const collections = await this.getDb().listCollections().toArray();
+        _.forEach(collections, async (collection) => {
+            await this.getDb().dropCollection(collection.name);
+        });
+            resolve(true);
+        }
+        catch(error) {
+            console.log(`Error -> ${error}`);
+            resolve(false);
+        }
+    });
+};
+
 
 /**
  * Utility function to close the database connection manually if needed.

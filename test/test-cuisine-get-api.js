@@ -1,5 +1,8 @@
 process.env.NODE_ENV = 'test';
 
+// Test fixture imports.
+const testFixtures = require('./test-fixtures');
+
 // Test module imports.
 const chai = require('chai');
 const chaiHttp = require('chai-http');
@@ -9,22 +12,16 @@ chai.use(chaiHttp);
 // Server import and creation
 const server = require('../server');
 
-const ObjectID = require('mongodb').ObjectID;
-
 // DB import.
 const db = require('../db');
 
 
 describe('All cuisine endpoints with no data in database', () => {
-    beforeEach(async () => {
-        let exists = await db.collectionExists('cuisines');
-        if (exists) {
-            db.getDb().dropCollection('cuisines', (err, results) => {
-                if (err) {
-                    throw err;
-                }
-            });
-        }
+    before(async () => {
+        await db.connect();
+        await db.dropAllCollections();
+	
+	await db.getDb().createCollection('cuisines');
     });
 
     it('Should return 404 because there are no cuisines.', (done) => {
@@ -40,19 +37,11 @@ describe('All cuisine endpoints with no data in database', () => {
 });
 
 describe('All cuisine endpoints with data in database', () => {
-    beforeEach(async () => {
-        const cuisines = [{name: "American", search_name: "american"},{name: "Japanese", search_name: "japanese"}];
-        let exists = await db.collectionExists('cuisines');
-        if (exists) {
-            db.getDb().dropCollection('cuisines', (err, results) => {
-                if (err) {
-                    throw err;
-                }
-            });
-        }
+    before(async () => {
+        await db.dropAllCollections();
 	
-	await db.getDb().collection('cuisines').insertMany(cuisines, (err, result) => {
-	});
+	await db.getDb().createCollection('cuisines');
+        await db.getDb().collection('cuisines').insertMany(testFixtures.sampleCuisines);
     });
 
     it('Should return two cuisines because we hit the return all endpoint.', (done) => {

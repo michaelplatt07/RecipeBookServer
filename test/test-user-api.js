@@ -1,6 +1,7 @@
 process.env.NODE_ENV = 'test';
 
-const crypto = require('crypto')
+// Test fixture imports.
+const testFixtures = require('./test-fixtures');
 
 // Test module imports.
 const chai = require('chai');
@@ -11,32 +12,19 @@ chai.use(chaiHttp);
 // Server import and creation
 const server = require('../server');
 
-const ObjectID = require('mongodb').ObjectID;
-
 // DB import.
 const db = require('../db');
+
+// Crypto for hashing password
+const crypto = require('crypto');
 
 
 describe('User registration, deletion, and logging in.', () => {
     before(async () => {
 	await db.connect();
-	db.collectionExists('users').then((exists) => {
-	    if (exists) {
-		db.getDb().dropCollection('users', (err, results) => {
-		    if (err)
-		    {
-			throw err;
-		    }
-		});
-	    }
-	    
-	    db.getDb().createCollection('users', (err, results) => {
-		if (err)
-		{
-		    throw err;
-		}
-	    });
-	});
+        await db.dropAllCollections();
+	
+	await db.getDb().createCollection('users');
     });
 
     
@@ -119,7 +107,7 @@ describe('User registration, deletion, and logging in.', () => {
     });
 
     it('Should allow the user to log in.', (done) => {
-	const password = "test1234"
+	const password = "test1234";
 	const cipher = crypto.createCipher('aes-128-cbc', 'baseSecret');
 	var encryptedPass = cipher.update(password, 'utf8', 'hex');
 	encryptedPass += cipher.final('hex');

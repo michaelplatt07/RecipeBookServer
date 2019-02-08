@@ -1,5 +1,8 @@
 process.env.NODE_ENV = 'test';
 
+// Test fixture imports.
+const testFixtures = require('./test-fixtures');
+
 // Test module imports.
 const chai = require('chai');
 const chaiHttp = require('chai-http');
@@ -9,57 +12,28 @@ chai.use(chaiHttp);
 // Server import and creation
 const server = require('../server');
 
-const ObjectID = require('mongodb').ObjectID;
-
 // DB import.
 const db = require('../db');
 
 // Token for testing.
-let token = "JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InRlc3RVc2VyIiwiaWF0IjoxNTM5MDUwMzQwfQ.lu84aP6OBUpgPdLdmj8BRJMoBH19BHcBBT_VQ6Jm9TI"
+let token = "JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InRlc3RVc2VyIiwiaWF0IjoxNTM5MDUwMzQwfQ.lu84aP6OBUpgPdLdmj8BRJMoBH19BHcBBT_VQ6Jm9TI";
 
 describe('Various tests for PUTting recipe data in the databse', () => {
-    before((done) => {
-	db.collectionExists('recipes').then((exists) => {
-	    if (exists) {
-		db.getDb().dropCollection('recipes', (err, results) => {
-		    if (err)
-		    {
-			throw err;
-		    }
-		    db.collectionExists('ingredients').then((exists) => {
-			if (exists)
-			{
-			    db.getDb().dropCollection('ingredients', (err, results) => {
-				if (err)
-				{
-				    throw err;
-				}
-			    });			    
-			}
-		    });
-		});
-	    }
-	    
-	    db.getDb().createCollection('recipes', (err, results) => {
-		if (err)
-		{
-		    throw err;
-		}
-		db.getDb().createCollection('ingredients', (err, results) => {
-		    if (err)
-		    {
-			throw err;
-		    }
-		    done();
-		});	
-	    });
-	});
+    before(async () => {
+        await db.connect();
+	await db.dropAllCollections();
+
+        await db.getDb().createCollection('recipes');
+        await db.getDb().createCollection('ingredients');
+        await db.getDb().createCollection('users');
+        await db.getDb().collection('users').insertOne(testFixtures.sampleUser);       
     });
     
     it('Should fail if there is no name sent to the server', (done) => {
 	chai.request(server)
 	    .post('/recipes/add')
 	    .set({ 'Authorization': token })
+            .send({})
 	    .end((err, res) => {
 		res.should.have.status(422);
 		res.body['msg']['noNameError'].should.be.equal('Please include a name in your recipe.');
