@@ -57,7 +57,10 @@ TODO List for the Server Application.
      Maybe make this a configuration file that is loaded up and add additional information as necessary
      - This point becomes moot because the config setup plus swagger docs will cover everything I need.
 
-* TODO Clean up test dependency and inconsistency issues.
+* DONE Clean up test dependency and inconsistency issues.
+  CLOSED: [2019-02-08 Fri 08:47] - Ended up not being too bad.  Just connected to DB for each test and loaded some
+  fixtures.
+
   This is a huge TODO as I'm not sure exactly the scope.  Right now the tests are dependent on being completed in a 
   certain order to ensure some data exists in the database.  In reality I should find a way to load a list of test
   fixtures into the database when needed and remove the DB after each set of tests are ran.
@@ -72,12 +75,12 @@ TODO List for the Server Application.
   4. [ ] Connect to Node.js
   5. [ ] Investigate a service that would reimport every few days.
 
-* TODO Create an endpoint for giving a recipe a rating '[0/2]'
-  1. [ ] Create endpoint.
+* TODO Create an endpoint for giving a recipe a rating '[2/2]'
+  1. [X] Create endpoint.
      This endpoint should take into account all the ratings for before as well as the most recent rating.  The average
      should work very similarly to the endpoint for updating measurements in the database.  Use that as a starting
      point to see how to get it working.
-  2. [ ] Add swagger documentation.
+  2. [X] Add swagger documentation.
 
 * TODO Create an activate URL '[0/2]'
   1. [ ] Modify the create endpoint to default to user not being activated.
@@ -129,7 +132,7 @@ TODO List for the Server Application.
   I believe this will mean making a dump of the test database after creating it once, saving off that dump, and
   loading it up each time we run a new test.
 
-* General Cleanup '[1/5]'
+* General Cleanup '[1/6]'
   1. [-] Add more robust debug statements so I don't constantly have to do console.logs().
      1. [X] Complete all Recipes API call.
      2. [ ] Complete all other calls
@@ -140,3 +143,4 @@ TODO List for the Server Application.
      - Looked into it and it's pretty trivial to integrate swagger by just using swagger-jsdoc
   5. [ ] ExpressJoi
      Check into this for validating.
+  6. [ ] Differentiate between put and post in the code base.

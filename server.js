@@ -190,6 +190,12 @@ app.post('/recipes/add', passport.authenticate('jwt', { session: false }), (req,
 });
 
 
+// Update rating of Recipe.
+app.post('/recipes/rating/update/:id?', passport.authenticate('jwt', { session: false }), (req, res) => {
+    recipeApi.updateRecipeRating(db.getDb(), req, res);
+});
+
+
 /**
  * --------------------------------
  * |     GROCERY LIST ROUTING     |

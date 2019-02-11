@@ -59,7 +59,8 @@ exports.sampleRecipe1 = {
         "italian"
     ],
     "submitted_by": "User1",
-    "searchable": true  
+    "searchable": true,  
+    "rating": 0
 };
 
 exports.sampleRecipe2 = {
@@ -104,7 +105,8 @@ exports.sampleRecipe2 = {
         "american"
     ],
     "submitted_by": "User1",
-    "searchable": true
+    "searchable": true,  
+    "rating": 0
 };
 
 exports.sampleCuisines = [

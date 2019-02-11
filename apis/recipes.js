@@ -514,7 +514,10 @@ exports.getRandomRecipe = async (db, req, res) => {
  */
 exports.addNewRecipe = async (db, req, res) => {
     debug('In addNewRecipe.');
-    recipeData = req.body;
+    const recipeData = req.body;
+
+    // Creating a rating field for the recipe.
+    recipeData.rating = 0;
 
     var errMsgDict = utils.checkRecipePostData(recipeData);
 
@@ -537,5 +540,57 @@ exports.addNewRecipe = async (db, req, res) => {
 	let recipe = await db.collection('recipes').insertOne(recipeData);
 	res.setHeader('Content-Type', 'application/json');
 	return res.status(200).send({ data: recipeData, message: 'Data successfully inserted' });
+    }
+};
+
+
+/**
+ * @swagger
+ *
+ * /recipes/rating/update/:id?:
+ *   post:
+ *     description: Updates the rating of a recipe in the database.
+ *     produces:
+ *       - application/json
+ *     parameter: 
+ *       - name: id
+ *         description: The Mongo ObjectID of the recipe to be updated.
+ *         in: URL parameters
+ *         require: true
+ *         type: String
+ *       - name: rating
+ *         description: The new rating to be averaged in.
+ *         in: body
+ *         require: true
+ *         type: int
+ *     responses:
+ *       200:
+ *         Success: There was one or more recipes in the database and they will be returned.
+ *       404:
+ *         NoMatchesError: There were no recipes with that ID in the database.
+ *     example:
+ *       /recipes/rating/update/1234
+ */
+exports.updateRecipeRating = async (db, req, res) => {
+    if (!req.body.rating) {
+        res.setHeader('Content-Type', 'application/json');
+     	return res.status(422).send({msg: 'There was no rating sent in the body.'});
+    }
+    else {
+        const query = {};
+        query._id =  new mongo.ObjectID(req.params.id);
+        let recipe = await db.collection("recipes").findOne(query);
+        if (!recipe)
+        {
+	    return res.status(404).send({msg: 'No recipes exist that match that ID.'});
+        }
+        else
+        {
+            const averagedRating = recipe.rating === 0 ? req.body.rating : ((recipe.rating + req.body.rating) / 2);
+            const newValues = { $set: { rating: averagedRating }};
+            recipe.rating = averagedRating;
+            await db.collection('recipes').updateOne(query, newValues);
+            return res.status(200).send({ data: recipe });
+        }
     }
 };

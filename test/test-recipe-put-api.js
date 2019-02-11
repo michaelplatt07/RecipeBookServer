@@ -508,3 +508,68 @@ describe('Various tests for PUTting recipe data in the databse', () => {
     });    
 
 });
+
+describe('Testing PUTs for updating the rating of a recipe.', () => {
+    before(async () => {
+        await db.connect();
+	await db.dropAllCollections();
+
+        await db.getDb().createCollection('recipes');
+        await db.getDb().createCollection('ingredients');
+        await db.getDb().createCollection('users');
+        await db.getDb().collection('users').insertOne(testFixtures.sampleUser);       
+        await db.getDb().collection('recipes').insertOne(testFixtures.sampleRecipe1);       
+    });
+
+    it('Should fail because there is no recipe with that ID', (done) => {
+	chai.request(server)
+	    .post('/recipes/rating/update/5b69bea0d125e430b8d6ec00')
+            .set({ 'Authorization': token })
+            .send({ rating: 5 })
+            .end((err, res) => {
+		res.should.have.status(404);
+		res.body['msg'].should.equal('No recipes exist that match that ID.');
+		done();
+	    });        
+    });    
+
+    
+    it('Should fail because there is no rating being passed in', (done) => {
+	chai.request(server)
+	    .post('/recipes/rating/update/5b69bea0d125e430b8d6eca2')
+            .set({ 'Authorization': token })
+	    .end((err, res) => {
+		res.should.have.status(422);
+		res.body['msg'].should.equal('There was no rating sent in the body.');
+		done();
+	    });        
+    });    
+
+    it('Should update the rating to value of 3', (done) => {
+	chai.request(server)
+	    .post('/recipes/rating/update/5b69bea0d125e430b8d6eca2')
+            .set({ 'Authorization': token })
+	    .send({
+                rating: 3
+            })
+	    .end((err, res) => {
+		res.should.have.status(200);
+                res.body['data']['rating'].should.equal(3);
+		done();
+	    });        
+    });
+    
+    it('Should update the rating to value of 2', (done) => {
+	chai.request(server)
+	    .post('/recipes/rating/update/5b69bea0d125e430b8d6eca2')
+            .set({ 'Authorization': token })
+	    .send({
+                rating: 1
+            })
+            .end((err, res) => {
+		res.should.have.status(200);
+		res.body['data']['rating'].should.equal(2);
+		done();
+	    });        
+    });
+});
