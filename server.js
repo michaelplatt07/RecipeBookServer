@@ -80,18 +80,29 @@ app.get('/config/configurations', (req, res) => {
  */
 /**
  * ----------------
+ * |     GETS     |
+ * ----------------
+ */
+// Delete a user.
+app.get('/users/delete/:userName?', (req, res) => {
+    usersApi.deleteUserAccount(db.getDb(), req, res);
+});
+
+
+// Activate a user.
+app.get('/users/activate/:userid?', (req, res) => {
+    usersApi.activateUserAccount(db.getDb(), req, res);
+});
+
+
+/**
+ * ----------------
  * |     PUTS     |
  * ----------------
  */
 // Register a new user
 app.post('/users/register', (req, res) => {
     usersApi.createUserAccount(db.getDb(), req, res);
-});
-
-
-// Delete a user.
-app.get('/users/delete/:userName?', (req, res) => {
-    usersApi.deleteUserAccount(db.getDb(), req, res);
 });
 
 

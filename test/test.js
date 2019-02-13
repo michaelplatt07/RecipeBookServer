@@ -7,4 +7,3 @@ require('./test-measurement-get-api');
 require('./test-course-get-api');
 require('./test-utils');
 require('./test-converter');
-

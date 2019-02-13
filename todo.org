@@ -61,7 +61,7 @@ TODO List for the Server Application.
   CLOSED: [2019-02-08 Fri 08:47] - Ended up not being too bad.  Just connected to DB for each test and loaded some
   fixtures.
 
-  This is a huge TODO as I'm not sure exactly the scope.  Right now the tests are dependent on being completed in a 
+  This is a huge undertaking as I'm not sure exactly the scope.  Right now the tests are dependent on being completed in a 
   certain order to ensure some data exists in the database.  In reality I should find a way to load a list of test
   fixtures into the database when needed and remove the DB after each set of tests are ran.
 
@@ -75,7 +75,8 @@ TODO List for the Server Application.
   4. [ ] Connect to Node.js
   5. [ ] Investigate a service that would reimport every few days.
 
-* TODO Create an endpoint for giving a recipe a rating '[2/2]'
+* DONE Create an endpoint for giving a recipe a rating '[2/2]'
+  CLOSED: [2019-02-11 Mon 14:12]
   1. [X] Create endpoint.
      This endpoint should take into account all the ratings for before as well as the most recent rating.  The average
      should work very similarly to the endpoint for updating measurements in the database.  Use that as a starting
@@ -86,6 +87,10 @@ TODO List for the Server Application.
   1. [ ] Modify the create endpoint to default to user not being activated.
   2. [ ] Create the activate endpoint
      I'll need an email server to send the activate email on user creation.
+
+* TODO Put checks in the user creation '[0/2]'
+  1. [ ] Check to make sure email address wasn't already used.
+  2. [ ] Check to make sure user name doesn't exist.
 
 * TODO Fix grocery list
   There is a lack of error handling in the groceryList API.  I need to make sure to handle errors like a user not

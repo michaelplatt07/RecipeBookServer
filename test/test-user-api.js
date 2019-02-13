@@ -19,7 +19,7 @@ const db = require('../db');
 const crypto = require('crypto');
 
 
-describe('User registration, deletion, and logging in.', () => {
+describe('User registration.', () => {
     before(async () => {
 	await db.connect();
         await db.dropAllCollections();
@@ -106,7 +106,56 @@ describe('User registration, deletion, and logging in.', () => {
 	    });
     });
 
-    it('Should allow the user to log in.', (done) => {
+});
+
+
+describe('User deletion and logging in.', () => {
+    before(async () => {
+	await db.connect();
+        await db.dropAllCollections();
+	
+	await db.getDb().createCollection('users');
+        
+        await db.getDb().collection('users').insertOne(testFixtures.sampleUser);
+    });
+    
+    it('Should fail because the user account has not been activated.', (done) => {
+	const password = "test1234";
+	const cipher = crypto.createCipher('aes-128-cbc', 'baseSecret');
+	var encryptedPass = cipher.update(password, 'utf8', 'hex');
+	encryptedPass += cipher.final('hex');
+	
+	chai.request(server)
+	    .post('/users/login')
+	    .send({ username: "testUser", password: encryptedPass })
+	    .end((err, res) => {
+		res.should.have.status(401);
+		res.body['message'].should.be.equal('User is not currently active.');
+		done();
+	    });
+    });
+
+    it('Should fail because the user account does not exist.', (done) => {
+        chai.request(server)
+	    .get('/users/activate/5c080b0e92b3f41495100000')
+	    .end((err, res) => {
+		res.should.have.status(400);
+		res.body['message'].should.be.equal('No user account associated with activation link.');
+		done();
+	    });
+    });
+
+    it('Should activate the user account.', (done) => {
+        chai.request(server)
+	    .get('/users/activate/5c080b0e92b3f41495142cf4')
+	    .end((err, res) => {
+		res.should.have.status(200);
+		res.body['message'].should.be.equal('User account successfully activated.');
+		done();
+	    });
+    });
+
+    it('Should allow user to log in.', (done) => {
 	const password = "test1234";
 	const cipher = crypto.createCipher('aes-128-cbc', 'baseSecret');
 	var encryptedPass = cipher.update(password, 'utf8', 'hex');
@@ -121,5 +170,6 @@ describe('User registration, deletion, and logging in.', () => {
 		done();
 	    });
     });
+    
+});
 
-})
