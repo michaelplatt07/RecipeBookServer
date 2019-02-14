@@ -1,4 +1,4 @@
-TODO List for the Server Application.
+nTODO List for the Server Application.
 -------------------------------------
 
 * DONE Refactor out the course to be plural courses
@@ -64,6 +64,9 @@ TODO List for the Server Application.
   This is a huge undertaking as I'm not sure exactly the scope.  Right now the tests are dependent on being completed in a 
   certain order to ensure some data exists in the database.  In reality I should find a way to load a list of test
   fixtures into the database when needed and remove the DB after each set of tests are ran.
+
+* TODO Get user from Authorization header on submit.
+  This is a priority 1 and needs to be fixed ASAP.
 
 * TODO Set up ElasticSearch '[0/5]'
   This isn't necessary right now because I don't have a lot of recipes in the database but it will become something
