@@ -1,4 +1,4 @@
-nTODO List for the Server Application.
+TODO List for the Server Application.
 -------------------------------------
 
 * DONE Refactor out the course to be plural courses
@@ -65,7 +65,11 @@ nTODO List for the Server Application.
   certain order to ensure some data exists in the database.  In reality I should find a way to load a list of test
   fixtures into the database when needed and remove the DB after each set of tests are ran.
 
-* TODO Get user from Authorization header on submit.
+* DONE Get user from Authorization header on submit.
+  CLOSED: [2019-02-17 Sun 01:56] - NOTE(map) : This may be done for now but I should really look into making sure
+  that using jwt.decode is acceptable.  Technically I'm validating on the endpoint before I even get to the part
+  where I would be concerned about this but I still feel a bit uneasy about how things stand. 
+
   This is a priority 1 and needs to be fixed ASAP.
 
 * TODO Set up ElasticSearch '[0/5]'

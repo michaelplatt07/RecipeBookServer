@@ -33,7 +33,7 @@ const swaggerSpec = swaggerJSDoc(config.get("swaggerConfig"));
 // Passport config.
 var jwtOptions = {};
 jwtOptions.jwtFromRequest = ExtractJwt.fromAuthHeaderWithScheme("jwt");
-jwtOptions.secretOrKey = 'basicSecret';
+jwtOptions.secretOrKey = new Buffer('basicSecret', 'base64');
 
 var strategy = new JwtStrategy(jwtOptions, async (jwt_payload, next) => {
     const user = await db.getDb().collection('users').findOne({ username: jwt_payload.id });

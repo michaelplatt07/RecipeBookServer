@@ -1,5 +1,6 @@
 const utils = require('../utils/utility-functions');
 const mongo = require('mongodb');
+const jwt = require('jsonwebtoken');
 const debug = require('debug')('recipes');
 
 const _ = require('lodash');
@@ -515,10 +516,11 @@ exports.getRandomRecipe = async (db, req, res) => {
 exports.addNewRecipe = async (db, req, res) => {
     debug('In addNewRecipe.');
     const recipeData = req.body;
-
+    
     // Creating a rating field for the recipe.
     recipeData.rating = 0;
-
+    recipeData.submitted_by = jwt.decode(req.get('Authorization').replace('JWT ', '').toString()).id;
+    
     var errMsgDict = utils.checkRecipePostData(recipeData);
 
     if (Object.keys(errMsgDict).length > 0)
