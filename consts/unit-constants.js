@@ -6,4 +6,4 @@ module.exports = {
     TABLESPOONS_IN_QUART: 64,
     CUPS_IN_QUART: 4,
     OUNCES_IN_POUNDS: 16
-}
+};
