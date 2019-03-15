@@ -17,14 +17,20 @@
    CLOSED: [2019-03-14 Thu 13:24]
    This is a pretty easy task.  Just create a gmail account, something like nara_accountcreation@gmail.com
 
-** TODO Configure Nodemailer [[https://github.com/michaelplatt07/RecipeBookServer/issues/3][Issue 3]] '[1/2]'
+** DONE Configure Nodemailer [[https://github.com/michaelplatt07/RecipeBookServer/issues/3][Issue 3]] '[3/3]'
+   CLOSED: [2019-03-15 Fri 12:38] - This is done but I'm going to create another ticket for further down the road to
+                                    make sure we finalize the template as this is just a temp.
    This requires a few tasks to be complete
    1. [X] Create a config file with the email account credentials.
-   2. [ ] Write code to load the credentials when needed and send the email.
+   2. [X] Write code to load the credentials when needed and send the email.
+   3. [X] Create a template for activation that we can load up instead of having the write the body or include inline.
 
 ** TODO Design and send the activate URL [[https://github.com/michaelplatt07/RecipeBookServer/issues/4][Issue 4]]
    The acivate URL already exists and I'm thinking it might not be too bad to simply send the user the direct
    activation URL with the Mongo ID to activate it.  I need to figure out if there is a security issue here though.
+
+   Should also note that I should pull config values for the URL to inserting like the url of the server instead of
+   just a hard coded string.
 
 * TODO Implement error for user creation.
   We curently just break the server if the user account creation attempt fails.  Probaly not the best way to handle

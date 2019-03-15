@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt'),
       crypto = require('crypto'),
       mongo = require('mongodb'),
       mailSubjects = require('../consts/mail-subjects.js'),
+      mailBodyAlts = require('../consts/mail-bodies.js'),
       emailUtil = require('../utils/email.js');
 
 /**
@@ -135,8 +136,8 @@ exports.createUserAccount = async (db, req, res) => {
 	    if (err) return next(err);
 	    newUser.password = hash;
 	    let result = await db.collection('users').insertOne(newUser);
-
-            emailUtil.sendEmail("michael.platt.07@gmail.com", mailSubjects.ACCOUNT_CREATION, "Test Body");
+            
+            emailUtil.sendEmail("michael.platt.07@gmail.com", mailSubjects.ACCOUNT_CREATION, mailBodyAlts.ACCOUNT_CREATION, result.insertedId);
             
 	    res.setHeader('Content-Type', 'application/json');
 	    return res.status(200).send({ message: 'Successfully created user account.'});
