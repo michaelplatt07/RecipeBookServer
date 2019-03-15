@@ -32,6 +32,9 @@
    Should also note that I should pull config values for the URL to inserting like the url of the server instead of
    just a hard coded string.
 
+* TODO Modify form to take email address [[https://github.com/michaelplatt07/RecipeBookServer/issues/8][Issue 8]]
+  I'll also need to run some sort of check to make sure it is valid.
+
 * TODO Implement error for user creation.
   We curently just break the server if the user account creation attempt fails.  Probaly not the best way to handle
   things and it should be fixed at some point.  Also should do proper validation to make sure user accounts being
@@ -55,6 +58,20 @@
 
 * TODO Throw error on unit-converter.js converting from unit to unit.
   This should probably be a promise that I will be reject instead and kickng up the ladder.
+
+* MILESTONE Finalize template for activation email [[https://github.com/michaelplatt07/RecipeBookServer/milestone/2][Email Template Finalize Miltestone]]
+
+** TODO Mobile First Design [[https://github.com/michaelplatt07/RecipeBookServer/issues/5][Issue 5]]
+   Redesign the HTML for a mobile first view that looks good.
+
+** TODO Move template to actual template file [[https://github.com/michaelplatt07/RecipeBookServer/issues/6][Issue 6]]
+   This file currently exists as a string in the emails.js file.  It should be it's own template somewhere I can 
+   insert values into.
+
+** TODO Alt text in body [[https://github.com/michaelplatt07/RecipeBookServer/issues/7][Issue 7]]
+   I need to create a good body value in case the user can't get images or CSS.
+
+
 
 * ----------------
 * -  Bug Report  -
