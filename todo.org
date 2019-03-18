@@ -33,7 +33,8 @@
    Should also note that I should pull config values for the URL to inserting like the url of the server instead of
    just a hard coded string.
 
-* TODO Modify form to take email address [[https://github.com/michaelplatt07/RecipeBookServer/issues/8][Issue 8]]
+* DONE Modify form to take email address [[https://github.com/michaelplatt07/RecipeBookServer/issues/8][Issue 8]]
+  CLOSED: [2019-03-18 Mon 11:37]
   I'll also need to run some sort of check to make sure it is valid.
 
   I will need to create the tests as well to ensure the email check is working as intending.
