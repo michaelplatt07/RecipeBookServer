@@ -25,7 +25,8 @@
    2. [X] Write code to load the credentials when needed and send the email.
    3. [X] Create a template for activation that we can load up instead of having the write the body or include inline.
 
-** TODO Design and send the activate URL [[https://github.com/michaelplatt07/RecipeBookServer/issues/4][Issue 4]]
+** DONE Design and send the activate URL [[https://github.com/michaelplatt07/RecipeBookServer/issues/4][Issue 4]]
+   CLOSED: [2019-03-18 Mon 10:39]
    The acivate URL already exists and I'm thinking it might not be too bad to simply send the user the direct
    activation URL with the Mongo ID to activate it.  I need to figure out if there is a security issue here though.
 
@@ -34,6 +35,8 @@
 
 * TODO Modify form to take email address [[https://github.com/michaelplatt07/RecipeBookServer/issues/8][Issue 8]]
   I'll also need to run some sort of check to make sure it is valid.
+
+  I will need to create the tests as well to ensure the email check is working as intending.
 
 * TODO Implement error for user creation.
   We curently just break the server if the user account creation attempt fails.  Probaly not the best way to handle
