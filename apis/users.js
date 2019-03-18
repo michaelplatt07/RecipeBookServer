@@ -1,8 +1,11 @@
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const debug = require('debug')('users');
-const crypto = require('crypto');
-const mongo = require('mongodb');
+const bcrypt = require('bcrypt'),
+      jwt = require('jsonwebtoken'),
+      debug = require('debug')('users'),
+      crypto = require('crypto'),
+      mongo = require('mongodb'),
+      mailSubjects = require('../consts/mail-subjects.js'),
+      mailBodyAlts = require('../consts/mail-bodies.js'),
+      emailUtil = require('../utils/email.js');
 
 /**
  * ----------------
@@ -122,7 +125,14 @@ exports.createUserAccount = async (db, req, res) => {
 	return res.status(401).send({ message: 'Must include a password.' });
     }
 
-    var newUser = { username: req.body.username, password: "", active: false };
+    // NOTE(map) : We will need ot put the proper checks in here.
+    if (!req.body.email || req.body.email === "" || req.body.email === " ")
+    {
+	res.setHeader('Content-Type', 'application/json');
+	return res.status(401).send({ message: 'Must include an email.' });
+    }
+
+    var newUser = { username: req.body.username, password: "", email: req.body.email, active: false };
 
     bcrypt.genSalt(10, (err, salt) => {
 	if (err)
@@ -133,7 +143,9 @@ exports.createUserAccount = async (db, req, res) => {
 	    if (err) return next(err);
 	    newUser.password = hash;
 	    let result = await db.collection('users').insertOne(newUser);
-
+            
+            emailUtil.sendEmail(newUser.email, mailSubjects.ACCOUNT_CREATION, mailBodyAlts.ACCOUNT_CREATION, result.insertedId);
+            
 	    res.setHeader('Content-Type', 'application/json');
 	    return res.status(200).send({ message: 'Successfully created user account.'});
 	});

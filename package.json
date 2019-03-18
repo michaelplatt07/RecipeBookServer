@@ -5,7 +5,7 @@
 			"main": "index.js",
 			"scripts": {
 						"test": "NODE_ENV=test mocha test/test.js",
-						"start": "NODE_ENV=dev DEBUG=recipes,groceryList,users,db,cuisines,courses,measurements,configs nodejs bin/www"
+			    "start": "NODE_ENV=dev DEBUG=recipes,groceryList,users,db,cuisines,courses,measurements,configs,email nodejs bin/www"
 			},
 			"repository": {
 						"type": "git",
@@ -37,6 +37,7 @@
 						"lodash": "^4.17.11",
 						"mocha": "^5.2.0",
 						"mongodb": "^2.2.36",
+						"nodemailer": "^5.1.1",
 						"passport": "^0.4.0",
 						"passport-http": "^0.3.0",
 						"passport-jwt": "^4.0.0",

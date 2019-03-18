@@ -10,6 +10,11 @@
 	"baseUrl": "http://localhost",
 	"basePort": 3000
     },
+    "emailConfig":
+    {
+	"emailAddress": "nararecipeapp@gmail.com",
+	"emailPassword": "rCIgqnOH66sDQCA9sdM!"
+    },
     "swaggerConfig":
     {
 	"definition":

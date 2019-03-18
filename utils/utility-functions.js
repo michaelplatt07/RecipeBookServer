@@ -1,4 +1,4 @@
-const _ = require('lodash')
+const _ = require('lodash');
 
 /**
  * Takes a value and an array of mongo db entries and checks to see if the ID exists.  This is just a small util
@@ -34,7 +34,7 @@ exports.convertTextToSearch = (textFriendlyString) => {
 */
 exports.createShortDescription = (description) => {
     return description.substring(0, 100) + "...";
-}
+};
 
 
 /**
@@ -148,11 +148,11 @@ exports.measurementInDb = (aMeasurement, measurementList) => {
 	{
 	    if ((measurementList['measurement_ratios'][i - 1]['percentage'] < measurementList['measurement_ratios'][i]['percentage'])  && (measurementList['measurement_ratios'][i]['measurement'] !== '')) // The previous measurement has a higher percentage of being used.
 	    {
-		measurementList['most_used_measurement'] = measurementList['measurement_ratios'][i]['measurement']
+		measurementList['most_used_measurement'] = measurementList['measurement_ratios'][i]['measurement'];
 	    }
 	    else if ((measurementList['measurement_ratios'][i - 1]['percentage'] > measurementList['measurement_ratios'][i]['percentage']) && (measurementList['measurement_ratios'][i - 1]['measurement'] !== ''))
 	    { // The later measurement has a higher percentage of being used.
-		measurementList['most_used_measurement'] = measurementList['measurement_ratios'][i -1]['measurement']
+		measurementList['most_used_measurement'] = measurementList['measurement_ratios'][i -1]['measurement'];
 	    }
 	    else
 	    {
@@ -210,4 +210,4 @@ exports.insertIngredients = (db, ingredientList) => {
 	    }
 	});	    
     });
-}
+};
