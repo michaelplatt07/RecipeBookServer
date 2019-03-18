@@ -47,6 +47,12 @@
 * ----------------
 * - Enhancements -
 * ----------------
+* DONE Check in the puts to make sure the user account is active [[https://github.com/michaelplatt07/RecipeBookServer/issues/10][Issue 10]]
+  CLOSED: [2019-03-18 Mon 11:55]
+  This check needs to be done during login, as you shouldn't be able to login when the user account is not active 
+  and it should be done when the inserts are done even though you shouldn't be able to hit that until you are
+  logged in anyways.  Extra layers of protection never hurt.
+  
 * TODO Put checks in the user creation '[0/2]'
   1. [ ] Check to make sure email address wasn't already used.
   2. [ ] Check to make sure user name doesn't exist.
