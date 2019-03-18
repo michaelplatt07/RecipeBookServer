@@ -16,7 +16,7 @@ const server = require('../server');
 const db = require('../db');
 
 // Token for testing.
-let token = "JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InRlc3RVc2VyIiwiaWF0IjoxNTM5MDUwMzQwfQ.lu84aP6OBUpgPdLdmj8BRJMoBH19BHcBBT_VQ6Jm9TI";
+let token = "JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InRlc3RVc2VyIiwiaWF0IjoxNTUyOTIxODQ4fQ.Ii3QotT8Uct9evShnHtbm7cEGco1fbK_zgGjZ_liZz4";
 
 describe('Various tests for PUTting recipe data in the databse', () => {
     before(async () => {

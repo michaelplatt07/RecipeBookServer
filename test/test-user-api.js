@@ -39,7 +39,7 @@ describe('User registration.', () => {
 	    });
     });
 
-    it('Should fail with no username being supplied.', (done) => {
+    it('Should fail with empty username being supplied.', (done) => {
 	chai.request(server)
 	    .post('/users/register')
 	    .send({ username: "" })
@@ -50,7 +50,7 @@ describe('User registration.', () => {
 	    });
     });
 
-    it('Should fail with no username being supplied.', (done) => {
+    it('Should fail with space for username being supplied.', (done) => {
 	chai.request(server)
 	    .post('/users/register')
 	    .send({ username: " " })
@@ -83,22 +83,43 @@ describe('User registration.', () => {
 	    });
     });
 
-    it('Should fail with a blank password being supplied.', (done) => {
+    it('Should fail with no email being supplied.', (done) => {
 	chai.request(server)
 	    .post('/users/register')
-	    .send({ username: "testUser", password: "" })
+	    .send({ username: "testUser", password: "test1234" })
 	    .end((err, res) => {
 		res.should.have.status(401);
-		res.body['message'].should.be.equal('Must include a password.');
+		res.body['message'].should.be.equal('Must include an email.');
 		done();
 	    });
     });
 
+    it('Should fail with empty email being supplied.', (done) => {
+	chai.request(server)
+	    .post('/users/register')
+	    .send({ username: "testUser", password: "test1234", email: "" })
+	    .end((err, res) => {
+		res.should.have.status(401);
+		res.body['message'].should.be.equal('Must include an email.');
+		done();
+	    });
+    });
+
+    it('Should fail with blank email being supplied.', (done) => {
+	chai.request(server)
+	    .post('/users/register')
+	    .send({ username: "testUser", password: "test1234", email: " " })
+	    .end((err, res) => {
+		res.should.have.status(401);
+		res.body['message'].should.be.equal('Must include an email.');
+		done();
+	    });
+    });
     
     it('Should create the user.', (done) => {
 	chai.request(server)
 	    .post('/users/register')
-	    .send({ username: "testUser", password: "test1234" })
+	    .send({ username: "testUser", password: "test1234", email: "test@test.com" })
 	    .end((err, res) => {
 		res.should.have.status(200);
 		res.body['message'].should.be.equal('Successfully created user account.');

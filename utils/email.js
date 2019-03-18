@@ -34,14 +34,10 @@ exports.sendEmail = (recipientAddress, subject, body, insertedId) => {
         if (error) {
             console.log(error);
         } else {
-            console.log('Email sent: ' + info.response);
+            debug('Email sent: ' + info.response);
         }
     }); 
 
-};
-
-exports.populateActivationEmailTemplate = () => {
-    
 };
 
 const getActivationEmailTemplate = (mongoId) => {

@@ -125,7 +125,14 @@ exports.createUserAccount = async (db, req, res) => {
 	return res.status(401).send({ message: 'Must include a password.' });
     }
 
-    var newUser = { username: req.body.username, password: "", active: false };
+    // NOTE(map) : We will need ot put the proper checks in here.
+    if (!req.body.email || req.body.email === "" || req.body.email === " ")
+    {
+	res.setHeader('Content-Type', 'application/json');
+	return res.status(401).send({ message: 'Must include an email.' });
+    }
+
+    var newUser = { username: req.body.username, password: "", email: req.body.email, active: false };
 
     bcrypt.genSalt(10, (err, salt) => {
 	if (err)
@@ -137,7 +144,7 @@ exports.createUserAccount = async (db, req, res) => {
 	    newUser.password = hash;
 	    let result = await db.collection('users').insertOne(newUser);
             
-            emailUtil.sendEmail("michael.platt.07@gmail.com", mailSubjects.ACCOUNT_CREATION, mailBodyAlts.ACCOUNT_CREATION, result.insertedId);
+            emailUtil.sendEmail(newUser.email, mailSubjects.ACCOUNT_CREATION, mailBodyAlts.ACCOUNT_CREATION, result.insertedId);
             
 	    res.setHeader('Content-Type', 'application/json');
 	    return res.status(200).send({ message: 'Successfully created user account.'});
