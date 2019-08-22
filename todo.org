@@ -11,7 +11,8 @@
   2. [X] Create the activate endpoint
      I'll need an email server to send the activate email on user creation.
 
-* MILESTONE Account Creation Email [[https://github.com/michaelplatt07/RecipeBookServer/milestone/1N][Account Creation Milestone]]
+* DONE MILESTONE Account Creation Email [[https://github.com/michaelplatt07/RecipeBookServer/milestone/1N][Account Creation Milestone]]
+  CLOSED: [2019-03-18 Mon 12:09]
 
 ** DONE Create Email [[https://github.com/michaelplatt07/RecipeBookServer/issues/2][Issue 2]]
    CLOSED: [2019-03-14 Thu 13:24]
@@ -80,8 +81,6 @@
 
 ** TODO Alt text in body [[https://github.com/michaelplatt07/RecipeBookServer/issues/7][Issue 7]]
    I need to create a good body value in case the user can't get images or CSS.
-
-
 
 * ----------------
 * -  Bug Report  -
