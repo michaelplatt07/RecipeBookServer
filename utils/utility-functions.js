@@ -187,9 +187,10 @@ exports.insertIngredients = (db, ingredientList) => {
 	    else if (results != null) // The ingredient was seen before.
 	    {
 		results = this.measurementInDb(ingredient['measurement'], results);
-		db.collection('ingredients').updateOne({_id: results['_id']}, results, (err, res) => {
+		db.collection('ingredients').updateOne({_id: results['_id']}, {$set: results}, (err, res) => {
 		    if (err)
 		    {
+                        console.log(err);
 			res.status(500).send({ message: 'Failed to update data.' });			
 		    }
 		});
@@ -201,7 +202,7 @@ exports.insertIngredients = (db, ingredientList) => {
 		ingredient['measurement_ratios'] = [{measurement: ingredient['measurement'], percentage: 1, count: 1}];
 		delete ingredient['quantity'];
 		delete ingredient['measurement'];
-		db.collection('ingredients').insertOne(ingredient, (err, result) => {
+		db.collection('ingredients').insertOne(ingredient, (err, res) => {
 		    if (err)
 		    {
 			res.status(500).send({ message: 'Failed to insert data.' });

@@ -1,4 +1,4 @@
-const bcrypt = require('bcrypt'),
+const bcrypt = require('bcryptjs'),
       jwt = require('jsonwebtoken'),
       debug = require('debug')('users'),
       crypto = require('crypto'),

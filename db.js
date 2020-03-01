@@ -30,7 +30,8 @@ exports.connect = async () => {
 	console.log('Already connected to the database.');
     }
     
-    dbObj.db = await MongoClient.connect(dbUrl + ":" + dbPort + "/" + dbName, {poolSize: 10}); 
+    const client = await MongoClient.connect(dbUrl + ":" + dbPort, {poolSize: 10, useUnifiedTopology: true});
+    dbObj.db = client.db(dbName);
 };
 
 

@@ -48,6 +48,9 @@
 * ----------------
 * - Enhancements -
 * ----------------
+* TODO Update the README with instructions about setting the NODE_ENV value and such [[][]]
+  Just need to update the instructions here with more information.
+
 * DONE Check in the puts to make sure the user account is active [[https://github.com/michaelplatt07/RecipeBookServer/issues/10][Issue 10]]
   CLOSED: [2019-03-18 Mon 11:55]
   This check needs to be done during login, as you shouldn't be able to login when the user account is not active 

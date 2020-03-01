@@ -1,6 +1,9 @@
 # My Recipe Book
 This is designed to be a NodeJS application that can be used to manage your recipe book.  The application is lightweight and separates the logic that queries the database from the front end display.
 
+## Running/Configuring Application
+
+
 ## Database
 Currently I'm setting this up to connect to a Mongo database.  I chose this database because I found that JSON is a nice format for storing recipes.  A sample recipe could look something like this:
 
@@ -100,6 +103,9 @@ In an attempt to standardize how the grocery list will display relevant units of
 
 ## Testing
 To run the unit tests for this application, navigate to the root directory.  From there, you can run the command `npm test` which will kickstart an entire suite of tests that cover the entire application.
+
+## Allowing Emails through NodeMailer
+This will not currently work unless the email account for the NARA gmail has the "Less Secure App Access" enabled.  This feature can be found by searching for that name under the profile management.
 
 ## Generating Certs
 Follow these steps to generate keys and certifications to be used in the API.

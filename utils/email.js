@@ -26,7 +26,7 @@ exports.sendEmail = (recipientAddress, subject, body, insertedId) => {
         html: getActivationEmailTemplate(insertedId),
         attachments: [{
             filename: 'cherry_blossom_sky.png',
-            path: '/home/michael/Desktop/RecipeApp/RecipeBookServer/consts/cherry_blossom_sky.png',
+            path: '/home/michael/Desktop/Programming/RecipeApp/RecipeBookServer/consts/cherry_blossom_sky.png',
             cid: 'blossom'
         }]
     };
