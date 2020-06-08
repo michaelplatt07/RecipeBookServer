@@ -1,5 +1,5 @@
 const ObjectID = require('mongodb').ObjectID;
-const debug = require('debug')('courses');
+const debug = require('debug')('categories');
 const Promise = require('bluebird');
 const unitConverter = require('../utils/unit-converter');
 
@@ -22,7 +22,7 @@ const unitConverter = require('../utils/unit-converter');
  *       404:
  *         NoCategoriesError: There are no categories in the database.
  *     example:
- *       /courses
+ *       /categories
  */
 exports.getAllCategories = async (db, req, res) => {
     debug("In categories");

@@ -157,3 +157,14 @@ exports.sampleCategories = [
         search_name: "meat"
     }
 ];
+
+exports.sampleServingSizes = [
+    {
+        dispaly_range: "1 - 2",
+        search_range: "1, 2"
+    },
+    {
+        dispaly_range: "3 - 4",
+        search_range: "3, 4"
+    }
+];
