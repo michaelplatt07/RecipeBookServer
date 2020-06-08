@@ -29,6 +29,8 @@ exports.getAllMeasurements = async (db, req, res) => {
     var query = {};
     
     let measurements = await db.collection("measurements").find(query).toArray();
+    // TODO(map) : Do I really want to return a 404 error here?  I feel like logging that there are no measurements
+    // is probably just better for me since it's possible to have this happen.
     if (!measurements || measurements.length == 0)
     {
 	return res.status(404).send({msg: 'There are currently no measurements in the database.'});

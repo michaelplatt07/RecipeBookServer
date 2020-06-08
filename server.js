@@ -24,6 +24,7 @@ const usersApi = require('./apis/users.js');
 const cuisineApi = require('./apis/cuisines.js');
 const courseApi = require('./apis/courses.js');
 const categoryApi = require('./apis/categories.js');
+const servingSizeApi = require('./apis/servingSizes.js');
 const measurementApi = require('./apis/measurements.js');
 const configApi = require('./apis/configs.js');
 
@@ -314,6 +315,22 @@ app.get('/courses', (req, res) => {
  */
 app.get('/categories', (req, res) => {
     categoryApi.getAllCategories(db.getDb(), req, res);
+});
+
+
+
+/**
+ * --------------------------------
+ * |     SERVING SIZE ROUTING     |
+ * --------------------------------
+ */
+/**
+ * ----------------
+ * |     GETS     |
+ * ----------------
+ */
+app.get('/servingSizes', (req, res) => {
+    servingSizeApi.getAllServingSizes(db.getDb(), req, res);
 });
 
 
