@@ -5,41 +5,6 @@
 * ----------------
 * -   Features   -
 * ----------------
-* DONE Create an activate URL '[2/2]'
-  CLOSED: [2019-03-14 Thu 12:42]
-  1. [X] Modify the create endpoint to default to user not being activated.
-  2. [X] Create the activate endpoint
-     I'll need an email server to send the activate email on user creation.
-
-* DONE MILESTONE Account Creation Email [[https://github.com/michaelplatt07/RecipeBookServer/milestone/1N][Account Creation Milestone]]
-  CLOSED: [2019-03-18 Mon 12:09]
-
-** DONE Create Email [[https://github.com/michaelplatt07/RecipeBookServer/issues/2][Issue 2]]
-   CLOSED: [2019-03-14 Thu 13:24]
-   This is a pretty easy task.  Just create a gmail account, something like nara_accountcreation@gmail.com
-
-** DONE Configure Nodemailer [[https://github.com/michaelplatt07/RecipeBookServer/issues/3][Issue 3]] '[3/3]'
-   CLOSED: [2019-03-15 Fri 12:38] - This is done but I'm going to create another ticket for further down the road to
-                                    make sure we finalize the template as this is just a temp.
-   This requires a few tasks to be complete
-   1. [X] Create a config file with the email account credentials.
-   2. [X] Write code to load the credentials when needed and send the email.
-   3. [X] Create a template for activation that we can load up instead of having the write the body or include inline.
-
-** DONE Design and send the activate URL [[https://github.com/michaelplatt07/RecipeBookServer/issues/4][Issue 4]]
-   CLOSED: [2019-03-18 Mon 10:39]
-   The acivate URL already exists and I'm thinking it might not be too bad to simply send the user the direct
-   activation URL with the Mongo ID to activate it.  I need to figure out if there is a security issue here though.
-
-   Should also note that I should pull config values for the URL to inserting like the url of the server instead of
-   just a hard coded string.
-
-* DONE Modify form to take email address [[https://github.com/michaelplatt07/RecipeBookServer/issues/8][Issue 8]]
-  CLOSED: [2019-03-18 Mon 11:37]
-  I'll also need to run some sort of check to make sure it is valid.
-
-  I will need to create the tests as well to ensure the email check is working as intending.
-
 * TODO Implement error for user creation.
   We curently just break the server if the user account creation attempt fails.  Probaly not the best way to handle
   things and it should be fixed at some point.  Also should do proper validation to make sure user accounts being
@@ -51,12 +16,6 @@
 * TODO Update the README with instructions about setting the NODE_ENV value and such [[][]]
   Just need to update the instructions here with more information.
 
-* DONE Check in the puts to make sure the user account is active [[https://github.com/michaelplatt07/RecipeBookServer/issues/10][Issue 10]]
-  CLOSED: [2019-03-18 Mon 11:55]
-  This check needs to be done during login, as you shouldn't be able to login when the user account is not active 
-  and it should be done when the inserts are done even though you shouldn't be able to hit that until you are
-  logged in anyways.  Extra layers of protection never hurt.
-  
 * TODO Put checks in the user creation '[0/2]'
   1. [ ] Check to make sure email address wasn't already used.
   2. [ ] Check to make sure user name doesn't exist.
@@ -144,6 +103,47 @@
 * ----------------
 * -  Completed   -
 * ----------------
+* DONE Check in the puts to make sure the user account is active [[https://github.com/michaelplatt07/RecipeBookServer/issues/10][Issue 10]]
+  CLOSED: [2019-03-18 Mon 11:55]
+  This check needs to be done during login, as you shouldn't be able to login when the user account is not active 
+  and it should be done when the inserts are done even though you shouldn't be able to hit that until you are
+  logged in anyways.  Extra layers of protection never hurt.
+  
+* DONE Create an activate URL '[2/2]'
+  CLOSED: [2019-03-14 Thu 12:42]
+  1. [X] Modify the create endpoint to default to user not being activated.
+  2. [X] Create the activate endpoint
+     I'll need an email server to send the activate email on user creation.
+
+* DONE MILESTONE Account Creation Email [[https://github.com/michaelplatt07/RecipeBookServer/milestone/1N][Account Creation Milestone]]
+  CLOSED: [2019-03-18 Mon 12:09]
+
+** DONE Create Email [[https://github.com/michaelplatt07/RecipeBookServer/issues/2][Issue 2]]
+   CLOSED: [2019-03-14 Thu 13:24]
+   This is a pretty easy task.  Just create a gmail account, something like nara_accountcreation@gmail.com
+
+** DONE Configure Nodemailer [[https://github.com/michaelplatt07/RecipeBookServer/issues/3][Issue 3]] '[3/3]'
+   CLOSED: [2019-03-15 Fri 12:38] - This is done but I'm going to create another ticket for further down the road to
+                                    make sure we finalize the template as this is just a temp.
+   This requires a few tasks to be complete
+   1. [X] Create a config file with the email account credentials.
+   2. [X] Write code to load the credentials when needed and send the email.
+   3. [X] Create a template for activation that we can load up instead of having the write the body or include inline.
+
+** DONE Design and send the activate URL [[https://github.com/michaelplatt07/RecipeBookServer/issues/4][Issue 4]]
+   CLOSED: [2019-03-18 Mon 10:39]
+   The acivate URL already exists and I'm thinking it might not be too bad to simply send the user the direct
+   activation URL with the Mongo ID to activate it.  I need to figure out if there is a security issue here though.
+
+   Should also note that I should pull config values for the URL to inserting like the url of the server instead of
+   just a hard coded string.
+
+* DONE Modify form to take email address [[https://github.com/michaelplatt07/RecipeBookServer/issues/8][Issue 8]]
+  CLOSED: [2019-03-18 Mon 11:37]
+  I'll also need to run some sort of check to make sure it is valid.
+
+  I will need to create the tests as well to ensure the email check is working as intending.
+
 * DONE Refactor out the course to be plural courses
   CLOSED: [2019-01-23 Wed 15:44]
 

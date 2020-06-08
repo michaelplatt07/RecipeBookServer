@@ -146,3 +146,14 @@ exports.sampleCourses = [
         search_name: "lunch"
     }
 ];
+
+exports.sampleCategories = [
+    {
+        name: "Poultry",
+        search_name: "poulty"
+    },
+    {
+        name: "Meat",
+        search_name: "meat"
+    }
+];

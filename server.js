@@ -23,6 +23,7 @@ const ingredientApi = require('./apis/ingredients.js');
 const usersApi = require('./apis/users.js');
 const cuisineApi = require('./apis/cuisines.js');
 const courseApi = require('./apis/courses.js');
+const categoryApi = require('./apis/categories.js');
 const measurementApi = require('./apis/measurements.js');
 const configApi = require('./apis/configs.js');
 
@@ -297,6 +298,22 @@ app.get('/cuisines', (req, res) => {
  */
 app.get('/courses', (req, res) => {
     courseApi.getAllCourses(db.getDb(), req, res);
+});
+
+
+
+/**
+ * --------------------------------
+ * |       CATEGORY ROUTING       |
+ * --------------------------------
+ */
+/**
+ * ----------------
+ * |     GETS     |
+ * ----------------
+ */
+app.get('/categories', (req, res) => {
+    categoryApi.getAllCategories(db.getDb(), req, res);
 });
 
 
