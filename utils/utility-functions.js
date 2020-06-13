@@ -102,6 +102,16 @@ exports.checkRecipePostData = (jsonData) => {
 	errMsgDict['noCuisinesError'] = 'Please include one or more cuisines this dish is a part of.';
     }
 
+    if (!jsonData['categories'] || jsonData['categories'].length == 0)
+    {
+	errMsgDict['noCategoriesError'] = 'Please include at least one category for the dish.';
+    }
+
+    if (!jsonData['serving_sizes'])
+    {
+	errMsgDict['noServingSizesError'] = 'Please select a serving size.';
+    }
+
     if (_.isNil(jsonData['searchable']))
     {
 	errMsgDict['noSearchableError'] = 'Please select if you want the recipe to be private or public.';

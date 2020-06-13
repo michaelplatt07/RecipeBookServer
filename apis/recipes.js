@@ -493,6 +493,16 @@ exports.getRandomRecipe = async (db, req, res) => {
  *         in: Form Body
  *         require: true
  *         type: List of Strings
+ *       - name: categories
+ *         description: The list of categories the recipe can be classified on.
+ *         in: Form Body
+ *         require: true
+ *         type: List of Strings
+ *       - name: serving_sizes
+ *         description: The amount of servings the dish makes.
+ *         in: Form Body
+ *         require: true
+ *         type: string
  *       - name: submitted_by
  *         description: The User that is submitting the recipe.
  *         in: Form Body
