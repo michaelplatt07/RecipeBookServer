@@ -59,6 +59,11 @@ exports.sampleRecipe1 = {
     "cuisines": [
         "italian"
     ],
+    "categories": [
+        "pasta",
+        "poultry"
+    ],
+    "serving_sizes": "1 - 2",
     "submitted_by": "User1",
     "searchable": true,  
     "rating": 0
@@ -105,6 +110,10 @@ exports.sampleRecipe2 = {
     "cuisines": [
         "american"
     ],
+    "categories": [
+        "meat"
+    ],
+    "serving_sizes": "3 - 4",
     "submitted_by": "User1",
     "searchable": true,  
     "rating": 0
