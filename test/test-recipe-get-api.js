@@ -93,6 +93,16 @@ describe('All recipe endpoints with an empty database', () => {
 	    });
     });
 
+    it('Should return no recipes found for the given categories',(done) => {
+	chai.request(server)
+	    .get('/recipes/categories')
+	    .end((err, res) => {
+		res.should.have.status(404);
+		res.body['msg'].should.be.equal('Please include one or more categories to filter by.');
+		done();
+	    });
+    });
+
     it('Should return no recipes found in the database',(done) => {
 	chai.request(server)
 	    .get('/recipes/random')
@@ -418,6 +428,38 @@ describe('All recipe endpoints with sample recipes in the database', () => {
     it('Should return both recipes based on the cuisines we are searching by.',(done) => {
 	chai.request(server)
 	    .get('/recipes/cuisines?list=american+italian')
+	    .end((err, res) => {
+		res.should.have.status(200);
+		res.body['recipes'].length.should.be.equal(2);
+		done();
+	    });
+    });
+
+    it('Should return the mac and cheese recipe based on the categories we are searching by.',(done) => {
+	chai.request(server)
+	    .get('/recipes/categories?list=pasta')
+	    .end((err, res) => {
+		res.should.have.status(200);
+		res.body['recipes'].length.should.be.equal(1);
+		res.body['recipes'][0]['search_name'].should.be.equal('mikes_mac_and_cheese');
+		done();
+	    });
+    });
+
+    it('Should return the ice cream recipe based on the categories we are searching by.',(done) => {
+	chai.request(server)
+	    .get('/recipes/categories?list=meat')
+	    .end((err, res) => {
+		res.should.have.status(200);
+		res.body['recipes'].length.should.be.equal(1);
+		res.body['recipes'][0]['search_name'].should.be.equal('ice_cream');
+		done();
+	    });
+    });
+
+    it('Should return both recipes based on the categories we are searching by.',(done) => {
+	chai.request(server)
+	    .get('/recipes/categories?list=pasta+meat')
 	    .end((err, res) => {
 		res.should.have.status(200);
 		res.body['recipes'].length.should.be.equal(2);

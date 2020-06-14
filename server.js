@@ -185,6 +185,12 @@ app.get('/recipes/cuisines', (req, res) => {
     recipeApi.getRecipesByCuisines(db.getDb(), req, res);
 });
 
+// Recipe by category
+// ?list=1+2+3...
+app.get('/recipes/categories', (req, res) => {
+    recipeApi.getRecipesByCategories(db.getDb(), req, res);
+});
+
 
 // Random recipe
 app.get('/recipes/random', (req, res) => {

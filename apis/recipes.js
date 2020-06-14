@@ -415,6 +415,56 @@ exports.getRecipesByCuisines = async (db, req, res) => {
 /**
  * @swagger
  *
+ * /recipes/categories:
+ *   get:
+ *     description: Searches for recipes that have specific categories.
+ *     produces:
+ *       - application/json
+ *     parameter: 
+ *       - name: list
+ *         description: The list of categories that will be used to search.
+ *         in: Query parameters
+ *         require: true
+ *         type: String
+ *     responses:
+ *       200:
+ *         Success: There was one or more recipes in the database that have some fields that match up with the filter
+ *                  options.
+ *       404:
+ *         NoCategoriesError: There were no categories passed in to search by.
+ *         NoMatchesError: There were no recipes that matches any of the categories passed in.
+ *     example:
+ *       /recipes/cateogires?list=Category1+Category2+...+CategoryN
+ */
+exports.getRecipesByCategories = async (db, req, res) => {
+    debug('In byCategories');
+    debug(`Categories -> ${req.query.list}`);
+
+    var query = {};
+    query.searchable = true;
+    if (req.query.list) {
+	query.categories = req.query.list.includes(" ") ? {$in: req.query.list.split(' ')} : req.query.list.toString();
+    }
+    else
+    {
+	res.setHeader('Content-Type', 'application/json');
+	return res.status(404).send({msg: 'Please include one or more categories to filter by.'});
+    }
+    
+    let recipes = await db.collection('recipes').find(query).toArray();
+    if (!recipes || recipes.length == 0)
+    {
+	res.setHeader('Content-Type', 'application/json');
+	return res.status(404).send({msg: 'There were no recipes found using that categories.'});
+    }
+    res.setHeader('Content-Type', 'application/json');
+    return res.status(200).send({ title: 'Recipes', recipes: recipes });
+};
+
+
+/**
+ * @swagger
+ *
  * /recipes/random:
  *   get:
  *     description: Pulls a random recipe from the database.
