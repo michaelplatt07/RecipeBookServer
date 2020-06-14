@@ -1,0 +1,30 @@
+{
+    "get": {
+        "description": "ping2 then pong!",
+        "operationId": "ping2",
+        
+        "responses": {
+            "200": {
+                "description": "OK",
+                "content": {
+                    "text/plain": {
+                        "schema": {
+                            "type": "string",
+                            "example": "pong"
+                        }
+                    }
+                }
+            },
+            "default": {
+                "description": "unexpected error",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/Error"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
