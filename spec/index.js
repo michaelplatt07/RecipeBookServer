@@ -1,9 +1,9 @@
 
 const path = require('path');
 const OpenApiValidator = require('express-openapi-validator').OpenApiValidator;
-const apiSpec = path.join(__dirname, 'openapi.json');
 
 module.exports.init = (app) => {
+    const apiSpec = require('./builder').buildSpec();
     return new OpenApiValidator({
         apiSpec,
         operationHandlers: path.join(__dirname),

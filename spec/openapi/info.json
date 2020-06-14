@@ -1,0 +1,10 @@
+{
+    "version": "1.0.0",
+    "title": "Reipie Book API",
+    "description": "API to deliver recipes as well as build a grocery list of necessary items to make a number of selected recipes.",
+    "termsOfService": "http://swagger.io/terms/",
+    "license": {
+           "name": "Apache 2.0",
+           "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+}
