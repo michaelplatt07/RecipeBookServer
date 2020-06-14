@@ -5,7 +5,7 @@
 			"main": "index.js",
 			"scripts": {
 						"test": "NODE_ENV=test mocha test/test.js",
-						"start": "NODE_ENV=dev DEBUG=recipes,groceryList,users,db,cuisines,courses,measurements,configs,email nodejs bin/www"
+						"start": "NODE_ENV=dev DEBUG=recipes,groceryList,users,db,cuisines,courses,measurements,configs,email node bin/www"
 			},
 			"repository": {
 						"type": "git",
@@ -30,6 +30,7 @@
 						"debug": "^3.2.6",
 						"ejs": "^2.6.1",
 						"express": "^4.16.4",
+						"express-openapi-validator": "^3.16.1",
 						"express-session": "^1.15.6",
 						"hoek": "^5.0.4",
 						"https": "^1.0.0",

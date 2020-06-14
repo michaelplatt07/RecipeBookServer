@@ -4,6 +4,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const config = require('config');
 var jwt = require('jsonwebtoken');
+const spec = require('./spec');
 
 var passport = require("passport");
 var passportJWT = require("passport-jwt");
@@ -11,7 +12,7 @@ var passportJWT = require("passport-jwt");
 var ExtractJwt = passportJWT.ExtractJwt;
 var JwtStrategy = passportJWT.Strategy;
 const app = express();
-
+ 
 // DB import.
 const db = require('./db');
 db.connect();
@@ -53,6 +54,7 @@ passport.use(strategy);
 app.use(bodyParser.json());
 app.use(passport.initialize());
 
+spec.init(app);
 
 /**
  * -----------------------------------------
