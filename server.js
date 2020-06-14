@@ -36,7 +36,7 @@ const swaggerSpec = swaggerJSDoc(config.get("swaggerConfig"));
 // Passport config.
 var jwtOptions = {};
 jwtOptions.jwtFromRequest = ExtractJwt.fromAuthHeaderWithScheme("jwt");
-jwtOptions.secretOrKey = new Buffer('basicSecret', 'base64');
+jwtOptions.secretOrKey = Buffer.from('basicSecret', 'base64');
 
 var strategy = new JwtStrategy(jwtOptions, async (jwt_payload, next) => {
     const user = await db.getDb().collection('users').findOne({ username: jwt_payload.id });
@@ -185,6 +185,12 @@ app.get('/recipes/courses', (req, res) => {
 // ?list=1+2+3...
 app.get('/recipes/cuisines', (req, res) => {
     recipeApi.getRecipesByCuisines(db.getDb(), req, res);
+});
+
+// Recipe by category
+// ?list=1+2+3...
+app.get('/recipes/categories', (req, res) => {
+    recipeApi.getRecipesByCategories(db.getDb(), req, res);
 });
 
 
