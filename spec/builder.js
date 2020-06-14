@@ -17,24 +17,27 @@ const buildPaths = (apiDir, paths = {}) => {
     fs.readdirSync(normalizedPath, { withFileTypes: true }).forEach((item) => {
         
         if (item.isFile()) {
-            const routeObj = require(apiDir+ item.name);
+            const routeObj = require(apiDir + item.name);
             const routeName = path.parse(item.name).name; 
 
             Object.keys(routeObj).forEach((value => {
+                _.set(routeObj[value], 'operationId', routeName);
                 _.set(routeObj[value], 'x-eov-operation-id', routeName);
                 _.set(routeObj[value], 'x-eov-operation-handler', apiToRouteHandler(apiDir) + routeName);
             }));
 
-            paths['/' + routeName] = routeObj;
+            
+            paths[apiToRoute(apiDir) + routeName] = routeObj;
         } else {
-            return buildPaths(apiDir+item.name+'/', paths);
+            return buildPaths(apiDir+item.name + '/', paths);
         }
         
     });
     return paths;
 };
 
-const apiToRouteHandler = (apiDir) => apiDir.replace('./openapi', '../');
+const apiToRoute = (apiDir) => apiDir.replace('./openapi/routes/', '/');
+const apiToRouteHandler = (apiDir) => apiDir.replace('./openapi', '..');
 
 
 const buildComponents = () => {

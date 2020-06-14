@@ -1,8 +1,6 @@
 {
     "get": {
         "description": "ping3 then pong!",
-        "operationId": "ping3",
-        
         "responses": {
             "200": {
                 "description": "OK",
