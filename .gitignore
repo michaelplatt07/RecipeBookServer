@@ -1,3 +1,4 @@
 node_modules
 config
 fly*
+/spec/.DS_Store

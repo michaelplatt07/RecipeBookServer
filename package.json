@@ -1,50 +1,51 @@
 {
-			"name": "recipebook",
-			"version": "1.0.0",
-			"description": "Node JS web application that includes a server as well as a UI.  The application serves to deliver recipes as well as build a grocery list of necessary items to make a number of selected recipes.",
-			"main": "index.js",
-			"scripts": {
-						"test": "NODE_ENV=test mocha test/test.js",
-						"start": "NODE_ENV=dev DEBUG=recipes,groceryList,users,db,cuisines,courses,measurements,configs,email node bin/www"
-			},
-			"repository": {
-						"type": "git",
-						"url": "git+https://github.com/michaelplatt07/RecipeBook.git"
-			},
-			"author": "Michael Platt",
-			"license": "ISC",
-			"bugs": {
-						"url": "https://github.com/michaelplatt07/RecipeBook/issues"
-			},
-			"homepage": "https://github.com/michaelplatt07/RecipeBook#readme",
-			"dependencies": {
-						"await": "^0.2.6",
-						"bcryptjs": "^2.4.3",
-						"bluebird": "^3.5.3",
-						"body-parser": "^1.18.3",
-						"chai": "^4.2.0",
-						"chai-http": "^4.2.0",
-						"config": "^1.31.0",
-						"connect-mongo": "^3.2.0",
-						"cookie-parser": "^1.4.3",
-						"debug": "^3.2.6",
-						"ejs": "^2.6.1",
-						"express": "^4.16.4",
-						"express-session": "^1.15.6",
-						"hoek": "^5.0.4",
-						"https": "^1.0.0",
-						"jsonwebtoken": "^8.4.0",
-						"lodash": "^4.17.13",
-						"mocha": "^8.0.1",
-						"mongodb": "^3.5.4",
-						"nodemailer": "^5.1.1",
-						"passport": "^0.4.0",
-						"passport-http": "^0.3.0",
-						"passport-jwt": "^4.0.0",
-						"passport-local": "^1.0.0",
-						"request": "^2.88.0",
-						"request-promise": "^4.2.2",
-						"supertest": "^3.3.0",
-						"swagger-jsdoc": "^3.4.0"
-			}
+	"name": "recipebook",
+	"version": "1.0.0",
+	"description": "Node JS web application that includes a server as well as a UI.  The application serves to deliver recipes as well as build a grocery list of necessary items to make a number of selected recipes.",
+	"main": "index.js",
+	"scripts": {
+		"test": "NODE_ENV=test mocha test/test.js",
+		"start": "NODE_ENV=dev DEBUG=recipes,groceryList,users,db,cuisines,courses,measurements,configs,email node bin/www"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/michaelplatt07/RecipeBook.git"
+	},
+	"author": "Michael Platt",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/michaelplatt07/RecipeBook/issues"
+	},
+	"homepage": "https://github.com/michaelplatt07/RecipeBook#readme",
+	"dependencies": {
+		"await": "^0.2.6",
+		"bcryptjs": "^2.4.3",
+		"bluebird": "^3.5.3",
+		"body-parser": "^1.18.3",
+		"chai": "^4.2.0",
+		"chai-http": "^4.2.0",
+		"config": "^1.31.0",
+		"connect-mongo": "^3.2.0",
+		"cookie-parser": "^1.4.3",
+		"debug": "^3.2.6",
+		"ejs": "^2.6.1",
+		"express": "^4.16.4",
+		"express-openapi-validator": "^3.16.1",
+		"express-session": "^1.15.6",
+		"hoek": "^5.0.4",
+		"https": "^1.0.0",
+		"jsonwebtoken": "^8.4.0",
+		"lodash": "^4.17.13",
+		"mocha": "^8.0.1",
+		"mongodb": "^3.5.4",
+		"nodemailer": "^5.1.1",
+		"passport": "^0.4.0",
+		"passport-http": "^0.3.0",
+		"passport-jwt": "^4.0.0",
+		"passport-local": "^1.0.0",
+		"request": "^2.88.0",
+		"request-promise": "^4.2.2",
+		"supertest": "^3.3.0",
+		"swagger-jsdoc": "^3.4.0"
+	}	
 }

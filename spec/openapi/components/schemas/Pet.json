@@ -1,0 +1,22 @@
+{
+    "required": [
+        "id",
+        "name",
+        "type"
+    ],
+    "properties": {
+        "id": {
+            "readOnly": true,
+            "type": "number"
+        },
+        "name": {
+            "type": "string"
+        },
+        "tag": {
+            "type": "string"
+        },
+        "type": {
+            "$ref": "#/components/schemas/PetType"
+        }
+    }
+}

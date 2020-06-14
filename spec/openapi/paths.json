@@ -1,0 +1,33 @@
+{
+    "/ping": {
+        "get": {
+            "description": "ping then pong!",
+            "operationId": "ping",
+            "x-eov-operation-id": "ping",
+            "x-eov-operation-handler": "../routes/ping",
+            "responses": {
+                "200": {
+                    "description": "OK",
+                    "content": {
+                        "text/plain": {
+                            "schema": {
+                                "type": "string",
+                                "example": "pong"
+                            }
+                        }
+                    }
+                },
+                "default": {
+                    "description": "unexpected error",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Error"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
