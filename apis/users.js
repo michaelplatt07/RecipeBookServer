@@ -198,7 +198,7 @@ exports.loginUser = async (db, req, res) => {
 	if (success === true)
 	{
             const payload = { id: user.username };
-	    const token = jwt.sign(payload, new Buffer('basicSecret', 'base64'));
+	    const token = jwt.sign(payload, Buffer.from('basicSecret', 'base64'));
 	    return res.status(200).send({ token: token, message: 'Successfully logged in.' });
 	}
 

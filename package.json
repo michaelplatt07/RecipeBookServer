@@ -5,7 +5,7 @@
 			"main": "index.js",
 			"scripts": {
 						"test": "NODE_ENV=test mocha test/test.js",
-						"start": "NODE_ENV=dev DEBUG=recipes,groceryList,users,db,cuisines,courses,measurements,configs,email nodejs bin/www"
+						"start": "NODE_ENV=dev DEBUG=recipes,groceryList,users,db,cuisines,courses,measurements,configs,email node bin/www"
 			},
 			"repository": {
 						"type": "git",
