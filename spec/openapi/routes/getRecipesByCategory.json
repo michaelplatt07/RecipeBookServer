@@ -1,0 +1,58 @@
+{
+    "get": {
+        "description": "Get the recipes that have the given categories associated with them.",
+        "parameters": [
+	    {
+		"in": "query",
+		"name": "list",
+		"description": "List of categories that should be used to search",
+		"required": true,
+		"style": "form",
+                "schema": {
+                    "type": "array",
+                    "items": {
+			"type": "string"
+		    }
+                }
+            }
+        ],
+        "responses": {
+            "200": {
+                "description": "OK",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "array",
+                            "items": {
+				"type": "object"
+			    }
+                        }
+                    }
+                }
+            },
+	    "404": {
+		"description": "No recipes found for given category. The category could be an invalid category.",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "string",
+                            "items": {
+				"type": "object"
+			    }
+                        }
+                    }
+                }
+	    },
+            "default": {
+                "description": "unexpected error",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/Error"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
