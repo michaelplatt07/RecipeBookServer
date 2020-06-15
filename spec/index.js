@@ -10,5 +10,14 @@ module.exports.init = (app) => {
         apiSpec,
         operationHandlers: path.join(__dirname),
         validateResponses: true
-    }).install(app);
+    })
+    .install(app)
+    .then(() => {
+        app.use((err, req, res, next) => {
+            res.status(err.status || 500).json({
+                message: err.message,
+                errors: err.errors,
+            });
+        });
+    });
 };
