@@ -18,8 +18,8 @@ module.exports.getRecipesByCategory = async (req, res) => {
     if (!recipes || recipes.length == 0)
     {
 	res.setHeader('Content-Type', 'application/json');
-	return res.status(404).send({msg: 'No recipes found for given category.'});
+	return res.status(404).send('No recipes found for given category.');
     }
     res.setHeader('Content-Type', 'application/json');
-    return res.status(200).send({ title: 'Recipes', recipes: recipes });
+    return res.status(200).send(recipes);
 };

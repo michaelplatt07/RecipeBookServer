@@ -1,52 +1,33 @@
 process.env.NODE_ENV = 'test';
 
-// Test fixture imports.
-const testFixtures = require('./test-fixtures');
+// Axios for the request to be made to the server
+const axios = require('axios');
 
 // Test module imports.
 const chai = require('chai');
-const chaiHttp = require('chai-http');
+const expect = chai.expect;
 const should = chai.should();
-chai.use(chaiHttp);
 
-// Server import and creation
-const server = require('../server');
+// Set up the response validator
+const chaiResponseValidator = require('chai-openapi-response-validator');
 
-// DB import.
-const db = require('../db');
+// Load an OpenAPI file (YAML or JSON) into this plugin
+// NOTE This has to be the full spec.json that we are building up dynamically on the server.
+// Should consider writing a little util function that would get the spec every time ther server starts up for
+// testing to make sure we have the latest and the tests don't fail.  This would require some infrastructure be
+// put in place to ensure that it's only happening on the test sever spin up.
+chai.use(chaiResponseValidator('/home/michael/Desktop/Programming/RecipeApp/RecipeBookServer/spec/full_spec.json'));
 
 describe('All recipe endpoints with an empty database', () => {
-    before(async () => {
-        await db.connect();
-        await db.dropAllCollections();
-	
-	await db.getDb().createCollection('recipes');
-    });
     
-    /*
-    it('Should return 404 because there were not categories passed in',(done) => {
-        try {
-	chai.request(server)
-	    .get('/getRecipesByCategory')
-	    .end((err, res) => {
-		res.should.have.status(404);
-		res.body['msg'].should.be.equal('Please include one or more categories to filter by.');
-		done();
-	    });
-        } catch(ex) {
-            console.log(ex);
-        };
-    });
-    */
-    
-    it('Should return 404 because there were no recipes found',(done) => {
-	chai.request(server)
-	    .get('/getRecipesByCategory?list=pasta')
-	    .end((err, res) => {
-		res.should.have.status(404);
-		res.body['msg'].should.be.equal('No recipes found for given category.');
-		done();
-	    });
+    it('Should return a single recipe that has the category of Grain', async function() {
+        
+        const res = await axios.get('http://localhost:3000/v1/getRecipesByCategory?list=grain');
+        
+        expect(res.status).to.equal(200);
+        expect(res.data.length).to.equal(1);
+        
+        expect(res).to.satisfyApiSpec;
     });
 
 });
