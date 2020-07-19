@@ -32,5 +32,5 @@ jobs:
       run: npm run build --if-present
     - name: Run unit tests
       env:
-        test_db_url: ${{ TESTDBURL }}
+        TESTDBURL: ${{ secrets.TESTDBURL }}
       run: npm test
