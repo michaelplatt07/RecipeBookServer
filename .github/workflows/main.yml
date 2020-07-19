@@ -31,4 +31,6 @@ jobs:
     - name: Build project
       run: npm run build --if-present
     - name: Run unit tests
+      env:
+        TESTDBURL: ${{ TESTDBURL }}
       run: npm test
