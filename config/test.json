@@ -3,8 +3,7 @@
     {
 	"host": "localhost",
 	"port": 27017,
-	"name": "testRecipeDb",
-	"testName": "mongodb+srv://testUser:6qDRJnPOJn8NM5vz@cluster0.zllvo.mongodb.net/testRecipeDb?retryWrites=true&w=majority"
+	"name": "testRecipeDb"
     },
     "serverConfig":
     {
