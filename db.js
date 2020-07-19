@@ -5,6 +5,7 @@ const debug = require('debug')('db');
 
 // DB config imports.
 const config = require('config');
+const cloudDbUrl = config.get('dbConfig.testName');
 const dbUrl = 'mongodb://' + config.get('dbConfig.host');
 const dbPort = config.get('dbConfig.port');
 const dbName = config.get('dbConfig.name');
@@ -30,7 +31,8 @@ exports.connect = async () => {
 	console.log('Already connected to the database.');
     }
     
-    const client = await MongoClient.connect(dbUrl + ":" + dbPort, {poolSize: 10, useUnifiedTopology: true});
+    // const client = await MongoClient.connect(dbUrl + ":" + dbPort, {poolSize: 10, useUnifiedTopology: true});
+    const client = await MongoClient.connect(cloudDbUrl, {poolSize: 10, useUnifiedTopology: true});
     dbObj.db = client.db(dbName);
 };
 
