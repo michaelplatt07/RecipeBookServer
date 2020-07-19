@@ -4,7 +4,7 @@
 	"description": "Node JS web application that includes a server as well as a UI.  The application serves to deliver recipes as well as build a grocery list of necessary items to make a number of selected recipes.",
 	"main": "index.js",
 	"scripts": {
-		"test": "NODE_ENV=test mocha test/test.js",
+		"test": "NODE_ENV=test mocha test/test.js --exit",
 		"start": "NODE_ENV=dev DEBUG=recipes,groceryList,users,db,cuisines,courses,measurements,configs,email node bin/www"
 	},
 	"repository": {
