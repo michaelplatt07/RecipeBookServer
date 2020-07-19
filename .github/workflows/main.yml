@@ -25,10 +25,6 @@ jobs:
     steps:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
-  
-    - name: Some sample action
-      env:
-        test_db_url: ${{secrets.TESTDBURL}}
 
     - name: Install dependencies
       run: npm install
