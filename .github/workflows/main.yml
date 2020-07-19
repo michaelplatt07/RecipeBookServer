@@ -25,10 +25,7 @@ jobs:
     steps:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
-      
-    - name: Test getting IP for whitelist
-      run: ipconfig
-      
+  
     - name: Some sample action
       env:
         test_db_url: ${{secrets.TESTDBURL}}
