@@ -2,4 +2,5 @@ node_modules
 config
 fly*
 /spec/.DS_Store
-/.nyc*
+/.nyc_output/*
+/coverage/*
