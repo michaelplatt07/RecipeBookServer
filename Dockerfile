@@ -2,9 +2,9 @@ FROM debian:buster
 
 RUN apt-get update
 
+# Various tools for downloading and code editing
 RUN apt-get install -y curl
 RUN apt-get install -y vim
-
 RUN apt-get install -y emacs25
 
 # Install Node 10 for now
@@ -29,7 +29,7 @@ RUN apt-get install -y mongodb-org*
 #curl -sL https://deb.nodesource.com/setup_14.x | bash -
 #apt-get install -y nodejs
 
-@ Install NVM so different versions of Node can be used for testing or whatever else.
+# Install NVM so different versions of Node can be used for testing or whatever else.
 RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
 
 # Create work dir to copy the server into
