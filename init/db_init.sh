@@ -12,4 +12,7 @@ echo
 echo "Loading cuisines..."
 mongoimport --db devRecipeDb --collection cuisines --file ../dumps/cuisines_dump.json
 echo
+echo "Loading categories..."
+mongoimport --db devRecipeDb --collection categories --file ../dumps/categories_dump.json
+echo
 echo "Finished loading dev database."
