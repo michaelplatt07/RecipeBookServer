@@ -47,5 +47,5 @@
 		"request-promise": "^4.2.2",
 		"supertest": "^3.3.0",
 		"swagger-jsdoc": "^3.4.0"
-	}	
+	}
 }
