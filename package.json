@@ -35,7 +35,7 @@
 		"hoek": "^5.0.4",
 		"https": "^1.0.0",
 		"jsonwebtoken": "^8.4.0",
-		"lodash": "^4.17.13",
+		"lodash": "^4.17.19",
 		"mocha": "^8.0.1",
 		"mongodb": "^3.5.4",
 		"nodemailer": "^5.1.1",
