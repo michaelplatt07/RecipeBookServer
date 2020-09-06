@@ -35,6 +35,7 @@ RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | b
 # Create work dir to copy the server into
 WORKDIR /usr/src/recipe-book-server
 
+# TODO(map) Maybe pull from github instead of copying the directory
 COPY . .
 
 # Create necessary Mongo directories for data to be able to be stored.
