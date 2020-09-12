@@ -245,6 +245,36 @@ describe('All recipe endpoints with sample recipes in the database', () => {
 	    });
     });
 
+    it('Should return the Mac & Cheese recipe because we searched by its category ', (done) => {
+	chai.request(server)
+	    .get('/recipes/search?searchParams=pasta')
+	    .end((err, res) => {
+		res.should.have.status(200);
+		res.body['recipes'][0]['search_name'].should.be.equal('mikes_mac_and_cheese');
+		done();
+	    });
+    });
+
+    it('Should return the Mac & Cheese recipe because we searched by its category ', (done) => {
+	chai.request(server)
+	    .get('/recipes/search?searchParams=pasta')
+	    .end((err, res) => {
+		res.should.have.status(200);
+		res.body['recipes'][0]['search_name'].should.be.equal('mikes_mac_and_cheese');
+		done();
+	    });
+    });
+
+    it('Should return two recipes becuase we searched by categories that covered both ', (done) => {
+	chai.request(server)
+	    .get('/recipes/search?searchParams=pasta+meat')
+	    .end((err, res) => {
+		res.should.have.status(200);
+		res.body['recipes'].length.should.be.equal(2);
+		done();
+	    });
+    });
+
     it('Should return both recipes because we searched by multiple cuisines', (done) => {
 	chai.request(server)
 	    .get('/recipes/search?searchParams=american+italian')

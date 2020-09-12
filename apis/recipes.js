@@ -165,9 +165,10 @@ exports.getRecipesBySearchCriteria = async (db, req, res) => {
     else {    
         const ingredientQuery = {'ingredients.name': {$regex: req.query.searchParams.includes(" ") ? req.query.searchParams.split(" ").join("|") : req.query.searchParams.toString()}};
         const cuisineQuery = {cuisines: req.query.searchParams.includes(" ") ? {$in: req.query.searchParams.split(' ')} : req.query.searchParams.toString()};
-        const courseQuery = {courses: req.query.searchParams.includes(" ") ? {$in: req.query.searchParams.split(' ')} : req.query.searchParams.toString()};
+        const categoryQuery = {categories: req.query.searchParams.includes(" ") ? {$in: req.query.searchParams.split(' ')} : req.query.searchParams.toString()};
+	    const courseQuery = {courses: req.query.searchParams.includes(" ") ? {$in: req.query.searchParams.split(' ')} : req.query.searchParams.toString()};
         const submittedByQuery = {submitted_by: req.query.searchParams.includes(" ") ? {$in: req.query.searchParams.split(' ')} : req.query.searchParams.toString()};
-        const queryList = [ingredientQuery, cuisineQuery, courseQuery, submittedByQuery];
+        const queryList = [ingredientQuery, cuisineQuery, categoryQuery, courseQuery, submittedByQuery];
 
         let recipes = await db.collection("recipes").find({ searchable: true, $or: queryList }).toArray();
 	if (recipes.length == 0)
