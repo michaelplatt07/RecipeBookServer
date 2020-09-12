@@ -120,3 +120,19 @@ NOTE: This has only been tested for Linux distributions.
 
 ## Testing
 Testing can be ran through the `npm test` command.  If this test is ran, there will be an output directory called `coverage` that will be created in the project.  Within this directory there is an `index.html` file.  Open this file to see a prettified version of the code coverage broken down by each file.  There is additional documentation that can be found on the NYC site linked here: https://www.npmjs.com/package/nyc
+
+## Docker
+Within the project is a `Dockerfile` file that can be used to build a docker container within the application.  This docker file will take care of setting up a few things including:
+
+1. MongoDB
+2. NodeJs V 10
+3. NVM
+4. Exposes ports 3000 and 27017 (allows host to connect front end to application should they deisre)
+5. Copies the server code to the container
+6. Installs VIM and Emacs for text editors
+
+To create the docker image locally simply use the command `docker build -t USER_NAME/IMAGE_NAME .` where your username and image name replace the place holders
+
+### Current shortcomings with Dockerfile
+1. Mongo isn't autmatically started.  The developer has to go into the container and run `mongod` to start it, then he/she will be able to connect to the local mongo host.
+2. There is no docker image on docker hub.  This needs to be pushed up so people can simply download the image instead of having to build locally.
