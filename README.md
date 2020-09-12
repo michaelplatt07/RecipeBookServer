@@ -118,6 +118,9 @@ NOTE: This has only been tested for Linux distributions.
 4. `sudo openssl req -x509 -newkey rsa:2048 -keyout keytmp.pem -out cert.pem -days 365`
 5. `sudo openssl rsa -in keytmp.pem -out key.pem`
 
+## Testing
+Testing can be ran through the `npm test` command.  If this test is ran, there will be an output directory called `coverage` that will be created in the project.  Within this directory there is an `index.html` file.  Open this file to see a prettified version of the code coverage broken down by each file.  There is additional documentation that can be found on the NYC site linked here: https://www.npmjs.com/package/nyc
+
 ## Docker
 Within the project is a `Dockerfile` file that can be used to build a docker container within the application.  This docker file will take care of setting up a few things including:
 
