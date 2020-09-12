@@ -1,9 +1,18 @@
 const utils = require('../utils/utility-functions');
+const recipeUtils = require('../utils/recipe-helper');
 const mongo = require('mongodb');
 const jwt = require('jsonwebtoken');
 const debug = require('debug')('recipes');
 
 const _ = require('lodash');
+
+/**
+ * TODO(map) Just a test endpoint for now
+ */
+exports.testRecipeParse = async (req, res) => {
+	return res.status(200).send(recipeUtils.unrefinedRecipeBuildAttempt(recipeUtils.stubbedVisionResponse()));
+};
+
 
 /**
  * ----------------

@@ -18,7 +18,9 @@
 	},
 	"homepage": "https://github.com/michaelplatt07/RecipeBook#readme",
 	"dependencies": {
+		"@google-cloud/vision": "^2.1.1",
 		"await": "^0.2.6",
+		"axios": "^0.20.0",
 		"bcryptjs": "^2.4.3",
 		"bluebird": "^3.5.3",
 		"body-parser": "^1.18.3",

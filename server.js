@@ -56,6 +56,15 @@ app.use(passport.initialize());
 
 spec.init(app);
 
+
+/** 
+ * TODO(map) Just testing
+ */
+app.get('/test/image/parse', (req, res) => {
+	recipeApi.testRecipeParse(req, res);
+});
+
+
 /**
  * -----------------------------------------
  * |         CONFIGURATION ROUTING         |
