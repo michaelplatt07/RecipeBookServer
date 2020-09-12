@@ -390,7 +390,7 @@ describe('Various tests for PUTting recipe data in the databse', () => {
 	    });
     });
 
-    it('Should should fail because there is no serving size', (done) => {
+    it('Should should fail because there is no chefs note section', (done) => {
 	chai.request(server)
 	    .post('/recipes/add')
 	    .set({ 'Authorization': token })
@@ -439,7 +439,6 @@ describe('Various tests for PUTting recipe data in the databse', () => {
 		done();
 	    });
     });
-    
     it('Should successfully insert Recipe 1 because all data is there', (done) => {
 	chai.request(server)
 	    .post('/recipes/add')
@@ -485,6 +484,58 @@ describe('Various tests for PUTting recipe data in the databse', () => {
 		description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras ornare urna imperdiet nisl semper maximus. Duis egestas elit a mi ornare, at fringilla lorem mattis. Duis feugiat velit nisi, in placerat dolor facilisis sit amet. In pulvinar et felis eget sagittis. Phasellus ac ipsum et orci interdum ultricies. Suspendisse mauris nibh, euismod in neque et, elementum sagittis eros. Sed mi justo, luctus sed tortor quis, vulputate hendrerit felis. Nunc tincidunt ultricies luctus. Donec imperdiet id nunc nec tempus. Suspendisse sit amet nunc pellentesque, facilisis mauris quis, gravida est. Suspendisse dapibus risus ut aliquam rutrum. Pellentesque erat arcu, pretium eu nisi ut, vestibulum euismod nunc. Mauris ac pulvinar ipsum, quis rutrum quam. Nam non tincidunt nisi. Nam nec arcu ut risus dapibus convallis. Vestibulum nisl elit, congue eu purus eu, luctus mollis risus."
 	    })
 	    .end((err, res) => {
+		res.should.have.status(422);
+		res.body['msg']['noChefNotesErros'].should.be.equal('Please include a chef note for the dish.');
+                done();
+	    });
+    });
+    
+    it('Should successfully insert Recipe 1 because all data is there', (done) => {
+	chai.request(server)
+	    .post('/recipes/add')
+	    .set({ 'Authorization': token })
+	    .send({
+		text_friendly_name: 'Sample Recipe',
+		ingredients: [
+		    {
+			text_friendly_name: 'Ingredient 1',
+			quantity: 8,
+			measurement: 'Tbsp'
+		    },
+		    {
+			text_friendly_name: 'Ingredient 2',
+			quantity: 1,
+			measurement: 'oz'
+		    }
+		],
+		steps: [
+		    "Cut stuff up.",
+		    "Mix stuff together.",
+		    "Cook it and enjoy"
+		],
+		courses: [
+		    "brinner"
+		],
+		prep_time: {
+		    "minutes": 5,
+		    "hours": 0
+		},
+		cook_time: {
+		    "minutes": 10,
+		    "hours": 1
+		},
+		cuisines: [
+		    'american'
+		],
+                categories: [
+                    "poultry"
+                ],
+                serving_sizes: "1 - 2",
+		searchable: true,
+		description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras ornare urna imperdiet nisl semper maximus. Duis egestas elit a mi ornare, at fringilla lorem mattis. Duis feugiat velit nisi, in placerat dolor facilisis sit amet. In pulvinar et felis eget sagittis. Phasellus ac ipsum et orci interdum ultricies. Suspendisse mauris nibh, euismod in neque et, elementum sagittis eros. Sed mi justo, luctus sed tortor quis, vulputate hendrerit felis. Nunc tincidunt ultricies luctus. Donec imperdiet id nunc nec tempus. Suspendisse sit amet nunc pellentesque, facilisis mauris quis, gravida est. Suspendisse dapibus risus ut aliquam rutrum. Pellentesque erat arcu, pretium eu nisi ut, vestibulum euismod nunc. Mauris ac pulvinar ipsum, quis rutrum quam. Nam non tincidunt nisi. Nam nec arcu ut risus dapibus convallis. Vestibulum nisl elit, congue eu purus eu, luctus mollis risus.",
+                chef_notes: "Pellentesque erat arcu, pretium eu nisi ut, vestibulum euismod nunc."
+	    })
+	    .end((err, res) => {
 		res.should.have.status(200);
 		done();
 	    });
@@ -527,7 +578,8 @@ describe('Various tests for PUTting recipe data in the databse', () => {
                     "meat"
                 ],
                 serving_sizes: "1 - 2",
-		description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras ornare urna imperdiet nisl semper maximus. Duis egestas elit a mi ornare, at fringilla lorem mattis. Duis feugiat velit nisi, in placerat dolor facilisis sit amet. In pulvinar et felis eget sagittis. Phasellus ac ipsum et orci interdum ultricies. Suspendisse mauris nibh, euismod in neque et, elementum sagittis eros. Sed mi justo, luctus sed tortor quis, vulputate hendrerit felis. Nunc tincidunt ultricies luctus. Donec imperdiet id nunc nec tempus. Suspendisse sit amet nunc pellentesque, facilisis mauris quis, gravida est. Suspendisse dapibus risus ut aliquam rutrum. Pellentesque erat arcu, pretium eu nisi ut, vestibulum euismod nunc. Mauris ac pulvinar ipsum, quis rutrum quam. Nam non tincidunt nisi. Nam nec arcu ut risus dapibus convallis. Vestibulum nisl elit, congue eu purus eu, luctus mollis risus."
+		description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras ornare urna imperdiet nisl semper maximus. Duis egestas elit a mi ornare, at fringilla lorem mattis. Duis feugiat velit nisi, in placerat dolor facilisis sit amet. In pulvinar et felis eget sagittis. Phasellus ac ipsum et orci interdum ultricies. Suspendisse mauris nibh, euismod in neque et, elementum sagittis eros. Sed mi justo, luctus sed tortor quis, vulputate hendrerit felis. Nunc tincidunt ultricies luctus. Donec imperdiet id nunc nec tempus. Suspendisse sit amet nunc pellentesque, facilisis mauris quis, gravida est. Suspendisse dapibus risus ut aliquam rutrum. Pellentesque erat arcu, pretium eu nisi ut, vestibulum euismod nunc. Mauris ac pulvinar ipsum, quis rutrum quam. Nam non tincidunt nisi. Nam nec arcu ut risus dapibus convallis. Vestibulum nisl elit, congue eu purus eu, luctus mollis risus.",
+                chef_notes: "Pellentesque erat arcu, pretium eu nisi ut, vestibulum euismod nunc."
 	    })
 	    .end((err, res) => {
 		res.should.have.status(200);
@@ -572,7 +624,8 @@ describe('Various tests for PUTting recipe data in the databse', () => {
                     "pasta"
                 ],
                 serving_sizes: "3 - 4",
-		description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras ornare urna imperdiet nisl semper maximus. Duis egestas elit a mi ornare, at fringilla lorem mattis. Duis feugiat velit nisi, in placerat dolor facilisis sit amet. In pulvinar et felis eget sagittis. Phasellus ac ipsum et orci interdum ultricies. Suspendisse mauris nibh, euismod in neque et, elementum sagittis eros. Sed mi justo, luctus sed tortor quis, vulputate hendrerit felis. Nunc tincidunt ultricies luctus. Donec imperdiet id nunc nec tempus. Suspendisse sit amet nunc pellentesque, facilisis mauris quis, gravida est. Suspendisse dapibus risus ut aliquam rutrum. Pellentesque erat arcu, pretium eu nisi ut, vestibulum euismod nunc. Mauris ac pulvinar ipsum, quis rutrum quam. Nam non tincidunt nisi. Nam nec arcu ut risus dapibus convallis. Vestibulum nisl elit, congue eu purus eu, luctus mollis risus."
+		description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras ornare urna imperdiet nisl semper maximus. Duis egestas elit a mi ornare, at fringilla lorem mattis. Duis feugiat velit nisi, in placerat dolor facilisis sit amet. In pulvinar et felis eget sagittis. Phasellus ac ipsum et orci interdum ultricies. Suspendisse mauris nibh, euismod in neque et, elementum sagittis eros. Sed mi justo, luctus sed tortor quis, vulputate hendrerit felis. Nunc tincidunt ultricies luctus. Donec imperdiet id nunc nec tempus. Suspendisse sit amet nunc pellentesque, facilisis mauris quis, gravida est. Suspendisse dapibus risus ut aliquam rutrum. Pellentesque erat arcu, pretium eu nisi ut, vestibulum euismod nunc. Mauris ac pulvinar ipsum, quis rutrum quam. Nam non tincidunt nisi. Nam nec arcu ut risus dapibus convallis. Vestibulum nisl elit, congue eu purus eu, luctus mollis risus.",
+                chef_notes: "Pellentesque erat arcu, pretium eu nisi ut, vestibulum euismod nunc."
 	    })
 	    .end((err, res) => {
 		res.should.have.status(200);

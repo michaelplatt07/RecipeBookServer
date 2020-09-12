@@ -596,7 +596,11 @@ exports.addNewRecipe = async (db, req, res) => {
 	recipeData['ingredients'].forEach((ingredient) => {
 	    ingredient['name'] = utils.convertTextToSearch(ingredient['text_friendly_name']);
 	});
-	
+
+        if (!recipeData['chef_notes']) {
+            recipeData['chef_notes'] = '';
+        }
+        
 	utils.insertIngredients(db, recipeData['ingredients']);
 
 	let recipe = await db.collection('recipes').insertOne(recipeData);

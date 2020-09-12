@@ -121,6 +121,11 @@ exports.checkRecipePostData = (jsonData) => {
     {
 	errMsgDict['noDescriptionError'] = 'Please include a description of the dish.'; 
     }
+
+    if (!_.has(jsonData, 'chef_notes'))
+    {
+	errMsgDict['noChefNotesErros'] = 'Please include a chef note for the dish.'; 
+    }
     
     return errMsgDict;
 };
