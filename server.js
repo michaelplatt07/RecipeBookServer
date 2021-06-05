@@ -132,6 +132,13 @@ app.get('/recipes', (req, res) => {
 });
 
 
+// TODO(map) This should get moved but I am testing for now
+// Import a Recipe from AllRecipes via scraper
+app.post('/recipes/import', (req, res) => {
+	recipeApi.importRecipes(db.getDb(), req, res);
+});
+
+
 // Search for single recipe with an ID
 app.get('/recipes/id/:id?', (req, res) => {
     recipeApi.getRecipeById(db.getDb(), req, res);

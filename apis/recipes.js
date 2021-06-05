@@ -4,6 +4,8 @@ const jwt = require('jsonwebtoken');
 const debug = require('debug')('recipes');
 
 const _ = require('lodash');
+const {spawn} = require('child_process');
+const path = require('path');
 
 /**
  * ----------------
@@ -39,6 +41,14 @@ exports.getRecipes = async (db, req, res) => {
     return res.status(200).send({ title: 'All Recipes', recipes: recipes });
 };
 
+
+exports.importRecipes = async (db, req, res) => {
+	debug("In importRecipes");
+	const pythonProcess = spawn('python', [path.join(__dirname, '..', 'scrapers/all_recipes_scraper.py')]);
+	pythonProcess.stdout.on('data', (scraped_recipe) => {
+		return res.status(200).send({ recipeData: scraped_recipe.toString() });
+	});
+};
 
 /**
  * @swagger
