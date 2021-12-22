@@ -2,7 +2,9 @@
 This is designed to be a NodeJS application that can be used to manage your recipe book.  The application is lightweight and separates the logic that queries the database from the front end display.
 
 ## Running/Configuring Application
+To enable the endpoint for scrapping recipe sites based on a URL Python needs both the Beautiful Soup and Requests libraries. Enable the environment using `source scraper_env/bin/activate` and run the application via `npm start`.
 
+To deactivate the virtual environment run `deactivate`.
 
 ## Database
 Currently I'm setting this up to connect to a Mongo database.  I chose this database because I found that JSON is a nice format for storing recipes.  A sample recipe could look something like this:

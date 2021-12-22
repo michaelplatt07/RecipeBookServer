@@ -3,6 +3,7 @@ require('./test-user-api');
 require('./test-recipe-get-api');
 require('./test-recipe-put-api');
 require('./test-cuisine-get-api');
+require('./test-scraper');
 require('./test-measurement-get-api');
 require('./test-course-get-api');
 require('./test-category-get-api');

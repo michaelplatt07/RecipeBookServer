@@ -5,8 +5,6 @@ from bs4 import BeautifulSoup
 import logging, sys
 logging.basicConfig(stream=sys.stderr, level=logging.INFO)
 
-# TODO(map) : Modify this so a URL can be passed in as a command line arg
-
 unicode_fraction_dict = {
     b'\xbd':'1/2',
     b'\x2153':'1/3',
@@ -33,7 +31,7 @@ converted_recipe = {}
 step_list = []
 ingredient_list = []
 
-URL = 'https://www.allrecipes.com/recipe/229330/super-moist-meatloaf/?internalSource=rotd&referringContentType=Homepage&clickId=cardslot%201'
+URL = sys.argv[1]
 page = requests.get(URL)
 soup = BeautifulSoup(page.content, 'html.parser')
 
