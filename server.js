@@ -54,7 +54,8 @@ passport.use(strategy);
 app.use(bodyParser.json());
 app.use(passport.initialize());
 
-spec.init(app);
+// TODO(map) Go back and implement
+// spec.init(app);
 
 /**
  * -----------------------------------------
