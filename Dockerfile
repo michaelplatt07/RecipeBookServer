@@ -36,6 +36,7 @@ WORKDIR /usr/src/recipe-book-server
 
 # TODO(map) Maybe pull from github instead of copying the directory
 COPY . .
+RUN npm install
 
 # Create the VENV for allowing scraping and install requirements.
 RUN python3 -m venv scraper_env
