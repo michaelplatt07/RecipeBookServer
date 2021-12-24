@@ -130,6 +130,62 @@ exports.sampleCuisines = [
     }  
 ];
 
+exports.sampleIngredients = [
+    {
+        "name": "elbow_noodles",
+        "text_friendly_name": "elbow noodles",
+        "most_used_measurement": "oz",
+        "total_measurements_added": 1,
+        "measurement_ratios": [
+            {
+                "measurement": "oz",
+                "percentage": 1,
+                "count": 1
+            }
+        ],
+    },
+    {
+        "name": "cheddar_cheese",
+        "text_friendly_name": "cheddar cheese",
+        "most_used_measurement": "oz",
+        "total_measurements_added": 1,
+        "measurement_ratios": [
+            {
+                "measurement": "oz",
+                "percentage": 1,
+                "count": 1
+            }
+        ],
+    },
+    {
+        "name": "gouda_cheese",
+        "text_friendly_name": "gouda cheese",
+        "most_used_measurement": "oz",
+        "total_measurements_added": 1,
+        "measurement_ratios": [
+            {
+                "measurement": "oz",
+                "percentage": 1,
+                "count": 1
+            }
+        ],
+    },
+    {
+        "name": "milk",
+        "text_friendly_name": "milk",
+        "most_used_measurement": "oz",
+        "total_measurements_added": 1,
+        "measurement_ratios": [
+            {
+                "measurement": "oz",
+                "percentage": 1,
+                "count": 1
+            }
+        ],
+    }
+];
+
+
 exports.sampleMeasurements = [
     {
         name: "Tbsp"
