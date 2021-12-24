@@ -6,6 +6,7 @@ require('./test-cuisine-get-api');
 require('./test-measurement-get-api');
 require('./test-course-get-api');
 require('./test-category-get-api');
+require('./test-ingredient-get-api');
 require('./test-serving-size-get-api');
 require('./test-utils');
 require('./test-converter');
