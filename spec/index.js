@@ -1,4 +1,5 @@
-
+// TODO(map) Uncomment when fixed.
+/*
 const path = require('path');
 const express = require('express');
 const OpenApiValidator = require('express-openapi-validator').OpenApiValidator;
@@ -21,3 +22,4 @@ module.exports.init = (app) => {
         });
     });
 };
+*/

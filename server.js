@@ -56,7 +56,8 @@ app.use(bodyParser.json());
 app.use(passport.initialize());
 app.use(cors());
 
-spec.init(app);
+// TODO(map) Go back and implement
+// spec.init(app);
 
 /**
  * -----------------------------------------
