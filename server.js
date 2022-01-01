@@ -135,13 +135,6 @@ app.get('/recipes', (req, res) => {
 });
 
 
-// TODO(map) This should get moved but I am testing for now
-// Import a Recipe from AllRecipes via scraper
-app.post('/recipes/import', passport.authenticate('jwt', { session: false }), (req, res) => {
-	recipeApi.importRecipes(db.getDb(), req, res);
-});
-
-
 // Search for single recipe with an ID
 app.get('/recipes/id/:id?', (req, res) => {
     recipeApi.getRecipeById(db.getDb(), req, res);
@@ -224,6 +217,12 @@ app.post('/recipes/add', passport.authenticate('jwt', { session: false }), (req,
 // Update rating of Recipe.
 app.post('/recipes/rating/update/:id?', passport.authenticate('jwt', { session: false }), (req, res) => {
     recipeApi.updateRecipeRating(db.getDb(), req, res);
+});
+
+
+// Import a Recipe from website via scraper
+app.post('/recipes/import', passport.authenticate('jwt', { session: false }), (req, res) => {
+	recipeApi.importRecipes(db.getDb(), req, res);
 });
 
 

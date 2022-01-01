@@ -48,7 +48,6 @@ converted_recipe['text_friendly_name'] = soup.find(class_ = 'o-AssetTitle__a-Hea
 converted_recipe['description'] = '' # TODO(map) There doesn't appear to be one?
 
 meta_info = soup.find(class_ = 'recipeInfo').text.strip().split()
-logging.debug(meta_info)
 cook_time = 0
 # TODO(map) Get test case to make sure that this logic passes in the event that there are
 # minutes only and no hours
@@ -65,7 +64,6 @@ directions = directions_body.find_all('li')
 for direction in directions:
     step_list.append(direction.text.strip())
 
-# TODO(map) Ingredient stuff next
 ingredients_body = soup.find(class_ = 'o-Ingredients__m-Body')
 ingredients = ingredients_body.find_all(class_ = 'o-Ingredients__a-Ingredient--CheckboxLabel')
 ingredient_list = list(map(lambda ingredient: ingredient.text.strip(), ingredients))
