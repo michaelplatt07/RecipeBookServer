@@ -34,6 +34,8 @@ jobs:
     - name: MongoDB in GitHub Actions
       uses: supercharge/mongodb-github-action@1.3.0
       
+    - name: Start virtual environment
+      run: source ~/.venv
     - name: Install dependencies
       run: npm install
     - name: Build project
