@@ -20,8 +20,8 @@ describe('All cuisine endpoints with no data in database', () => {
     before(async () => {
         await db.connect();
         await db.dropAllCollections();
-	
-	await db.getDb().createCollection('cuisines');
+
+        await db.getDb().createCollection('cuisines');
     });
 
     it('Should return 404 because there are no cuisines.', (done) => {
@@ -33,14 +33,15 @@ describe('All cuisine endpoints with no data in database', () => {
                 done();
             });
     });
-    
+
 });
 
 describe('All cuisine endpoints with data in database', () => {
     before(async () => {
+        await db.connect();
         await db.dropAllCollections();
-	
-	await db.getDb().createCollection('cuisines');
+
+        await db.getDb().createCollection('cuisines');
         await db.getDb().collection('cuisines').insertMany(testFixtures.sampleCuisines);
     });
 
@@ -53,5 +54,5 @@ describe('All cuisine endpoints with data in database', () => {
                 done();
             });
     });
-    
+
 });

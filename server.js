@@ -3,9 +3,10 @@ const url = require('url');
 const express = require('express');
 const bodyParser = require('body-parser');
 const config = require('config');
-var jwt = require('jsonwebtoken');
 const spec = require('./spec');
+const cors = require('cors');
 
+var jwt = require('jsonwebtoken');
 var passport = require("passport");
 var passportJWT = require("passport-jwt");
 
@@ -53,6 +54,7 @@ passport.use(strategy);
 // Config stuff for server.
 app.use(bodyParser.json());
 app.use(passport.initialize());
+app.use(cors());
 
 // TODO(map) Go back and implement
 // spec.init(app);
@@ -215,6 +217,12 @@ app.post('/recipes/add', passport.authenticate('jwt', { session: false }), (req,
 // Update rating of Recipe.
 app.post('/recipes/rating/update/:id?', passport.authenticate('jwt', { session: false }), (req, res) => {
     recipeApi.updateRecipeRating(db.getDb(), req, res);
+});
+
+
+// Import a Recipe from website via scraper
+app.post('/recipes/import', passport.authenticate('jwt', { session: false }), (req, res) => {
+	recipeApi.importRecipes(db.getDb(), req, res);
 });
 
 

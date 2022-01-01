@@ -3,7 +3,7 @@ const ObjectID = require('mongodb').ObjectID;
 exports.sampleUser = {
     _id : ObjectID("5c080b0e92b3f41495142cf4"),
     "username": "testUser",
-    "password": "$2b$10$V.a3BjVSUvlnfmDK1Ck.EeaXgMn3v2sBpmqaBgTVUb45WFJLkARqO",
+    "password": "$2a$10$/VULTax5OODCACI8Zh329.kYDwrBc7Wii4c1wFAYMWulzU2ERBkeK",
     "active": false
 };
 

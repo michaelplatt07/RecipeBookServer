@@ -177,7 +177,7 @@ describe('User deletion and logging in.', () => {
     });
 
     it('Should allow user to log in.', (done) => {
-	const password = "test1234";
+	const password = "testPass";
 	const cipher = crypto.createCipher('aes-128-cbc', 'baseSecret');
 	var encryptedPass = cipher.update(password, 'utf8', 'hex');
 	encryptedPass += cipher.final('hex');

@@ -7,10 +7,6 @@ RUN apt-get install -y curl
 RUN apt-get install -y vim
 RUN apt-get install -y emacs25
 
-# Commenting out Node 10 because it's deprecated
-# RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -
-# RUN apt-get install -y nodejs
-
 # Uncomment for Node 14
 RUN curl -sL https://deb.nodesource.com/setup_14.x | bash -
 RUN apt-get install -y nodejs
@@ -23,7 +19,10 @@ RUN apt-get install -y wget
 RUN wget -qO - https://www.mongodb.org/static/pgp/server-4.2.asc | apt-key add -
 RUN echo "deb http://repo.mongodb.org/apt/debian buster/mongodb-org/4.2 main" | tee /etc/apt/sources.list.d/mongodb-org-4.2.list
 RUN apt-get update
+RUN apt-get install -y tmux
 RUN apt-get install -y mongodb-org*
+RUN apt-get install -y python3
+RUN apt-get install -y python3-venv
 
 # Uncomment for Node 12
 #curl -sL https://deb.nodesource.com/setup_12.x | bash -
@@ -37,6 +36,11 @@ WORKDIR /usr/src/recipe-book-server
 
 # TODO(map) Maybe pull from github instead of copying the directory
 COPY . .
+RUN npm install
+
+# Create the VENV for allowing scraping and install requirements.
+RUN python3 -m venv scraper_env
+RUN . ./scraper_env/bin/activate && pip install -r requirements.txt
 
 # Create necessary Mongo directories for data to be able to be stored.
 RUN mkdir -p /data/db /data/configdb && chown -R mongodb:mongodb /data/db /data/configdb
