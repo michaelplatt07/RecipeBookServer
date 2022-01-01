@@ -4,3 +4,4 @@ fly*
 /spec/.DS_Store
 /.nyc_output/*
 /coverage/*
+/scraper_env/*

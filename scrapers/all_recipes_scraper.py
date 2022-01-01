@@ -1,4 +1,5 @@
 import requests
+import os
 import json
 from bs4 import BeautifulSoup
 
@@ -32,14 +33,21 @@ step_list = []
 ingredient_list = []
 
 URL = sys.argv[1]
-page = requests.get(URL)
-soup = BeautifulSoup(page.content, 'html.parser')
+
+if 'sample' in URL:
+    test_url = os.getcwd() + '/test/' + URL
+    html = open(test_url, 'r')
+else:
+    page = requests.get(URL)
+    html = page.content
+
+soup = BeautifulSoup(html, 'html.parser')
 
 converted_recipe['text_friendly_name'] = soup.find(class_ = 'intro').text.strip()
 converted_recipe['description'] = soup.find(class_ = 'recipe-summary').text.strip()
 
 meta_info = soup.find(class_ = 'recipe-info-section').text.strip().split()
-logging.debug(meta_info)
+#logging.debug(meta_info)
 # TODO(map) : This is ugly.  Consider refactoring to something better.  Might need to have client specific cases though.
 # TODO(map) : Consider unifying the cases (maybe all lower) in case this isn't uniform across the site
 # TODO(map) : Could have hours and minutes? May need to convert minutes to hour/minutes combination.  Find other recipes to test
@@ -53,19 +61,19 @@ for index, info in enumerate(meta_info):
 
 # Start parsing the bulk of the recipe information. Mainly get the directions and ingredients here.
 recipe_body = soup.find(id='recipe-body')
-logging.debug("Prettified Version of Recipe")
+logging.debug('Prettified Version of Recipe')
 logging.debug(recipe_body.prettify())
 
 # Directions section
 directions_body = soup.find(class_='instructions-section')
-logging.debug("Prettified Version of Directions")
+logging.debug('Prettified Version of Directions')
 logging.debug(directions_body.prettify())
 directions = directions_body.find_all('li')
 logging.debug(directions)
 
 # Ingredients section
 ingredients_body = soup.find(class_='ingredients-section')
-logging.debug("Prettified Version of Ingredients")
+logging.debug('Prettified Version of Ingredients')
 logging.debug(ingredients_body.prettify())
 ingredients = ingredients_body.find_all('li')
 
@@ -89,14 +97,12 @@ for ingredient in ingredients:
                 converted_fraction_text = unicode_fraction_dict.get(ingredient_amount)
                 formatted_amount += ' ' + converted_fraction_text
         else:
-            remainder_text += " " + ingredient_component
+            remainder_text += ' ' + ingredient_component
     ingredient_list.append(formatted_amount.strip() + ' ' + remainder_text.strip())
     logging.debug('Formatted ingredient: {} {}'.format(formatted_amount.strip(), remainder_text.strip()))
 
 converted_recipe['steps'] = step_list
 converted_recipe['ingredients'] = ingredient_list # TODO(map) : This still isn't done being formatted but for now gives something to work with
 
-logging.debug(json.dumps(converted_recipe))
-logging.info(json.dumps(converted_recipe))
-print(converted_recipe)
+print(json.dumps(converted_recipe))
 sys.stdout.flush()

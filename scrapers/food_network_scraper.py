@@ -1,5 +1,6 @@
 import requests
 import json
+import os
 from bs4 import BeautifulSoup
 
 import logging, sys
@@ -33,8 +34,15 @@ step_list = []
 ingredient_list = []
 
 URL = sys.argv[1]
-page = requests.get(URL)
-soup = BeautifulSoup(page.content, 'html.parser')
+
+if 'sample' in URL:
+    test_url = os.getcwd() + '/test/' + URL
+    html = open(test_url, "r")
+else:
+    page = requests.get(URL)
+    html = page.content
+
+soup = BeautifulSoup(html, 'html.parser')
 
 converted_recipe['text_friendly_name'] = soup.find(class_ = 'o-AssetTitle__a-HeadlineText').text.strip()
 converted_recipe['description'] = '' # TODO(map) There doesn't appear to be one?
@@ -48,7 +56,7 @@ for index, info in enumerate(meta_info):
     if info == 'Total:':
         cook_time += int(meta_info[index + 1]) * 60
         cook_time += int(meta_info[index + 3])
-        converted_recipe['cook_time'] = dict([('minutes', cook_time)])
+        converted_recipe['cook_time'] = dict([('minutes', str(cook_time))])
     elif info == 'Yield:':
         converted_recipe['serving_sizes'] = meta_info[index + 1]
 
@@ -65,5 +73,6 @@ ingredient_list.remove('Deselect All')
 
 converted_recipe['steps'] = step_list
 converted_recipe['ingredients'] = ingredient_list
-print(converted_recipe)
+
+print(json.dumps(converted_recipe))
 sys.stdout.flush()

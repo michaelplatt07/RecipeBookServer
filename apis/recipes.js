@@ -694,13 +694,13 @@ exports.importRecipes = async (db, req, res) => {
         debug("Scraping allrecipes...");
         const pythonProcess = spawn('python', [path.join(__dirname, '..', 'scrapers/all_recipes_scraper.py'), urlToScrape]);
         pythonProcess.stdout.on('data', (scraped_recipe) => {
-            return res.status(200).send({ recipeData: scraped_recipe.toString() });
+            return res.status(200).send({ recipeData: JSON.parse(scraped_recipe.toString()) });
         });
     } else if(urlToScrape.includes('foodnetwork')) {
         debug("Scraping foodnetwork...");
         const pythonProcess = spawn('python', [path.join(__dirname, '..', 'scrapers/food_network_scraper.py'), urlToScrape]);
         pythonProcess.stdout.on('data', (scraped_recipe) => {
-            return res.status(200).send({ recipeData: scraped_recipe.toString() });
+            return res.status(200).send({ recipeData: JSON.parse(scraped_recipe.toString()) });
         });
     } else {
         return res.status(404).send({msg: 'Scraping not supported for this site yet'})
