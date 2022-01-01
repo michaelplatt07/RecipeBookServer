@@ -25,17 +25,18 @@ jobs:
     steps:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
-    - uses: syphar/restore-virtualenv@v1
+    - uses: actions/setup-python@v2
       with:
-        requirement_files: requirements.txt
+        python-version: '3.7'
+        cache: 'pip'
+    - name: Install pip requirements
+      run: pip install -r requirements.txt
       
     # Starts a Mongo DB on localhost with latest version.  May want to specify a different version so it remains the same without auto
     # upgrading for now leave as is.  Search in Marketplace for MongoDB in GitHub Actions to look at options.
     - name: MongoDB in GitHub Actions
       uses: supercharge/mongodb-github-action@1.3.0
       
-    - name: Start virtual environment
-      run: source ~/.venv
     - name: Install dependencies
       run: npm install
     - name: Build project
