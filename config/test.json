@@ -1,31 +1,31 @@
 {
     "dbConfig":
     {
-	"host": "localhost",
-	"port": 27017,
-	"name": "testRecipeDb"
+        "host": "localhost",
+        "port": 27017,
+        "name": "testRecipeDb"
     },
     "serverConfig":
     {
-	"baseUrl": "http://localhost",
-	"basePort": 3000
+        "baseUrl": "http://localhost",
+        "basePort": 3000
     },
     "emailConfig":
     {
-	"emailAddress": "nararecipeapp@gmail.com",
-	"emailPassword": "rCIgqnOH66sDQCA9sdM!"
+        "emailAddress": "someEmail",
+        "emailPassword": "somePassword"
     },
     "swaggerConfig":
     {
-	"definition":
-	{
-	    "openapi": "3.0.0",
-	    "info":
-	    {
-		"title": "Recipe Book Server API Description",
-		"version": "1.0.0"
-	    }
-	},
-	"apis": ["./apis/*"]
+        "definition":
+        {
+            "openapi": "3.0.0",
+            "info":
+            {
+                "title": "Recipe Book Server API Description",
+                "version": "1.0.0"
+            }
+        },
+        "apis": ["./apis/*"]
     }
 }

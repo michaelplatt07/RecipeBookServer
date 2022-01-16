@@ -5,9 +5,20 @@ const debug = require('debug')('db');
 
 // DB config imports.
 const config = require('config');
-const dbUrl = 'mongodb://' + config.get('dbConfig.host');
-const dbPort = config.get('dbConfig.port');
-const dbName = config.get('dbConfig.name');
+let dbUrl = '';
+let dbPort = '';
+let dbName = '';
+
+if (process.env.DATABASE_URL) {
+    dbUrl = process.env.DATABASE_URL;
+    dbPort = process.env.DATABASE_PORT;
+    dbName = process.env.DATABASE_NAME;
+} else {
+    dbUrl = 'mongodb://' + config.get('dbConfig.host');
+    dbPort = config.get('dbConfig.port');
+    dbName = config.get('dbConfig.name');
+}
+
 const appDomain = 'localhost';
 const appPort = 3000;
 

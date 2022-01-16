@@ -18,113 +18,152 @@ const db = require('../db');
 // Crypto for hashing password
 const crypto = require('crypto');
 
+describe('Test get all users with no users in the database', () => {
+    before(async () => {
+        await db.connect();
+        await db.dropAllCollections();
+
+        await db.getDb().createCollection('users');
+    });
+
+    it('Should return 400 because there are no users in the db', (done) => {
+        chai.request(server)
+            .get('/users')
+            .end((err, res) => {
+                res.should.have.status(400);
+                res.body['message'].should.be.equal('There are no users in the database.');
+                done();
+            });
+    });
+});
+
+describe('Test get all users with users in the database', () => {
+    before(async () => {
+        await db.connect();
+        await db.dropAllCollections();
+
+        await db.getDb().createCollection('users');
+
+        await db.getDb().collection('users').insertOne(testFixtures.sampleUser);
+    });
+
+    it('Should return all users in the database', (done) => {
+        chai.request(server)
+            .get('/users')
+            .end((err, res) => {
+                res.should.have.status(200);
+                res.body['users'].length.should.be.equal(1);
+                done();
+            });
+    });
+});
 
 describe('User registration.', () => {
     before(async () => {
-	await db.connect();
+        await db.connect();
         await db.dropAllCollections();
-	
-	await db.getDb().createCollection('users');
+
+        await db.getDb().createCollection('users');
     });
 
-    
+
     it('Should fail with no username being supplied.', (done) => {
-	chai.request(server)
-	    .post('/users/register')
-	    .send({})
-	    .end((err, res) => {
-		res.should.have.status(401);
-		res.body['message'].should.be.equal('Must include a username.');
-		done();
-	    });
+        chai.request(server)
+            .post('/users/register')
+            .send({})
+            .end((err, res) => {
+                res.should.have.status(401);
+                res.body['message'].should.be.equal('Must include a username.');
+                done();
+            });
     });
 
     it('Should fail with empty username being supplied.', (done) => {
-	chai.request(server)
-	    .post('/users/register')
-	    .send({ username: "" })
-	    .end((err, res) => {
-		res.should.have.status(401);
-		res.body['message'].should.be.equal('Must include a username.');
-		done();
-	    });
+        chai.request(server)
+            .post('/users/register')
+            .send({ username: "" })
+            .end((err, res) => {
+                res.should.have.status(401);
+                res.body['message'].should.be.equal('Must include a username.');
+                done();
+            });
     });
 
     it('Should fail with space for username being supplied.', (done) => {
-	chai.request(server)
-	    .post('/users/register')
-	    .send({ username: " " })
-	    .end((err, res) => {
-		res.should.have.status(401);
-		res.body['message'].should.be.equal('Must include a username.');
-		done();
-	    });
+        chai.request(server)
+            .post('/users/register')
+            .send({ username: " " })
+            .end((err, res) => {
+                res.should.have.status(401);
+                res.body['message'].should.be.equal('Must include a username.');
+                done();
+            });
     });
 
     it('Should fail with no password being supplied.', (done) => {
-	chai.request(server)
-	    .post('/users/register')
-	    .send({ username: "testUser" })
-	    .end((err, res) => {
-		res.should.have.status(401);
-		res.body['message'].should.be.equal('Must include a password.');
-		done();
-	    });
+        chai.request(server)
+            .post('/users/register')
+            .send({ username: "testUser" })
+            .end((err, res) => {
+                res.should.have.status(401);
+                res.body['message'].should.be.equal('Must include a password.');
+                done();
+            });
     });
 
     it('Should fail with a blank password being supplied.', (done) => {
-	chai.request(server)
-	    .post('/users/register')
-	    .send({ username: "testUser", password: "" })
-	    .end((err, res) => {
-		res.should.have.status(401);
-		res.body['message'].should.be.equal('Must include a password.');
-		done();
-	    });
+        chai.request(server)
+            .post('/users/register')
+            .send({ username: "testUser", password: "" })
+            .end((err, res) => {
+                res.should.have.status(401);
+                res.body['message'].should.be.equal('Must include a password.');
+                done();
+            });
     });
 
     it('Should fail with no email being supplied.', (done) => {
-	chai.request(server)
-	    .post('/users/register')
-	    .send({ username: "testUser", password: "test1234" })
-	    .end((err, res) => {
-		res.should.have.status(401);
-		res.body['message'].should.be.equal('Must include an email.');
-		done();
-	    });
+        chai.request(server)
+            .post('/users/register')
+            .send({ username: "testUser", password: "test1234" })
+            .end((err, res) => {
+                res.should.have.status(401);
+                res.body['message'].should.be.equal('Must include an email.');
+                done();
+            });
     });
 
     it('Should fail with empty email being supplied.', (done) => {
-	chai.request(server)
-	    .post('/users/register')
-	    .send({ username: "testUser", password: "test1234", email: "" })
-	    .end((err, res) => {
-		res.should.have.status(401);
-		res.body['message'].should.be.equal('Must include an email.');
-		done();
-	    });
+        chai.request(server)
+            .post('/users/register')
+            .send({ username: "testUser", password: "test1234", email: "" })
+            .end((err, res) => {
+                res.should.have.status(401);
+                res.body['message'].should.be.equal('Must include an email.');
+                done();
+            });
     });
 
     it('Should fail with blank email being supplied.', (done) => {
-	chai.request(server)
-	    .post('/users/register')
-	    .send({ username: "testUser", password: "test1234", email: " " })
-	    .end((err, res) => {
-		res.should.have.status(401);
-		res.body['message'].should.be.equal('Must include an email.');
-		done();
-	    });
+        chai.request(server)
+            .post('/users/register')
+            .send({ username: "testUser", password: "test1234", email: " " })
+            .end((err, res) => {
+                res.should.have.status(401);
+                res.body['message'].should.be.equal('Must include an email.');
+                done();
+            });
     });
-    
+
     it('Should create the user.', (done) => {
-	chai.request(server)
-	    .post('/users/register')
-	    .send({ username: "testUser", password: "test1234", email: "test@test.com" })
-	    .end((err, res) => {
-		res.should.have.status(200);
-		res.body['message'].should.be.equal('Successfully created user account.');
-		done();
-	    });
+        chai.request(server)
+            .post('/users/register')
+            .send({ username: "testUser", password: "test1234", email: "test@test.com" })
+            .end((err, res) => {
+                res.should.have.status(200);
+                res.body['message'].should.be.equal('Successfully created user account.');
+                done();
+            });
     });
 
 });
@@ -132,65 +171,65 @@ describe('User registration.', () => {
 
 describe('User deletion and logging in.', () => {
     before(async () => {
-	await db.connect();
+        await db.connect();
         await db.dropAllCollections();
-	
-	await db.getDb().createCollection('users');
-        
+
+        await db.getDb().createCollection('users');
+
         await db.getDb().collection('users').insertOne(testFixtures.sampleUser);
     });
-    
+
     it('Should fail because the user account has not been activated.', (done) => {
-	const password = "test1234";
-	const cipher = crypto.createCipher('aes-128-cbc', 'baseSecret');
-	var encryptedPass = cipher.update(password, 'utf8', 'hex');
-	encryptedPass += cipher.final('hex');
-	
-	chai.request(server)
-	    .post('/users/login')
-	    .send({ username: "testUser", password: encryptedPass })
-	    .end((err, res) => {
-		res.should.have.status(401);
-		res.body['message'].should.be.equal('User is not currently active.');
-		done();
-	    });
+        const password = "test1234";
+        const cipher = crypto.createCipher('aes-128-cbc', 'baseSecret');
+        var encryptedPass = cipher.update(password, 'utf8', 'hex');
+        encryptedPass += cipher.final('hex');
+
+        chai.request(server)
+            .post('/users/login')
+            .send({ username: "testUser", password: encryptedPass })
+            .end((err, res) => {
+                res.should.have.status(401);
+                res.body['message'].should.be.equal('User is not currently active.');
+                done();
+            });
     });
 
     it('Should fail because the user account does not exist.', (done) => {
         chai.request(server)
-	    .get('/users/activate/5c080b0e92b3f41495100000')
-	    .end((err, res) => {
-		res.should.have.status(400);
-		res.body['message'].should.be.equal('No user account associated with activation link.');
-		done();
-	    });
+            .get('/users/activate/5c080b0e92b3f41495100000')
+            .end((err, res) => {
+                res.should.have.status(400);
+                res.body['message'].should.be.equal('No user account associated with activation link.');
+                done();
+            });
     });
 
     it('Should activate the user account.', (done) => {
         chai.request(server)
-	    .get('/users/activate/5c080b0e92b3f41495142cf4')
-	    .end((err, res) => {
-		res.should.have.status(200);
-		res.body['message'].should.be.equal('User account successfully activated.');
-		done();
-	    });
+            .get('/users/activate/5c080b0e92b3f41495142cf4')
+            .end((err, res) => {
+                res.should.have.status(200);
+                res.body['message'].should.be.equal('User account successfully activated.');
+                done();
+            });
     });
 
     it('Should allow user to log in.', (done) => {
-	const password = "testPass";
-	const cipher = crypto.createCipher('aes-128-cbc', 'baseSecret');
-	var encryptedPass = cipher.update(password, 'utf8', 'hex');
-	encryptedPass += cipher.final('hex');
-	
-	chai.request(server)
-	    .post('/users/login')
-	    .send({ username: "testUser", password: encryptedPass })
-	    .end((err, res) => {
-		res.should.have.status(200);
-		res.body['message'].should.be.equal('Successfully logged in.');
-		done();
-	    });
+        const password = "testPass";
+        const cipher = crypto.createCipher('aes-128-cbc', 'baseSecret');
+        var encryptedPass = cipher.update(password, 'utf8', 'hex');
+        encryptedPass += cipher.final('hex');
+
+        chai.request(server)
+            .post('/users/login')
+            .send({ username: "testUser", password: encryptedPass })
+            .end((err, res) => {
+                res.should.have.status(200);
+                res.body['message'].should.be.equal('Successfully logged in.');
+                done();
+            });
     });
-    
+
 });
 
