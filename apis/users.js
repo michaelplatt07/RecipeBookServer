@@ -51,6 +51,37 @@ exports.activateUserAccount = async (db, req, res) => {
 /**
  * @swagger
  *
+ * /users:
+ *   get:
+ *     description: Gets a list of all the users.
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         Success: The list of users was returned.
+ *       400:
+ *         NoUserError: There are no users.
+ *     example:
+ *       /users
+ */
+exports.getAllUsers = async (db, req, res) => {
+    debug("In getAllUsers");
+
+    let users = await db.collection('users').find({}).toArray();
+
+    if (!users || users.length == 0)
+    {
+        return res.status(400).send({ message: 'There are no users in the database.'});
+    }
+
+    res.setHeader('Content-Type', 'application/json');
+    return res.status(200).send({ users: users });
+};
+
+
+/**
+ * @swagger
+ *
  * /users/delete/USERNAME:
  *   get:
  *     description: Deletes a user account from the database.

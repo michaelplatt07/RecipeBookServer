@@ -1,0 +1,31 @@
+FROM debian:buster
+
+RUN apt-get update
+
+RUN apt-get install -y curl
+
+# Uncomment for Node 14
+RUN curl -sL https://deb.nodesource.com/setup_14.x | bash -
+RUN apt-get install -y nodejs
+RUN apt-get install -y python3
+RUN apt-get install -y python3-venv
+
+# Install NVM so different versions of Node can be used for testing or whatever else.
+RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
+
+# Create work dir to copy the server into
+WORKDIR /usr/src/recipe-book-server
+
+# TODO(map) Maybe pull from github instead of copying the directory
+COPY . .
+RUN npm install
+
+# Create the VENV for allowing scraping and install requirements.
+RUN python3 -m venv scraper_env
+RUN . ./scraper_env/bin/activate && pip install -r requirements.txt
+
+# Ports to expose
+EXPOSE 3000
+
+CMD . ./scraper_env/bin/activate
+CMD npm start

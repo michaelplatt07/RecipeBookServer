@@ -91,11 +91,11 @@ In an attempt to standardize how the grocery list will display relevant units of
 	]
 }
 ```
-<b>NOTE:</b> This collection should never be modified by the admin of the application as the values are updated automatically by the application.  In the even an admin does want to update an entry, they can do so to modify percentages, counts, etc. to get the desired results.
+<b>NOTE:</b> This collection should never be modified by the admin of the application as the values are updated automatically by the application.  In the event an admin does want to update an entry, they can do so to modify percentages, counts, etc. to get the desired results.
 
 ## Installing
 1. Check out the application via GIT.
-2. Get the MongoDB from the following URL: https://www.mongodb.com/cloud/atlas?jmp=nav
+2. Get MongoDB from the following URL: https://www.mongodb.com/cloud/atlas?jmp=nav
 3. Make sure Mongo is installed and up and running.
 4. Install the modules using `npm install` on the root directory of this project.
 5. Import the default database documents in the `/dumps` directory with the following command:
@@ -104,10 +104,20 @@ In an attempt to standardize how the grocery list will display relevant units of
 6. Once the modules have been installed the application should be all set to run.  Navigate to the directory of the application and run via the command `npm start`.
 
 ## Testing
-To run the unit tests for this application, navigate to the root directory.  From there, you can run the command `npm test` which will kickstart an entire suite of tests that cover the entire application.
+Tests can be ran in either of the two ways listed below. As of the time of writing, having a test database called `testRecipeDb` is required.
+1. Install MongoDB locally on your machine and run the tests via the `npm test` command
+2. Build or pull the latest docker image with either of the commands:
+    * To pull the latest -> `docker pull michaelplatt/recipe-book-server:latest`
+    * To build the image -> `docker build -f Dockerfile -t recipe_test_server .` (Note that for this option you need to specify which of the docker files to use, Dockerfile in this case, because there are multiple files here; the command also needs to be ran in the root directory of this application as it copies the code from the current directory)
+
+If using the docker image, either by pulling or building, running tests has a few extra steps:
+1. Create and start a container using the docker image `docker run -it --name recipe_test_server recipe_test_server` for example
+2. Create two terminals for the docker container (I personally use tmux and split the pane but you can use screen or some other session manager or however else you want to accomplish this)
+3. Start mongo in one of the terminal/pane via `mongod`
+4. Run the tests in the other terminal/pane via `npm test` from the root directory of the server application.
 
 ## Allowing Emails through NodeMailer
-This will not currently work unless the email account for the NARA gmail has the "Less Secure App Access" enabled.  This feature can be found by searching for that name under the profile management.
+TODO(map) Explain how to set up a mailer once I've researched how to set it up securly and have all the holes plugged.
 
 ## Generating Certs
 Follow these steps to generate keys and certifications to be used in the API.
@@ -119,22 +129,3 @@ NOTE: This has only been tested for Linux distributions.
 3. `sudo openssl x509 -req -days 365 -in server.csr -signkey server.key -out server.crt`
 4. `sudo openssl req -x509 -newkey rsa:2048 -keyout keytmp.pem -out cert.pem -days 365`
 5. `sudo openssl rsa -in keytmp.pem -out key.pem`
-
-## Testing
-Testing can be ran through the `npm test` command.  If this test is ran, there will be an output directory called `coverage` that will be created in the project.  Within this directory there is an `index.html` file.  Open this file to see a prettified version of the code coverage broken down by each file.  There is additional documentation that can be found on the NYC site linked here: https://www.npmjs.com/package/nyc
-
-## Docker
-Within the project is a `Dockerfile` file that can be used to build a docker container within the application.  This docker file will take care of setting up a few things including:
-
-1. MongoDB
-2. NodeJs V 10
-3. NVM
-4. Exposes ports 3000 and 27017 (allows host to connect front end to application should they deisre)
-5. Copies the server code to the container
-6. Installs VIM and Emacs for text editors
-
-To create the docker image locally simply use the command `docker build -t USER_NAME/IMAGE_NAME .` where your username and image name replace the place holders
-
-### Current shortcomings with Dockerfile
-1. Mongo isn't autmatically started.  The developer has to go into the container and run `mongod` to start it, then he/she will be able to connect to the local mongo host.
-2. There is no docker image on docker hub.  This needs to be pushed up so people can simply download the image instead of having to build locally.

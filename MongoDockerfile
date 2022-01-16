@@ -1,0 +1,21 @@
+FROM debian:buster
+
+RUN apt-get update
+
+# Install stuff so we can intall Mongo
+RUN apt-get install -y gnupg
+RUN apt-get install -y wget
+
+# Actually do the install of Mongo
+RUN wget -qO - https://www.mongodb.org/static/pgp/server-4.2.asc | apt-key add -
+RUN echo "deb http://repo.mongodb.org/apt/debian buster/mongodb-org/4.2 main" | tee /etc/apt/sources.list.d/mongodb-org-4.2.list
+RUN apt-get update
+RUN apt-get install -y mongodb-org*
+
+# Create necessary Mongo directories for data to be able to be stored.
+RUN mkdir -p /data/db /data/configdb && chown -R mongodb:mongodb /data/db /data/configdb
+
+# Mongo port required to be able to launch
+EXPOSE 27017
+
+CMD mongod --bind_ip 0.0.0.0

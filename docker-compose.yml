@@ -1,0 +1,16 @@
+version: "3.3"
+services:
+    db:
+        image: "recipe_book_db:latest"
+        ports:
+            - "127.0.0.1:27017:27017"
+    web:
+        image: "recipe_book_server:latest"
+        ports:
+            - "3000:3000"
+        depends_on:
+            - "db"
+        environment:
+            DATABASE_URL: "mongodb://db"
+            DATABASE_PORT: "27017"
+            DATABASE_NAME: "devRecipeDb" 

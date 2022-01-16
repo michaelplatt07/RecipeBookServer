@@ -102,6 +102,15 @@ app.get('/users/activate/:userid?', (req, res) => {
 });
 
 
+// Get all users.
+// Locked behind the environment being dev for safety reasons
+if (process.env.NODE_ENV == 'dev' || process.env.NODE_ENV == 'test') {
+    app.get('/users', (req, res) => {
+        usersApi.getAllUsers(db.getDb(), req, res);
+    });
+}
+
+
 /**
  * ----------------
  * |     PUTS     |
